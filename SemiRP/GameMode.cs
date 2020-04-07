@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using SampSharp.GameMode;
 
 namespace SemiRP

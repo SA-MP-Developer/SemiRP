@@ -3,6 +3,7 @@ using SemiRP.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Dynamic;
 using System.Text;
 
@@ -16,7 +17,8 @@ namespace SemiRP
         {
 #if DEBUG
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=mydatabase;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(ConfigurationManager.AppSettings["connectionStringDebug"]);
+            
 #else
 
 #endif
