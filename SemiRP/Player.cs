@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using SampSharp.GameMode.Display;
 using SemiRP.Utils;
 using SampSharp.GameMode.Definitions;
+using SemiRP.Models;
 
 namespace SemiRP
 {
@@ -18,8 +19,8 @@ namespace SemiRP
 
         #region Overrides of BasePlayer
 
-        public AccountData AccountData { get; set; }
-        public CharacterData ActiveCharacter { get; set; }
+        public Account AccountData { get; set; }
+        public Character ActiveCharacter { get; set; }
 
         public bool AcceptMP { get; set; }
 

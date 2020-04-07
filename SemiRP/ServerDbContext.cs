@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SemiRP.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,9 +10,8 @@ namespace SemiRP
 {
     public class ServerDbContext : DbContext
     {
-        public DbSet<AccountData> Accounts { get; set; }
-        public DbSet<CharacterData> Characters { get; set; }
-
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Character> Characters { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 #if DEBUG
@@ -21,26 +21,5 @@ namespace SemiRP
 
 #endif
         }
-    }
-
-    public class AccountData
-    {
-        [Key]
-        public int AccountId { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-        public string Nickname { get; set; }
-        public string LastConnectionIP { get; set; }
-        public DateTime LastConnectionTime { get; set; }
-    }
-
-    public class CharacterData
-    {
-        [Key]
-        public int CharacterId { get; set; }
-        public AccountData Account { get; set; }
-        public string Name { get; set; }
-        public int Age { get; set; }
     }
 }
