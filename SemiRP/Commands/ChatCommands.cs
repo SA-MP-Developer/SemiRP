@@ -68,7 +68,7 @@ namespace SemiRP.Commands
             }
         }
 
-        [Command("chuchotter", "chu", "whisper", "wh")]
+        [Command("chuchotter", "chu", "whisper", "wh", "w")]
         private static bool WhisperCommand(Player sender, Player receiver, string message)
         {
             if (sender.Position.DistanceTo(receiver.Position) > PROXIMITY_WHISPER)
