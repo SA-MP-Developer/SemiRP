@@ -8,7 +8,7 @@ namespace SemiRP.Models
     public class Account
     {
         [Key]
-        private int accountId;
+        private int id;
         private string username;
         private string password;
         private string email;
@@ -22,9 +22,9 @@ namespace SemiRP.Models
             
         }
 
-        public Account(int accountId, string username, string password, string email, string nickname, string lastConnectionIP, DateTime lastConnectionTime)
+        public Account(int id, string username, string password, string email, string nickname, string lastConnectionIP, DateTime lastConnectionTime)
         {
-            AccountId = accountId;
+            Id = id;
             Username = username;
             Password = password;
             Email = email;
@@ -34,7 +34,7 @@ namespace SemiRP.Models
         }
 
         
-        public int AccountId { get => accountId; set => accountId = value; }
+        public int Id { get => id; set => id = value; }
         public string Username { get => username; set => username = value; }
         public string Password { get => password; set => password = value; }
         public string Email { get => email; set => email = value; }

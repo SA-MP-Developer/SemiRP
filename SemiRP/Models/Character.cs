@@ -8,7 +8,7 @@ namespace SemiRP.Models
     public class Character
     {
         [Key]
-        private int characterId;
+        private int id;
         private Account account;
         private string name;
         private int age;
@@ -17,16 +17,16 @@ namespace SemiRP.Models
         {
 
         }
-        public Character(int characterId, Account account, string name, int age)
+        public Character(int id, Account account, string name, int age)
         {
-            CharacterId = characterId;
+            Id = id;
             Account = account;
             Name = name;
             Age = age;
         }
 
 
-        public int CharacterId { get => characterId; set => characterId = value; }
+        public int Id { get => id; set => id = value; }
         internal Account Account { get => account; set => account = value; }
         public string Name { get => name; set => name = value; }
         public int Age { get => age; set => age = value; }
