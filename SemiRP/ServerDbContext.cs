@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using SemiRP.Models;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace SemiRP
         {
 #if DEBUG
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(ConfigurationManager.AppSettings["connectionStringDebug"]);
+            optionsBuilder.UseMySql(ConfigurationManager.ConnectionStrings["connectionStringDebug"].ConnectionString, b => b.MigrationsAssembly("SemiRP"));
             
 #else
 
