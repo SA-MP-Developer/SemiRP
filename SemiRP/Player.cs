@@ -9,11 +9,13 @@ using SampSharp.GameMode.Display;
 using SemiRP.Utils;
 using SampSharp.GameMode.Definitions;
 using SemiRP.Models;
+using SampSharp.Core.Callbacks;
+using SemiRP.PlayerSystems;
 
 namespace SemiRP
 {
     [PooledType]
-    partial class Player : BasePlayer
+    public class Player : BasePlayer
     {
         public const int PASSWORD_MAX_ATTEMPTS = 3;
 
@@ -40,10 +42,15 @@ namespace SemiRP
             }
 
             if (userExist)
-                LogPlayer();
+            {
+                PlayerLogin login = new PlayerLogin(this, PASSWORD_MAX_ATTEMPTS);
+                login.Begin();
+            }
             else
-                RegisterPlayer();
-
+            {
+                PlayerRegistration registration = new PlayerRegistration(this);
+                registration.Begin();
+            }
         }
 
         public override void OnText(TextEventArgs e)
