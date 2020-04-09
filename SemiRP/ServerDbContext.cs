@@ -18,7 +18,7 @@ namespace SemiRP
         {
 #if DEBUG
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseMySql(ConfigurationManager.ConnectionStrings["connectionStringDebug"].ConnectionString, b => b.MigrationsAssembly("SemiRP"));
+            optionsBuilder.UseMySql(ConfigurationManager.ConnectionStrings["connectionStringDebug"].ConnectionString);
             
 #else
 
