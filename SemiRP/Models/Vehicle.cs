@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace SemiRP.Models
@@ -23,6 +24,7 @@ namespace SemiRP.Models
             this.IdVehicle = idVehicle;
         }
 
+        [Key]
         public int Id { get => id; set => id = value; }
         public Character Owner { get => owner; set => owner = value; }
         public int IdVehicle { get => idVehicle; set => idVehicle = value; }

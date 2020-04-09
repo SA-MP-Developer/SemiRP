@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace SemiRP.Models
@@ -17,6 +18,7 @@ namespace SemiRP.Models
             this.Id = id;
         }
 
+        [Key]
         public int Id { get => id; set => id = value; }
     }
 }

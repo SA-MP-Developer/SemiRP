@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using SemiRP.Models;
 using System;
 using System.Collections.Generic;
@@ -16,13 +17,19 @@ namespace SemiRP
         public DbSet<Character> Characters { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
 #if DEBUG
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseMySql(ConfigurationManager.ConnectionStrings["connectionStringDebug"].ConnectionString);
-            
-#else
+                optionsBuilder.UseMySql(ConfigurationManager.ConnectionStrings["connectionStringDebug"].ConnectionString,
+                    mySqlOptions => mySqlOptions.ServerVersion(new Version(10, 4, 12), ServerType.MariaDb))
+                    .EnableDetailedErrors();
 
+#else
+                optionsBuilder.UseMySql(ConfigurationManager.ConnectionStrings["connectionStringRelease"].ConnectionString,
+                    mySqlOptions => mySqlOptions.ServerVersion(new Version(10, 4, 12), ServerType.MariaDb))
+                    .EnableDetailedErrors();
 #endif
+            }
         }
     }
 }

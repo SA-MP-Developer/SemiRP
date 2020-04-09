@@ -7,7 +7,6 @@ namespace SemiRP.Models
 {
     public class Account
     {
-        [Key]
         private int id;
         private string username;
         private string password;
@@ -33,7 +32,8 @@ namespace SemiRP.Models
             LastConnectionTime = lastConnectionTime;
         }
 
-        
+
+        [Key]
         public int Id { get => id; set => id = value; }
         public string Username { get => username; set => username = value; }
         public string Password { get => password; set => password = value; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace SemiRP.Models
@@ -23,6 +24,7 @@ namespace SemiRP.Models
             this.Quantity = quantity;
         }
 
+        [Key]
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
         public double Weight { get => weight; set => weight = value; }
