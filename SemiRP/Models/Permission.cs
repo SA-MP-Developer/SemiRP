@@ -8,7 +8,7 @@ namespace SemiRP.Models
     public class Permission
     {
         private int id;
-        private String Name;
+        private String name;
         private Permission parentPermission;
         private List<Permission> childPermissions;
 
@@ -19,27 +19,27 @@ namespace SemiRP.Models
         public Permission(int id, string name, List<Permission> childPermissions)
         {
             this.id = id;
-            Name = name;
+            this.name = name;
             this.childPermissions = childPermissions;
         }
 
         public Permission(int id, string name, Permission parentPermission)
         {
             this.id = id;
-            Name = name;
+            this.name = name;
             this.parentPermission = parentPermission;
         }
 
         public Permission(int id, string name, Permission parentPermission, List<Permission> childPermissions)
         {
             this.Id = id;
-            Name1 = name;
+            this.name = name;
             this.ParentPermission = parentPermission;
             this.ChildPermissions = childPermissions;
         }
         [Key]
         public int Id { get => id; set => id = value; }
-        public string Name1 { get => Name; set => Name = value; }
+        public string Name { get => name; set => name = value; }
         public Permission ParentPermission { get => parentPermission; set => parentPermission = value; }
         public List<Permission> ChildPermissions { get => childPermissions; set => childPermissions = value; }
     }
