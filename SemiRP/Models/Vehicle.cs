@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SemiRP.Models
 {
-    class Vehicle
+    public class Vehicle
     {
         private int id;
         private Container container;

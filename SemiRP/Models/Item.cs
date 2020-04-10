@@ -5,18 +5,18 @@ using System.Text;
 
 namespace SemiRP.Models
 {
-    public class Object
+    public class Item
     {
         private int id;
         private String name;
         private double weight;
         private int quantity;
 
-        public Object()
+        public Item()
         {
         }
 
-        public Object(int id, string name, double weight, int quantity)
+        public Item(int id, string name, double weight, int quantity)
         {
             this.Id = id;
             this.Name = name;

@@ -39,7 +39,7 @@ namespace SemiRP.Models
             this.GroupRanks = groupRanks;
             this.Inventory = inventory;
         }
-
+        [Key]
         public int Id { get => id; set => id = value; }
         public Account Account { get => account; set => account = value; }
         public string Name { get => name; set => name = value; }

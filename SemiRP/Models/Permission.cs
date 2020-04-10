@@ -37,7 +37,7 @@ namespace SemiRP.Models
             this.ParentPermission = parentPermission;
             this.ChildPermissions = childPermissions;
         }
-
+        [Key]
         public int Id { get => id; set => id = value; }
         public string Name1 { get => Name; set => Name = value; }
         public Permission ParentPermission { get => parentPermission; set => parentPermission = value; }

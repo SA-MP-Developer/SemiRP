@@ -9,17 +9,21 @@ namespace SemiRP.Models
     {
         private int id;
         private String name;
-        private Group group;
+        private Group parentGroup;
 
-        public GroupRank(int id, string name, Group group)
+        public GroupRank()
+        {
+        }
+
+        public GroupRank(int id, string name, Group parentGroup)
         {
             this.Id = id;
             this.Name = name;
-            this.Group = group;
+            this.ParentGroup = parentGroup;
         }
-
+        [Key]
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
-        internal Group Group { get => group; set => group = value; }
+        public Group ParentGroup { get => parentGroup; set => parentGroup = value; }
     }
 }
