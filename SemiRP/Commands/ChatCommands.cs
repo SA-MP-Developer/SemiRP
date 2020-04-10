@@ -17,89 +17,57 @@ namespace SemiRP.Commands
         [Command("me")]
         private static void MeCommand(Player sender, string message)
         {
-            foreach(Player p in Player.All)
-            {
-                if (sender.Position.DistanceTo(p.Position) <= PROXIMITY_RADIUS)
-                {
-                    p.SendClientMessage(Color.HotPink, "* " + sender.Name + " " + message);
-                }
-            }
+            Utils.Chat.SendMeChat(sender, message);
         }
 
         [Command("do")]
         private static void DoCommand(Player sender, string message)
         {
-            foreach (Player p in Player.All)
-            {
-                if (sender.Position.DistanceTo(p.Position) <= PROXIMITY_RADIUS)
-                {
-                    p.SendClientMessage(Color.HotPink, "* (" + sender.Name + ") " + message);
-                }
-            }
+            Utils.Chat.SendDoChat(sender, message);
         }
 
         [Command("crier", "c", "shout", "s")]
         private static void ShoutCommand(Player sender, string message)
         {
-            foreach (Player p in Player.All)
-            {
-                float distance = sender.Position.DistanceTo(p.Position);
-                if (distance <= PROXIMITY_RADIUS * PROXIMITY_SHOUT_FACTOR)
-                {
-                    float darkenAmount = Math.Clamp(distance / (PROXIMITY_RADIUS * PROXIMITY_SHOUT_FACTOR), 0f, 0.8f);
-                    Color col = Color.White.Darken(darkenAmount);
-                    p.SendClientMessage(col, sender.Name + " crie : " + message);
-                }
-            }
+            Utils.Chat.SendGradientRangedChat(sender, PROXIMITY_RADIUS * PROXIMITY_SHOUT_FACTOR, Color.White, sender.Name + " crie : " + message);
         }
 
         [Command("b", "(")]
         private static void OocCommand(Player sender, string message)
         {
-            foreach (Player p in Player.All)
-            {
-                float distance = sender.Position.DistanceTo(p.Position);
-                if (distance <= PROXIMITY_RADIUS * PROXIMITY_SHOUT_FACTOR)
-                {
-                    float darkenAmount = Math.Clamp(distance / (PROXIMITY_RADIUS * PROXIMITY_SHOUT_FACTOR), 0f, 0.8f);
-                    Color col = Color.White.Darken(darkenAmount);
-                    p.SendClientMessage(col, "(( " + sender.Name + "[" + sender.Id + "] : " + message + " ))");
-                }
-            }
+            Utils.Chat.SendGradientRangedChat(sender, PROXIMITY_RADIUS, Color.White, "(( " + sender.Name + "[" + sender.Id + "] : " + message + " ))");
         }
 
         [Command("chuchotter", "chu", "whisper", "wh", "w")]
-        private static bool WhisperCommand(Player sender, Player receiver, string message)
+        private static void WhisperCommand(Player sender, Player receiver, string message)
         {
             if (sender.Position.DistanceTo(receiver.Position) > PROXIMITY_WHISPER)
             {
                 sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] Vous êtes trop loin du joueur ciblé.");
-                return false;
+                return;
             }
 
             sender.SendClientMessage(Color.White, "Vous chuchottez à " + receiver.Name + " : " + message);
             receiver.SendClientMessage(Color.White, sender.Name + " vous chuchotte : " + message);
-            return true;
         }
 
         [Command("mp", "pm")]
-        private static bool PrivateMessageCommand(Player sender, Player receiver, string message)
+        private static void PrivateMessageCommand(Player sender, Player receiver, string message)
         {
             if (!receiver.IsConnected)
             {
                 sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] le joueur id " + receiver.Id + " n'est pas connecté.");
-                return false;
+                return;
             }
 
             if (!receiver.AcceptMP)
             {
                 sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] " + receiver.Name + " n'accepte pas de MP.");
-                return true;
+                return;
             }
 
             sender.SendClientMessage(Color.Yellow, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
             receiver.SendClientMessage(Color.Yellow, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
-            return true;
         }
     }
 }
