@@ -31,7 +31,7 @@ namespace SemiRP
             base.OnConnected(e);
 
             bool userExist = false;
-
+            
             using (var db = new ServerDbContext())
             {
                 userExist = db.Accounts.Any(a => a.Username == this.Name);
@@ -44,11 +44,34 @@ namespace SemiRP
             if (userExist)
             {
                 PlayerLogin login = new PlayerLogin(this, PASSWORD_MAX_ATTEMPTS);
+                login.DialogEnded += (sender, e) =>
+                {
+
+                };
+
                 login.Begin();
             }
             else
             {
                 PlayerRegistration registration = new PlayerRegistration(this);
+
+                registration.DialogEnded += (sender, e) =>
+                {
+                    using var db = new ServerDbContext();
+                    Account acc = new Account
+                    {
+                        Email = e.Email,
+                        Username = this.Name,
+                        Nickname = this.Name,
+                        Password = e.Password,
+                        LastConnectionIP = this.IP,
+                        LastConnectionTime = DateTime.Now
+                    };
+
+                    db.Add(acc);
+                    db.SaveChanges();
+                };
+
                 registration.Begin();
             }
         }

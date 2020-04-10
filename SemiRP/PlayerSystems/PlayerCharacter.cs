@@ -5,13 +5,25 @@ using System.Text;
 
 namespace SemiRP.PlayerSystems
 {
+    public class CharCreationDialogEndEventArgs : EventArgs
+    {
+
+    }
+
     class PlayerCharacterCreation
     {
-        private Player player;
+        private readonly Player player;
 
         public PlayerCharacterCreation(Player player)
         {
             this.player = player;
         }
+
+        protected virtual void OnDialogEnded(CharCreationDialogEndEventArgs e)
+        {
+            DialogEnded?.Invoke(this, e);
+        }
+
+        public event EventHandler<CharCreationDialogEndEventArgs> DialogEnded;
     }
 }

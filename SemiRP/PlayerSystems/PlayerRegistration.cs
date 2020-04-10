@@ -14,18 +14,24 @@ using System.Text.RegularExpressions;
 
 namespace SemiRP.PlayerSystems
 {
+    public class RegistrationDialogEndEventArgs : EventArgs
+    {
+        public string Password { get; set; }
+        public string Email { get; set; }
+    }
+
     class PlayerRegistration
     {
-        private Player player;
+        private readonly Player player;
 
         private string password;
         private string email;
 
         #region Dialogs
 
-        private ListDialog registrationMenu;
-        private InputDialog passwordDialog;
-        private InputDialog emailDialog;
+        private readonly ListDialog registrationMenu;
+        private readonly InputDialog passwordDialog;
+        private readonly InputDialog emailDialog;
 
         #endregion
 
@@ -34,8 +40,8 @@ namespace SemiRP.PlayerSystems
             this.player = player;
 
             registrationMenu = new ListDialog("Inscription", "Valider", "");
-            registrationMenu.AddItem("[" + Color.Red + "KO" + Color.White + "] Mot de passe");
-            registrationMenu.AddItem("[" + Color.Red + "KO" + Color.White + "] eMail");
+            registrationMenu.AddItem("[" + Color.Red + " " + Color.White + "] Mot de passe");
+            registrationMenu.AddItem("[" + Color.Red + " " + Color.White + "] eMail");
             registrationMenu.AddItem("Continuer");
             registrationMenu.Response += MenuDialog;
 
@@ -57,24 +63,25 @@ namespace SemiRP.PlayerSystems
             registrationMenu.Show(player);
         }
 
-        private bool RegisterPlayer()
+        protected virtual void OnDialogEnded(RegistrationDialogEndEventArgs e)
+        {
+            DialogEnded?.Invoke(this, e);
+        }
+
+        public event EventHandler<RegistrationDialogEndEventArgs> DialogEnded;
+
+        private bool EndDialog()
         {
             if (password.Length == 0 || email.Length == 0)
                 return false;
 
-            using (var db = new ServerDbContext())
+            RegistrationDialogEndEventArgs e = new RegistrationDialogEndEventArgs
             {
-                Account acc = new Account();
-                acc.Email = email;
-                acc.Username = player.Name;
-                acc.Nickname = player.Name;
-                acc.Password = password;
-                acc.LastConnectionIP = player.IP;
-                acc.LastConnectionTime = DateTime.Now;
+                Email = email,
+                Password = password
+            };
 
-                db.Add(acc);
-                db.SaveChanges();
-            }
+            OnDialogEnded(e);
 
             return true;
         }
@@ -84,14 +91,14 @@ namespace SemiRP.PlayerSystems
             registrationMenu.Items.Clear();
 
             if (password.Length != 0)
-                registrationMenu.AddItem("[" + Color.Green + "OK" + Color.White + "] Mot de passe");
+                registrationMenu.AddItem("[" + Color.Green + "X" + Color.White + "] Mot de passe");
             else
-                registrationMenu.AddItem("[" + Color.Red + "KO" + Color.White + "] Mot de passe");
+                registrationMenu.AddItem("[" + Color.Red + " " + Color.White + "] Mot de passe");
 
             if (email.Length != 0)
-                registrationMenu.AddItem("[" + Color.Green + "OK" + Color.White + "] eMail");
+                registrationMenu.AddItem("[" + Color.Green + "X" + Color.White + "] eMail");
             else
-                registrationMenu.AddItem("[" + Color.Red + "KO" + Color.White + "] eMail");
+                registrationMenu.AddItem("[" + Color.Red + " " + Color.White + "] eMail");
 
             registrationMenu.AddItem("Continuer");
 
@@ -110,7 +117,7 @@ namespace SemiRP.PlayerSystems
                     break;
                 case 2:
                     {
-                        if (RegisterPlayer())
+                        if (EndDialog())
                             return;
                         else
                             BuildAndShowMenuDialog();

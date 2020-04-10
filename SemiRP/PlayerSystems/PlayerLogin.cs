@@ -11,17 +11,22 @@ using System.Runtime.CompilerServices;
 
 namespace SemiRP.PlayerSystems
 {
+    public class LoginDialogEndEventArgs : EventArgs
+    {
+
+    }
+
     class PlayerLogin
     {
-        private Player player;
-        private int maxAttemtps;
+        private readonly Player player;
+        private readonly int maxAttemtps;
 
         private int attempts;
         private bool success;
 
         #region Dialogs
 
-        private InputDialog passwordDialog;
+        private readonly InputDialog passwordDialog;
 
         #endregion
 
@@ -46,6 +51,12 @@ namespace SemiRP.PlayerSystems
 
             return success;
         }
+        protected virtual void OnDialogEnded(LoginDialogEndEventArgs e)
+        {
+            DialogEnded?.Invoke(this, e);
+        }
+
+        public event EventHandler<LoginDialogEndEventArgs> DialogEnded;
 
         private void LoginDialog(object sender, DialogResponseEventArgs e)
         {
