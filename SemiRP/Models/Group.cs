@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SemiRP.Models
 {
-    class Group
+    public class Group
     {
         private int id;
         private Character owner;
@@ -31,6 +31,6 @@ namespace SemiRP.Models
         public Character Owner { get => owner; set => owner = value; }
         public string Name { get => name; set => name = value; }
         public DateTime DateCreation { get => dateCreation; set => dateCreation = value; }
-        internal List<GroupRank> ListRank { get => listRank; set => listRank = value; }
+        public List<GroupRank> ListRank { get => listRank; set => listRank = value; }
     }
 }

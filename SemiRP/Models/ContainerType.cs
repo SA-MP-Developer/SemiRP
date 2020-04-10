@@ -1,25 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace SemiRP.Models
 {
-    public class GroupRank
+    public class ContainerType
     {
         private int id;
         private String name;
-        private Group group;
+        private int maxSpace;
 
-        public GroupRank(int id, string name, Group group)
+        public ContainerType()
+        {
+        }
+
+        public ContainerType(int id, string name, int maxSpace)
         {
             this.Id = id;
             this.Name = name;
-            this.Group = group;
+            this.MaxSpace = maxSpace;
         }
 
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
-        internal Group Group { get => group; set => group = value; }
+        public int MaxSpace { get => maxSpace; set => maxSpace = value; }
     }
 }

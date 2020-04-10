@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SemiRP.Models
 {
-    class Object
+    public class Object
     {
         private int id;
         private String name;
