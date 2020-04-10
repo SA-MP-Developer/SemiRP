@@ -7,10 +7,17 @@ namespace SemiRP.Models
 {
     public class Character
     {
+        public enum CharSex
+        {
+            NOT_SET = -1,
+            MAN = 0,
+            WOMAN = 1
+        }
+
         private int id;
         private Account account;
         private string name;
-        private int age;
+        private uint age;
         private List<Permission> perms;
         private List<GroupRank> groupRanks;
         private List<Group> groupOwner;
@@ -22,7 +29,7 @@ namespace SemiRP.Models
 
         }
 
-        public Character(int id, Account account, string name, int age, List<Permission> perms, List<GroupRank> groupRanks, Container inventory)
+        public Character(int id, Account account, string name, uint age, List<Permission> perms, List<GroupRank> groupRanks, Container inventory)
         {
             this.Id = id;
             this.Account = account;
@@ -36,9 +43,12 @@ namespace SemiRP.Models
         public int Id { get => id; set => id = value; }
         public Account Account { get => account; set => account = value; }
         public string Name { get => name; set => name = value; }
-        public int Age { get => age; set => age = value; }
+        public uint Age { get => age; set => age = value; }
+        public CharSex Sex { get; set; }
         public List<Permission> Perms { get => perms; set => perms = value; }
         public List<GroupRank> GroupRanks { get => groupRanks; set => groupRanks = value; }
         public Container Inventory { get => inventory; set => inventory = value; }
+
+        
     }
 }

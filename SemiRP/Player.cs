@@ -54,6 +54,12 @@ namespace SemiRP
             else
             {
                 PlayerRegistration registration = new PlayerRegistration(this);
+                PlayerCharacterCreation charCreation = new PlayerCharacterCreation(this);
+                MessageDialog charCreationDialog = new MessageDialog("Inscription", "Vous allez maintenant pouvoir commencer la création de votre personnage.", "Continuer");
+                charCreationDialog.Response += (sender, e) =>
+                {
+                    charCreation.Begin();
+                };
 
                 registration.DialogEnded += (sender, e) =>
                 {
@@ -70,6 +76,22 @@ namespace SemiRP
 
                     db.Add(acc);
                     db.SaveChanges();
+
+                    this.AccountData = db.Accounts.Single(a => a.Username == this.Name);
+
+                    charCreationDialog.Show(this);
+                };
+
+                charCreation.DialogEnded += (sender, e) =>
+                {
+                    using var db = new ServerDbContext();
+                    Character chr = new Character
+                    {
+                        Account = this.AccountData,
+                        Age = e.Age,
+                        Name = e.Name,
+                        Sex = e.Sex
+                    };
                 };
 
                 registration.Begin();
