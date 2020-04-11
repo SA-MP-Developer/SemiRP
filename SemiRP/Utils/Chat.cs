@@ -46,5 +46,17 @@ namespace SemiRP.Utils
         {
             SendRangedChat(from, Commands.ChatCommands.PROXIMITY_RADIUS, Color.HotPink, "* (" + from.Name + ") " + message);
         }
+        public static void ErrorChat(Player player, string message)
+        {
+            player.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] "+message);
+        }
+        public static void AdminChat(Player player, string message)
+        {
+            player.SendClientMessage(Color.White, "[" + Color.Red + "ADMIN" + Color.White + "] " + message);
+        }
+        public static void HelpChat(Player player, string message)
+        {
+            player.SendClientMessage(Color.White, "[" + Color.DeepSkyBlue + "AIDE" + Color.White + "] " + message);
+        }
     }
 }
