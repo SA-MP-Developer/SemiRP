@@ -14,6 +14,7 @@ namespace SemiRP.Models
         private string nickname;
         private string lastConnectionIP;
         private DateTime lastConnectionTime;
+        private List<Permission> perms;
 
 
         public Account()
@@ -21,7 +22,7 @@ namespace SemiRP.Models
             
         }
 
-        public Account(int id, string username, string password, string email, string nickname, string lastConnectionIP, DateTime lastConnectionTime)
+        public Account(int id, string username, string password, string email, string nickname, string lastConnectionIP, DateTime lastConnectionTime, List<Permission> perms)
         {
             Id = id;
             Username = username;
@@ -30,6 +31,7 @@ namespace SemiRP.Models
             Nickname = nickname;
             LastConnectionIP = lastConnectionIP;
             LastConnectionTime = lastConnectionTime;
+            Perms = perms;
         }
 
 
@@ -41,5 +43,6 @@ namespace SemiRP.Models
         public string Nickname { get => nickname; set => nickname = value; }
         public string LastConnectionIP { get => lastConnectionIP; set => lastConnectionIP = value; }
         public DateTime LastConnectionTime { get => lastConnectionTime; set => lastConnectionTime = value; }
+        public List<Permission> Perms { get => perms; set => perms = value; }
     }
 }
