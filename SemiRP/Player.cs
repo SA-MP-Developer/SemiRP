@@ -46,30 +46,31 @@ namespace SemiRP
                 PlayerLogin login = new PlayerLogin(this, PASSWORD_MAX_ATTEMPTS);
                 login.DialogEnded += (sender, e) =>
                 {
-
+                    PlayerCharacterChoice chrChoiceMenu = new PlayerCharacterChoice(this);
+                    chrChoiceMenu.Show();
                 };
 
                 login.Begin();
             }
             else
             {
-                PlayerRegistration registration = new PlayerRegistration(this);
-                PlayerCharacterCreation charCreation = new PlayerCharacterCreation(this);
-                MessageDialog charCreationDialog = new MessageDialog("Inscription", "Vous allez maintenant pouvoir commencer la création de votre personnage.", "Continuer");
-                charCreationDialog.Response += (sender, e) =>
-                {
-                    charCreation.Begin();
-                };
+                PlayerRegistration regMenu = new PlayerRegistration();
 
-                registration.DialogEnded += (sender, e) =>
+                regMenu.GetMenu().Ended += (sender, e) =>
                 {
+                    if (!(e.Data.ContainsKey("password") && e.Data.ContainsKey("email")))
+                    {
+                        regMenu.Show(this);
+                        return;
+                    }
+
                     using var db = new ServerDbContext();
                     Account acc = new Account
                     {
-                        Email = e.Email,
+                        Email = (string)e.Data["email"],
                         Username = this.Name,
                         Nickname = this.Name,
-                        Password = e.Password,
+                        Password = (string)e.Data["password"],
                         LastConnectionIP = this.IP,
                         LastConnectionTime = DateTime.Now
                     };
@@ -79,22 +80,11 @@ namespace SemiRP
 
                     this.AccountData = db.Accounts.Single(a => a.Username == this.Name);
 
-                    charCreationDialog.Show(this);
+                    PlayerCharacterChoice chrChoiceMenu = new PlayerCharacterChoice(this);
+                    chrChoiceMenu.Show();
                 };
 
-                charCreation.DialogEnded += (sender, e) =>
-                {
-                    using var db = new ServerDbContext();
-                    Character chr = new Character
-                    {
-                        Account = this.AccountData,
-                        Age = e.Age,
-                        Name = e.Name,
-                        Sex = e.Sex
-                    };
-                };
-
-                registration.Begin();
+                regMenu.Show(this);
             }
         }
 
