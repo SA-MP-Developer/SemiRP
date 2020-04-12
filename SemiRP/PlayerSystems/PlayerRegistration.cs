@@ -7,6 +7,7 @@ using SemiRP.Models;
 using SemiRP.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
 using System.Runtime.Serialization;
 using System.Text;
@@ -14,159 +15,89 @@ using System.Text.RegularExpressions;
 
 namespace SemiRP.PlayerSystems
 {
-    public class RegistrationDialogEndEventArgs : EventArgs
+    public class PlayerRegistration
     {
-        public string Password { get; set; }
-        public string Email { get; set; }
-    }
+        MenuDialog menu;
+        MenuDialogItem passwordItem;
+        MenuDialogItem emailItem;
 
-    class PlayerRegistration
-    {
-        private readonly Player player;
-
-        private string password;
-        private string email;
-
-        #region Dialogs
-
-        private readonly ListDialog registrationMenu;
-        private readonly InputDialog passwordDialog;
-        private readonly InputDialog emailDialog;
-
-        #endregion
-
-        public PlayerRegistration(Player player)
+        public PlayerRegistration()
         {
-            this.player = player;
+            menu = new MenuDialog("Inscription", "Valider", continueName : "Continuer ...");
 
-            registrationMenu = new ListDialog("Inscription", "Valider", "");
-            registrationMenu.AddItem("[" + Color.Red + " " + Color.White + "] Mot de passe");
-            registrationMenu.AddItem("[" + Color.Red + " " + Color.White + "] eMail");
-            registrationMenu.AddItem("Continuer");
-            registrationMenu.Response += MenuDialog;
+            passwordItem = new MenuDialogItem(Color.Red + "Mot de passe");
+            passwordItem.Selected += PasswordSelect;
 
-            passwordDialog = new InputDialog("Inscription / Mot de passe",
-                                    "Entrez le mot de passe que vous utiliserez pour vous connecter.\nIl doit être superieur ou égal à 8 caractères.",
-                                    true, "Valider", "Retour");
-            passwordDialog.Response += PasswordDialog;
+            emailItem = new MenuDialogItem(Color.Red + "Email");
+            emailItem.Selected += EmailSelect;
 
-            emailDialog = new InputDialog("Inscription / eMail",
-                                    "Entrez votre adresse eMail.", false, "Valider", "Retour");
-            emailDialog.Response += MailDialog;
-
-            email = "";
-            password = "";
+            menu.AddItem(passwordItem);
+            menu.AddItem(emailItem);
         }
 
-        public void Begin()
+        public void Show(BasePlayer player)
         {
-            registrationMenu.Show(player);
+            menu.Show(player);
         }
 
-        protected virtual void OnDialogEnded(RegistrationDialogEndEventArgs e)
+        public MenuDialog GetMenu()
         {
-            DialogEnded?.Invoke(this, e);
+            return menu;
         }
 
-        public event EventHandler<RegistrationDialogEndEventArgs> DialogEnded;
-
-        private bool EndDialog()
+        private void PasswordSelect(object sender, MenuDialogItemEventArgs e)
         {
-            if (password.Length == 0 || email.Length == 0)
-                return false;
-
-            RegistrationDialogEndEventArgs e = new RegistrationDialogEndEventArgs
+            InputDialog passwordDialog = new InputDialog("Inscription / Mot de passe",
+                                                "Veuillez entrer un mot de passe de plus de 7 caractères.",
+                                                true, "Confirmer", "Retour");
+            passwordDialog.Response += (sender, eventArg) =>
             {
-                Email = email,
-                Password = password
+                if (eventArg.DialogButton == DialogButton.Right)
+                {
+                    menu.Show(e.Player);
+                    return;
+                }
+
+                if (eventArg.InputText.Length < 8)
+                {
+                    passwordDialog.Show(eventArg.Player);
+                    return;
+                }
+
+                e.ParentData["password"] = PasswordHasher.Hash(eventArg.InputText);
+                passwordItem.Name = Color.Green + "Mot de passe";
+                menu.Show(e.Player);
             };
 
-            OnDialogEnded(e);
-
-            return true;
+            passwordDialog.Show(e.Player);
         }
 
-        private void BuildAndShowMenuDialog()
+        private void EmailSelect(object sender, MenuDialogItemEventArgs e)
         {
-            registrationMenu.Items.Clear();
+            InputDialog emailDialog = new InputDialog("Inscription / Email",
+                                                "Veuillez entrer un email pour vous contacter.",
+                                                false, "Confirmer", "Retour");
 
-            if (password.Length != 0)
-                registrationMenu.AddItem("[" + Color.Green + "X" + Color.White + "] Mot de passe");
-            else
-                registrationMenu.AddItem("[" + Color.Red + " " + Color.White + "] Mot de passe");
-
-            if (email.Length != 0)
-                registrationMenu.AddItem("[" + Color.Green + "X" + Color.White + "] eMail");
-            else
-                registrationMenu.AddItem("[" + Color.Red + " " + Color.White + "] eMail");
-
-            registrationMenu.AddItem("Continuer");
-
-            registrationMenu.Show(player);
-        }
-
-        private void MenuDialog(object sender, DialogResponseEventArgs e)
-        {
-            switch (e.ListItem)
+            emailDialog.Response += (sender, eventArg) =>
             {
-                case 0:
-                    passwordDialog.Show(player);
-                    break;
-                case 1:
-                    emailDialog.Show(player);
-                    break;
-                case 2:
-                    {
-                        if (EndDialog())
-                            return;
-                        else
-                            BuildAndShowMenuDialog();
-                        break;
-                    }
-                default:
-                    BuildAndShowMenuDialog();
-                    break;
-            }
-        }
+                if (eventArg.DialogButton == DialogButton.Right)
+                {
+                    menu.Show(e.Player);
+                    return;
+                }
 
-        private void PasswordDialog(object sender, DialogResponseEventArgs e)
-        {
-            if (e.DialogButton == DialogButton.Right)
-            {
-                BuildAndShowMenuDialog();
-                return;
-            }
+                if (! new EmailAddressAttribute().IsValid(eventArg.InputText))
+                {
+                    emailDialog.Show(eventArg.Player);
+                    return;
+                }
 
-            if (e.InputText.Length < 8)
-            {
-                passwordDialog.Show(player);
-                return;
-            }
+                e.ParentData["email"] = eventArg.InputText;
+                emailItem.Name = Color.Green + "Email";
+                menu.Show(e.Player);
+            };
 
-            password = PasswordHasher.Hash(e.InputText);
-            BuildAndShowMenuDialog();
-        }
-
-        private void MailDialog(object sender, DialogResponseEventArgs e)
-        {
-            if (e.DialogButton == DialogButton.Right)
-            {
-                BuildAndShowMenuDialog();
-                return;
-            }
-
-            try
-            {
-                MailAddress m = new MailAddress(e.InputText);
-
-                email = e.InputText;
-                BuildAndShowMenuDialog();
-            }
-            catch (FormatException)
-            {
-                emailDialog.Message = Color.Yellow + "L'eMail que vous avez entré n'est pas valide !\n\n" + Color.White + "Entrez votre adresse eMail.";
-                emailDialog.Show(player);
-            }
+            emailDialog.Show(e.Player);
         }
     }
 }

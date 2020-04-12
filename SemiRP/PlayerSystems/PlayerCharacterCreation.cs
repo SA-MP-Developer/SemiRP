@@ -1,210 +1,139 @@
 ﻿using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
+using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.World;
+using SemiRP.Models;
+using SemiRP.Utils;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 using static SemiRP.Models.Character;
 
 namespace SemiRP.PlayerSystems
 {
-    public class CharCreationDialogEndEventArgs : EventArgs
+    public class PlayerCharacterCreation
     {
-        public string Name;
-        public uint Age;
-        public CharSex Sex;
-    }
+        MenuDialog menu;
+        MenuDialogItem nameItem;
+        MenuDialogItem ageItem;
+        MenuDialogItem sexItem;
 
-    class PlayerCharacterCreation
-    {
-        private readonly Player player;
-
-        private string char_name;
-        private uint char_age;
-        private CharSex char_sex;
-
-        #region Dialogs
-
-        private readonly ListDialog creationMenu;
-        private readonly InputDialog nameDialog;
-        private readonly InputDialog ageDialog;
-        private readonly MessageDialog sexDialog;
-
-        #endregion
-
-        public PlayerCharacterCreation(Player player)
+        public PlayerCharacterCreation()
         {
-            this.player = player;
+            menu = new MenuDialog("Création de personnage", "Valider", continueName: "Continuer ...");
 
-            char_name = "";
-            char_age = 0;
-            char_sex = CharSex.NOT_SET;
+            nameItem = new MenuDialogItem(Color.Red + "Nom");
+            nameItem.Selected += NameSelect;
 
-            creationMenu = new ListDialog("Personnage", "Valider", "");
-            creationMenu.AddItem("[" + Color.Red + " " + Color.White + "] Nom");
-            creationMenu.AddItem("[" + Color.Red + " " + Color.White + "] Age");
-            creationMenu.AddItem("[" + Color.Red + " " + Color.White + "] Sexe");
-            creationMenu.AddItem("Continuer");
-            creationMenu.Response += MenuDialog;
+            ageItem = new MenuDialogItem(Color.Red + "Age");
+            ageItem.Selected += AgeSelect;
 
-            nameDialog = new InputDialog("Personnage / Nom", "Veuillez entrer le nom de votre personnage, sous la forme \"Prénom_Nom\"." , false, "Valider", "Retour");
-            nameDialog.Response += NameDialog;
+            sexItem = new MenuDialogItem(Color.Red + "Sexe");
+            sexItem.Selected += SexSelect;
 
-            ageDialog = new InputDialog("Personnage / Age", "Veuillez entrer l'age de votre personnage, entre 16 et 90 ans.", false, "Valider", "Retour");
-
-            sexDialog = new MessageDialog("Personnage / Sexe", "Veuillez choisir le sexe de votre personnage.", "Homme", "Femme");
-
+            menu.AddItem(nameItem);
+            menu.AddItem(ageItem);
+            menu.AddItem(sexItem);
         }
 
-        public void Begin()
+        public void Show(BasePlayer player)
         {
-            creationMenu.Show(player);
+            menu.Show(player);
         }
 
-        protected virtual void OnDialogEnded(CharCreationDialogEndEventArgs e)
+        public MenuDialog GetMenu()
         {
-            DialogEnded?.Invoke(this, e);
+            return menu;
         }
 
-        public event EventHandler<CharCreationDialogEndEventArgs> DialogEnded;
-
-        private bool EndDialog()
+        private void NameSelect(object sender, MenuDialogItemEventArgs e)
         {
-            if (char_name.Length == 0 || char_age == 0 || char_sex == CharSex.NOT_SET)
-                return false;
-
-            CharCreationDialogEndEventArgs e = new CharCreationDialogEndEventArgs
+            InputDialog nameDialog = new InputDialog("Création de personnage / Nom",
+                                                "Veuillez entrer un nom pour votre de personnage de la forme Prénom_Nom.",
+                                                false, "Confirmer", "Retour");
+            nameDialog.Response += (sender, eventArg) =>
             {
-                Name = char_name,
-                Age = char_age,
-                Sex = char_sex
-            };
-
-            OnDialogEnded(e);
-
-            return true;
-        }
-
-        private void BuildAndShowMenuDialog()
-        {
-            creationMenu.Items.Clear();
-
-            string name_item;
-            if (char_name.Length != 0)
-                name_item = "[" + Color.Green + "X" + Color.White + "] ";
-            else
-                name_item =  "[" + Color.Red + " " + Color.White + "] ";
-            creationMenu.AddItem(name_item + "Nom");
-
-            string age_item;
-            if (char_age != 0)
-                age_item = "[" + Color.Green + "X" + Color.White + "] ";
-            else
-                age_item = "[" + Color.Red + " " + Color.White + "] ";
-            creationMenu.AddItem(age_item + "Age");
-
-            string sex_item;
-            if (char_sex != CharSex.NOT_SET)
-                sex_item = "[" + Color.Green + "X" + Color.White + "] ";
-            else
-                sex_item = "[" + Color.Red + " " + Color.White + "] ";
-            creationMenu.AddItem(sex_item + "Sexe");
-
-            creationMenu.AddItem("Continuer");
-
-            creationMenu.Show(player);
-        }
-
-        private void MenuDialog(object sender, DialogResponseEventArgs e)
-        {
-            switch (e.ListItem)
-            {
-                case 0:
-                    nameDialog.Show(player);
-                    break;
-                case 1:
-                    ageDialog.Show(player);
-                    break;
-                case 2:
-                    sexDialog.Show(player);
-                    break;
-                case 4:
-                    {
-                        if (EndDialog())
-                            return;
-                        else
-                            BuildAndShowMenuDialog();
-                        break;
-                    }
-                default:
-                    BuildAndShowMenuDialog();
-                    break;
-            }
-        }
-
-        private void NameDialog(object sender, DialogResponseEventArgs e)
-        {
-            if (e.DialogButton == DialogButton.Right)
-            {
-                BuildAndShowMenuDialog();
-                return;
-            }
-
-            var regex = new Regex(@"[A-Z][a-z]+_[A-Z][a-z]+([A-Z][a-z]+)*");
-            if (!regex.IsMatch(e.InputText))
-            {
-                nameDialog.Message = Color.Yellow + "Le nom entré n'est pas correct." + Color.White + "\n" + nameDialog.Message;
-                BuildAndShowMenuDialog();
-                return;
-            }
-
-            char_name = e.InputText;
-            BuildAndShowMenuDialog();
-        }
-
-        private void AgeDialog(object sender, DialogResponseEventArgs e)
-        {
-            if (e.DialogButton == DialogButton.Right)
-            {
-                BuildAndShowMenuDialog();
-                return;
-            }
-
-            try
-            {
-                uint age = uint.Parse(e.InputText);
-                if (age >= 16 || age <= 90)
+                if (eventArg.DialogButton == DialogButton.Right)
                 {
-                    char_age = age;
-                    BuildAndShowMenuDialog();
+                    menu.Show(e.Player);
                     return;
                 }
 
-                ageDialog.Message = Color.Yellow + "L'age entré n'est pas correct." + Color.White + "\n" + nameDialog.Message;
-                BuildAndShowMenuDialog();
-                return;
-            }
-            catch (FormatException)
-            {
-                ageDialog.Message = Color.Yellow + "L'age entré n'est pas correct." + Color.White + "\n" + nameDialog.Message;
-                BuildAndShowMenuDialog();
-                return;
-            }
+                var regex = new Regex(@"[A-Z][a-z]+_[A-Z][a-z]+([A-Z][a-z]+)*");
+                if (!regex.IsMatch(eventArg.InputText))
+                {
+                    nameDialog.Show(eventArg.Player);
+                    return;
+                }
+
+                e.ParentData["name"] = eventArg.InputText;
+                nameItem.Name = Color.Green + "Nom";
+                menu.Show(e.Player);
+            };
+
+            nameDialog.Show(e.Player);
         }
 
-        private void SexDialog(object sender, DialogResponseEventArgs e)
+        private void AgeSelect(object sender, MenuDialogItemEventArgs e)
         {
-            if (e.DialogButton == DialogButton.Right)
+            InputDialog ageDialog = new InputDialog("Création de personnage / Age",
+                                                "Veuillez entrer l'âge votre personnage.",
+                                                false, "Confirmer", "Retour");
+
+            ageDialog.Response += (sender, eventArg) =>
             {
-                char_sex = CharSex.WOMAN;
-                BuildAndShowMenuDialog();
-                return;
-            }
-            char_sex = CharSex.MAN;
-            BuildAndShowMenuDialog();
+                if (eventArg.DialogButton == DialogButton.Right)
+                {
+                    menu.Show(e.Player);
+                    return;
+                }
+
+                uint age = 0;
+
+                if (!(uint.TryParse(eventArg.InputText, out age)))
+                {
+                    ageDialog.Show(eventArg.Player);
+                    return;
+                }
+
+                if (age < 16 || age > 90)
+                {
+                    ageDialog.Show(eventArg.Player);
+                    return;
+                }
+
+                e.ParentData["age"] = age;
+                ageItem.Name = Color.Green + "Age";
+                menu.Show(e.Player);
+            };
+
+            ageDialog.Show(e.Player);
+        }
+
+        private void SexSelect(object sender, MenuDialogItemEventArgs e)
+        {
+            MessageDialog sexDialog = new MessageDialog("Création de personnage / Sexe",
+                                                "Veuillez choisir le sexe de votre personnage.",
+                                                "Homme", "Femme");
+
+            sexDialog.Response += (sender, eventArg) =>
+            {
+                if (eventArg.DialogButton == DialogButton.Right)
+                {
+                    e.ParentData["sex"] = Character.CharSex.WOMAN;
+                    sexItem.Name = Color.Green + "Sexe";
+                }
+                else
+                {
+                    e.ParentData["sex"] = Character.CharSex.MAN;
+                    sexItem.Name = Color.Green + "Sexe";
+                }
+                menu.Show(e.Player);
+            };
+
+            sexDialog.Show(e.Player);
         }
     }
 }
