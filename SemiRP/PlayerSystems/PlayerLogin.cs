@@ -74,7 +74,7 @@ namespace SemiRP.PlayerSystems
 
             if (!PasswordHasher.Verify(e.InputText, player.AccountData.Password))
             {
-                if (attempts < maxAttemtps)
+                if (attempts < maxAttemtps - 1)
                 {
                     attempts++;
                     passwordDialog.Message = "Mauvais mot de passe !\nIl vous reste " + Color.DarkRed + (maxAttemtps - attempts) + Color.White + " essais.";
@@ -87,6 +87,7 @@ namespace SemiRP.PlayerSystems
             }
 
             success = true;
+            OnDialogEnded(new LoginDialogEndEventArgs());
             return;
         }
     }
