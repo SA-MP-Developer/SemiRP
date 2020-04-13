@@ -18,6 +18,7 @@ namespace SemiRP
     public class Player : BasePlayer
     {
         public const int PASSWORD_MAX_ATTEMPTS = 3;
+        public const int MAX_CHARACTERS = 2;
 
         #region Overrides of BasePlayer
 
