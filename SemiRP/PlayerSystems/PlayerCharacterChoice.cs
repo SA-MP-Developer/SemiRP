@@ -38,10 +38,16 @@ namespace SemiRP.PlayerSystems
             else
             {
                 charList = new ListDialog("Choix de personnage", "Confirmer", "Quitter");
+                charList.Response += ChoiceResponse;
 
                 foreach (Character chr in playerChars)
                 {
                     charList.AddItem(chr.Name + " (" + Utils.SexUtils.SexToString(chr.Sex) + ", " + chr.Age + " ans)");
+                }
+
+                if (playerChars.Count < Player.MAX_CHARACTERS)
+                {
+                    charList.AddItem("Créer un autre personnage...");
                 }
             }
         }
@@ -79,7 +85,7 @@ namespace SemiRP.PlayerSystems
             charList.Show(player);
         }
 
-        public void ChoiceRespons(object sender, DialogResponseEventArgs e)
+        public void ChoiceResponse(object sender, DialogResponseEventArgs e)
         {
             if (e.DialogButton == DialogButton.Right)
             {
@@ -87,10 +93,15 @@ namespace SemiRP.PlayerSystems
                 return;
             }
 
-            if (e.ListItem > playerChars.Count)
+            if (e.ListItem < playerChars.Count)
             {
                 player.ActiveCharacter = playerChars[e.ListItem];
                 player.SendClientMessage("Tu as choisi " + player.ActiveCharacter.Name);
+            }
+            else
+            {
+                charCreationMenu = new PlayerCharacterCreation();
+                this.Show();
             }
         }
     }
