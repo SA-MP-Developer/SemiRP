@@ -18,6 +18,7 @@ namespace SemiRP.Models
         private Account account;
         private string name;
         private uint age;
+        private int level;
         private List<Permission> perms;
         private List<GroupRank> groupRanks;
         private List<Group> groupOwner;
@@ -31,7 +32,7 @@ namespace SemiRP.Models
 
         }
 
-        public Character(int id, Account account, string name, uint age, List<Permission> perms, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Container inventory)
+        public Character(int id, Account account, string name, uint age, int level, List<Permission> perms, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Container inventory)
         {
             this.Id = id;
             this.Account = account;
@@ -42,6 +43,7 @@ namespace SemiRP.Models
             this.GroupOwner = groupOwner;
             this.BuildingOwner = buildingOwner;
             this.Inventory = inventory;
+            this.Level = level;
         }
         [Key]
         public int Id { get => id; set => id = value; }
@@ -54,5 +56,6 @@ namespace SemiRP.Models
         public List<Building> BuildingOwner { get => buildingOwner; set => buildingOwner = value; }
         public Container Inventory { get => inventory; set => inventory = value; }
         public CharSex Sex { get; set; }
+        public int Level { get => level; set => level = value; }
     }
 }
