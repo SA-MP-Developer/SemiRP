@@ -60,13 +60,15 @@ namespace SemiRP.PlayerSystems
 
                     using (var db = new ServerDbContext())
                     {
+                        db.Accounts.Attach(player.AccountData);
+
                         Character chr = new Character();
                         chr.Account = player.AccountData;
                         chr.Name = (string)e.Data["name"];
                         chr.Age = (uint)e.Data["age"];
                         chr.Sex = (Character.CharSex)e.Data["sex"];
 
-                        db.Characters.Add(chr);
+                        db.Add(chr);
                         db.SaveChanges();
                     }
                 };
