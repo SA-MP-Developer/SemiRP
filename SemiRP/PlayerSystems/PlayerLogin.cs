@@ -16,7 +16,7 @@ namespace SemiRP.PlayerSystems
 
     }
 
-    class PlayerLogin
+    public class PlayerLogin
     {
         private readonly Player player;
         private readonly int maxAttemtps;

@@ -1,4 +1,5 @@
-﻿using SampSharp.GameMode.Definitions;
+﻿using Microsoft.EntityFrameworkCore;
+using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.World;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace SemiRP.PlayerSystems
 {
-    class PlayerCharacterChoice
+    public class PlayerCharacterChoice
     {
 
         ListDialog charList;
@@ -28,7 +29,7 @@ namespace SemiRP.PlayerSystems
 
             using (var db = new ServerDbContext())
             {
-                playerChars = db.Characters.Select(c => c).Where(c => c.Account == player.AccountData).ToList();
+                playerChars = db.Characters.Select(c => c).Where(c => c.Account == player.AccountData).Include(s => s.SpawnLocation).ToList();
             }
 
             if (playerChars.Count == 0)
@@ -42,6 +43,7 @@ namespace SemiRP.PlayerSystems
 
                 foreach (Character chr in playerChars)
                 {
+                    Console.WriteLine("Spawn " + chr.Name + " : " + chr.SpawnLocation.Position.ToString());
                     charList.AddItem(chr.Name + " (" + Utils.SexUtils.SexToString(chr.Sex) + ", " + chr.Age + " ans)");
                 }
 
@@ -68,15 +70,28 @@ namespace SemiRP.PlayerSystems
                     {
                         db.Accounts.Attach(player.AccountData);
 
+                        SpawnLocation chrSpawn = new SpawnLocation();
+                        chrSpawn.Interior = 0;
+                        chrSpawn.VirtualWorld = 0;
+                        chrSpawn.X = 1762.1357f;
+                        chrSpawn.Y = -1862.8958f;
+                        chrSpawn.Z = 13.5757f;
+                        chrSpawn.RotX = 0f;
+                        chrSpawn.RotY = 0f;
+                        chrSpawn.RotZ = 269.4686f;
+
                         Character chr = new Character();
                         chr.Account = player.AccountData;
                         chr.Name = (string)e.Data["name"];
                         chr.Age = (uint)e.Data["age"];
                         chr.Sex = (Character.CharSex)e.Data["sex"];
+                        chr.SpawnLocation = chrSpawn;
 
                         db.Add(chr);
                         db.SaveChanges();
                     }
+
+                    player.SpawnCharacter();
                 };
                 charCreationMenu.Show(player);
                 return;
@@ -97,6 +112,7 @@ namespace SemiRP.PlayerSystems
             {
                 player.ActiveCharacter = playerChars[e.ListItem];
                 player.SendClientMessage("Tu as choisi " + player.ActiveCharacter.Name);
+                player.SpawnCharacter();
             }
             else
             {

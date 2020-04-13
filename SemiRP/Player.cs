@@ -42,6 +42,8 @@ namespace SemiRP
                         .Single(a => a.Username == this.Name);
             }
 
+            this.ToggleSpectating(true);
+
             if (userExist)
             {
                 PlayerLogin login = new PlayerLogin(this, PASSWORD_MAX_ATTEMPTS);
@@ -115,6 +117,17 @@ namespace SemiRP
                     p.SendClientMessage(col, this.Name + " dit : " + e.Text);
                 }
             }
+        }
+
+        public void SpawnCharacter()
+        {
+            if (this.ActiveCharacter == null)
+                return;
+
+            this.ToggleSpectating(false);
+            this.SetSpawnInfo(NoTeam, 26, this.ActiveCharacter.SpawnLocation.Position, this.ActiveCharacter.SpawnLocation.RotZ);
+            this.Name = this.ActiveCharacter.Name;
+            this.Spawn();
         }
 
         #endregion
