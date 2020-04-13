@@ -47,6 +47,16 @@ namespace SemiRP
                 PlayerLogin login = new PlayerLogin(this, PASSWORD_MAX_ATTEMPTS);
                 login.DialogEnded += (sender, e) =>
                 {
+                    using (var db = new ServerDbContext())
+                    {
+                        db.Accounts.Attach(this.AccountData);
+
+                        this.AccountData.LastConnectionIP = this.IP;
+                        this.AccountData.LastConnectionTime = DateTime.Now;
+
+                        db.SaveChanges();
+                    }
+
                     PlayerCharacterChoice chrChoiceMenu = new PlayerCharacterChoice(this);
                     chrChoiceMenu.Show();
                 };
@@ -88,6 +98,7 @@ namespace SemiRP
                 regMenu.Show(this);
             }
         }
+
 
         public override void OnText(TextEventArgs e)
         {
