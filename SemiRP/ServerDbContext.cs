@@ -9,6 +9,8 @@ using System.Configuration;
 using System.Dynamic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using SemiRP.Models.ItemHeritage;
+using SemiRP.Models.ContainerHeritage;
 
 namespace SemiRP
 {
@@ -24,6 +26,8 @@ namespace SemiRP
         public DbSet<Item> Items { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Phone> Phones { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

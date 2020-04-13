@@ -11,17 +11,18 @@ namespace SemiRP.Models
         private String name;
         private double weight;
         private int quantity;
-
+        private Container currentContainer;
         public Item()
         {
         }
 
-        public Item(int id, string name, double weight, int quantity)
+        public Item(int id, string name, double weight, int quantity, Container currentContainer)
         {
             this.Id = id;
             this.Name = name;
             this.Weight = weight;
             this.Quantity = quantity;
+            this.currentContainer = currentContainer;
         }
 
         [Key]
@@ -29,5 +30,6 @@ namespace SemiRP.Models
         public string Name { get => name; set => name = value; }
         public double Weight { get => weight; set => weight = value; }
         public int Quantity { get => quantity; set => quantity = value; }
+        public Container CurrentContainer { get => currentContainer; set => currentContainer = value; }
     }
 }
