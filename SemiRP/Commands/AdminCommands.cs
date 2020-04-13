@@ -13,7 +13,8 @@ namespace SemiRP.Commands
         [Command("help", "h")]
         private static void Help(Player sender)
         {
-            Utils.Chat.AdminChat(sender, "help");
+            Utils.Chat.AdminChat(sender, "/help");
+            
         }
     }
 }
