@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -12,8 +13,11 @@ namespace SemiRP.Models
         private Permission parentPermission;
         private List<Permission> childPermissions;
 
-        public Permission()
+        public Permission() { }
+
+        public Permission(string name)
         {
+            this.name = name;
         }
 
         public Permission(int id, string name, List<Permission> childPermissions)
