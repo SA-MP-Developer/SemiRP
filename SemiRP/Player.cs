@@ -11,6 +11,7 @@ using SampSharp.GameMode.Definitions;
 using SemiRP.Models;
 using SampSharp.Core.Callbacks;
 using SemiRP.PlayerSystems;
+using Microsoft.EntityFrameworkCore;
 
 namespace SemiRP
 {
@@ -38,7 +39,7 @@ namespace SemiRP
                 userExist = db.Accounts.Any(a => a.Username == this.Name);
                 
                 if (userExist)
-                    AccountData = db.Accounts
+                    AccountData = db.Accounts.Include(a => a.Perms)
                         .Single(a => a.Username == this.Name);
             }
 

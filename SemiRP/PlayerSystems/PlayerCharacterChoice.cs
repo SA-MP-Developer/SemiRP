@@ -29,7 +29,14 @@ namespace SemiRP.PlayerSystems
 
             using (var db = new ServerDbContext())
             {
-                playerChars = db.Characters.Select(c => c).Where(c => c.Account == player.AccountData).Include(s => s.SpawnLocation).ToList();
+                playerChars = db.Characters.Select(c => c).Where(c => c.Account == player.AccountData)
+                    .Include(s => s.SpawnLocation)
+                    .Include(c => c.Perms)
+                    .Include(c => c.GroupRanks)
+                    .Include(c => c.GroupOwner)
+                    .Include(c => c.BuildingOwner)
+                    .Include(c => c.Inventory)
+                    .ToList();
             }
 
             if (playerChars.Count == 0)
