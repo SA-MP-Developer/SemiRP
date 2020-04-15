@@ -9,21 +9,6 @@ namespace SemiRP.Utils
 {
     class PermissionsChecker
     {
-        public static bool IsServerOwner(Player player)
-        {
-            return player.AccountData.Perms.Any(p => p.Name == "serverowner");
-        }
-
-        public static bool IsAdmin(Player player)
-        {
-            return player.AccountData.Perms.Any(p => p.Name == "admin");
-        }
-
-        public static bool IsModerator(Player player)
-        {
-            return player.AccountData.Perms.Any(p => p.Name == "modo");
-        }
-
         public static bool IsGroupOwner(Player player, Group group)
         {
             foreach (Group g in player.ActiveCharacter.GroupOwner)
