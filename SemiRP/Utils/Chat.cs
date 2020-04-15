@@ -58,5 +58,19 @@ namespace SemiRP.Utils
         {
             player.SendClientMessage(Color.White, "[" + Color.DeepSkyBlue + "AIDE" + Color.White + "] " + message);
         }
+        public static void CallChat(Player player, string message)
+        {
+            player.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] " + message);
+        }
+        public static void SMSChat(Player player, string message)
+        {
+            player.SendClientMessage(Color.White, "[" + Color.OrangeRed + "SMS" + Color.White + "] " + message);
+        }
+        public static void ChatInCall(Player player, string numero, string message)
+        {
+            player.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] (" + numero + ") " + message);
+        }
+        
+
     }
 }

@@ -25,5 +25,17 @@ namespace SemiRP.Commands
         {
             PhoneHelper.Call(sender, number);
         }
+
+        [Command("dec", "decrocher")]
+        private static void PickUp(Player sender)
+        {
+            PhoneHelper.PickUp(sender);
+        }
+
+        [Command("rac", "raccrocher")]
+        private static void HangUp(Player sender)
+        {
+            PhoneHelper.HangUp(sender);
+        }
     }
 }

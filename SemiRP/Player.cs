@@ -12,6 +12,7 @@ using SemiRP.Models;
 using SampSharp.Core.Callbacks;
 using SemiRP.PlayerSystems;
 using Microsoft.EntityFrameworkCore;
+using SemiRP.Models.ItemHeritage;
 
 namespace SemiRP
 {
@@ -107,15 +108,39 @@ namespace SemiRP
         {
             base.OnText(e);
             e.SendToPlayers = false;
-
-            foreach (Player p in Player.All)
+            if (Utils.ItemUtils.PhoneHelper.GetDefaultPhone(this.ActiveCharacter).IsCalling)
             {
-                float distance = this.Position.DistanceTo(p.Position);
-                if (distance < Commands.ChatCommands.PROXIMITY_RADIUS)
+                Phone phone = Utils.ItemUtils.PhoneHelper.GetDefaultPhone(this.ActiveCharacter);
+                Phone phoneCall = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(phone.PhoneNumberCaller);
+                Character characterCall = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneCall);
+                Player playerCall = Utils.PlayerUtils.PlayerHelper.SearchCharacter(characterCall);
+                Utils.Chat.ChatInCall(playerCall, phone.Number, e.Text);
+                Utils.Chat.ChatInCall(this, phoneCall.Number, e.Text);
+                foreach (Player p in Player.All)
                 {
-                    float darkenAmount = Math.Clamp(distance / Commands.ChatCommands.PROXIMITY_RADIUS, 0f, 0.8f);
-                    Color col = Color.White.Darken(darkenAmount);
-                    p.SendClientMessage(col, this.Name + " dit : " + e.Text);
+                    if(p != this)
+                    {
+                        float distance = this.Position.DistanceTo(p.Position);
+                        if (distance < Commands.ChatCommands.PROXIMITY_RADIUS)
+                        {
+                            float darkenAmount = Math.Clamp(distance / Commands.ChatCommands.PROXIMITY_RADIUS, 0f, 0.8f);
+                            Color col = Color.White.Darken(darkenAmount);
+                            p.SendClientMessage(col, this.Name + " dit (Tél.) : " + e.Text);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (Player p in Player.All)
+                {
+                    float distance = this.Position.DistanceTo(p.Position);
+                    if (distance < Commands.ChatCommands.PROXIMITY_RADIUS)
+                    {
+                        float darkenAmount = Math.Clamp(distance / Commands.ChatCommands.PROXIMITY_RADIUS, 0f, 0.8f);
+                        Color col = Color.White.Darken(darkenAmount);
+                        p.SendClientMessage(col, this.Name + " dit : " + e.Text);
+                    }
                 }
             }
         }

@@ -9,6 +9,10 @@ namespace SemiRP.Utils.PlayerUtils
     {
         public static Player SearchCharacter(Character character)
         {
+            if(character is null)
+            {
+                return null;
+            }
             foreach(Player p in Player.All)
             {
                 if(p.ActiveCharacter == character)

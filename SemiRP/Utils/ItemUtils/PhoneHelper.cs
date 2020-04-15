@@ -40,13 +40,17 @@ namespace SemiRP.Utils.ItemUtils
                 return null;
             }
         }
+        public static Phone GetDefaultPhone(Character character)
+        {
+            return GetAllPhone().Select(x => x).Where(x => x.DefaultPhone == true).FirstOrDefault();
+        }
         public static void SendSMS(Player sender, string number, string message)
         {
             Phone phoneReceiver = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(number);
 
             if (phoneReceiver is null)
             {
-                sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] le numéro " + number + " n'est pas attribué.");
+                Chat.ErrorChat(sender, "Le numéro " + number + " n'est pas attribué.");
                 return;
             }
             Character character = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneReceiver);
@@ -54,47 +58,121 @@ namespace SemiRP.Utils.ItemUtils
             Phone phoneSender = ContainerHelper.CheckPlayerPhone(sender);
             if (!receiver.IsConnected)
             {
-                sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] le joueur n'est pas connecté.");
+                Chat.ErrorChat(sender, "Le joueur n'est pas connecté.");
                 return;
             }
-            sender.SendClientMessage(Color.Yellow, "[SMS] Message envoyé à " + number + " : " + message);
-            receiver.SendClientMessage(Color.Yellow, "[SMS] Message reçu de" + phoneSender.Number + " : " + message);
+            Chat.SMSChat(sender, "Message envoyé à " + number + " : " + message);
+            Chat.SMSChat(receiver, "Message reçu de" + phoneSender.Number + " : " + message);
         }
         public static void Call(Player sender, string number)
         {
             Phone phoneReceiver = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(number);
             if (phoneReceiver is null)
             {
-                sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] le numéro " + number + " n'est pas attribué.");
+                Chat.ErrorChat(sender, "le numéro " + number + " n'est pas attribué.");
                 return;
+            }
+            if (phoneReceiver.IsRinging || phoneReceiver.IsCalling)
+            {
+                Chat.ErrorChat(sender, "le numéro " + number + " est déjà en cours d'appel.");
             }
             Character character = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneReceiver);
             Player receiver = PlayerHelper.SearchCharacter(character);
             Phone phoneSender = ContainerHelper.CheckPlayerPhone(sender);
+
             if (!receiver.IsConnected)
             {
-                sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] le joueur n'est pas connecté.");
+                Chat.ErrorChat(sender, "Le joueur n'est pas connecté.");
                 return;
             }
-            sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] Appel en cours...");
-            receiver.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] Quelqu'un essaie de vous appeler ! /t dec pour décrocher.");
+            Chat.CallChat(sender, "Appel en cours...");
+            
+            if(receiver != null) // If a player has the phone
+            {
+                Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler ! /t dec pour décrocher.");
+            }
+            else // If the phone is not in a player inventory
+            {
+
+            }
+            phoneSender.IsRinging = true;
+            phoneSender.PhoneNumberCaller = phoneReceiver.Number;
             phoneReceiver.IsRinging = true;
+            phoneReceiver.PhoneNumberCaller = phoneSender.Number;
             var timer = new Timer(5000, true);
             int nbr = 0;
             timer.Tick += (sender, e) => {
-                if (nbr < 3)
-                {
-                    receiver.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] Quelqu'un essaie de vous appeler ! /t dec pour décrocher.");
-                    nbr++;
-                }
-                else
+                if(phoneSender.IsCalling && phoneReceiver.IsCalling) // If the players are now in a call
                 {
                     timer.Dispose();
                     nbr = 0;
-                    phoneReceiver.IsRinging = false;
                 }
+                else
+                {
+                    if (nbr < 3)
+                    {
+                        if (receiver != null) // If a player has the phone
+                        {
+                            Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler ! /t dec pour décrocher.");
+                        }
+                        else // If the phone is not in a player inventory
+                        {
+
+                        }
+
+                        nbr++;
+                    }
+                    else
+                    {
+                        timer.Dispose();
+                        nbr = 0;
+                        phoneSender.IsRinging = false;
+                        phoneSender.PhoneNumberCaller = null;
+                        phoneReceiver.IsRinging = false;
+                        phoneReceiver.PhoneNumberCaller = null;
+                    }
+                }
+                
 
             };
+        }
+
+        public static void PickUp(Player player)
+        {
+            if (!GetDefaultPhone(player.ActiveCharacter).IsRinging)
+            {
+                Chat.ErrorChat(player, "Vous n'avez aucun appel.");
+                return;
+            }
+            Phone phonePlayer = GetDefaultPhone(player.ActiveCharacter);
+            Phone phoneCaller = GetPhoneByNumber(phonePlayer.PhoneNumberCaller);
+            Character characterCaller = GetPhoneOwner(phoneCaller);
+            Player playerCaller = PlayerHelper.SearchCharacter(characterCaller);
+            Chat.CallChat(player, "Vous avez décroché.");
+            Chat.CallChat(playerCaller, "La personne a décroché.");
+            phonePlayer.IsRinging = false;
+            phoneCaller.IsRinging = false;
+            phonePlayer.IsCalling = true;
+            phoneCaller.IsCalling = true;
+        }
+        public static void HangUp(Player player)
+        {
+            if (!GetDefaultPhone(player.ActiveCharacter).IsCalling)
+            {
+                Chat.ErrorChat(player, "Vous n'êtes pas en appel.");
+                return;
+            }
+            Phone phonePlayer = GetDefaultPhone(player.ActiveCharacter);
+            Phone phoneCaller = GetPhoneByNumber(phonePlayer.PhoneNumberCaller);
+            Character characterCaller = GetPhoneOwner(phoneCaller);
+            Player playerCaller = PlayerHelper.SearchCharacter(characterCaller);
+            Chat.CallChat(player, "Vous avez raccroché.");
+            Chat.CallChat(playerCaller, "La personne a raccroché.");
+            phonePlayer.IsCalling = false;
+            phoneCaller.IsCalling = false;
+            phonePlayer.PhoneNumberCaller = null;
+            phoneCaller.PhoneNumberCaller = null;
+            
         }
     }
 }
