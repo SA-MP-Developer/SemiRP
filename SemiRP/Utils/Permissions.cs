@@ -1,4 +1,6 @@
-﻿using SemiRP.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SampSharp.GameMode.SAMP;
+using SemiRP.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,50 +11,98 @@ namespace SemiRP.Utils
 {
     class Permissions
     {
-        public static bool AddAccountPerm(Account account, string permname)
+        public static short AddPerm(PermissionSet permSet, string permname)
         {
             using (var db = new ServerDbContext())
             {
-                db.Accounts.Attach(account);
+                db.PermissionSets.Attach(permSet);
 
-                if (account.Perms.Any(p => p.Name == permname))
-                    return false; ;
+                if (!db.Permissions.Any(p => p.Name == permname))
+                    return 1;
 
-                account.Perms.Add(new Permission(permname));
+                if (permSet.PermissionsSetPermission.Select(p => p.Permission).Any(p => p.Name == permname))
+                    return 2;
 
+                var perm = db.Permissions.Single(p => p.Name == permname);
+                db.Permissions.Load();
+
+                if (perm.ChildPermissions == null || perm.ChildPermissions.Count == 0)
+                {
+                    permSet.PermissionsSetPermission.Add(new PermissionSetPermission(permSet, perm));
+                }
+                else
+                {
+                    AddPerm_Rec(permSet, perm);
+                }
+                db.Entry(permSet).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 db.SaveChanges();
             }
-
-            return true;
+            return 0;
         }
 
-        public static bool RemoveAccountPerm(Account account, string permname, bool first=true)
+        private static void AddPerm_Rec(PermissionSet permSet, Permission perm)
+        {
+            if (perm.ChildPermissions == null || perm.ChildPermissions.Count == 0)
+            {
+                if (!permSet.PermissionsSetPermission.Select(p => p.Permission).Any(p => p.Name == perm.Name))
+                    permSet.PermissionsSetPermission.Add(new PermissionSetPermission(permSet, perm));
+            }
+            else
+            {
+                foreach(Permission child in perm.ChildPermissions)
+                {
+                    AddPerm_Rec(permSet, child);
+                }
+            }
+        }
+
+        public static short RemovePerm(PermissionSet permSet, string permname)
         {
             using (var db = new ServerDbContext())
             {
-                db.Accounts.Attach(account);
+                db.PermissionSets.Attach(permSet);
 
-                if (!account.Perms.Any(p => p.Name == permname))
-                    return false;
+                if (!db.Permissions.Any(p => p.Name == permname))
+                    return 1;
 
-                var perm = account.Perms.Where(p => p.Name == permname).First();
+                var perm = db.Permissions.Single(p => p.Name == permname);
+                db.Permissions.Load();
+                db.PermissionSetPermissions.Where(ps => ps.PermissionSetId == permSet.Id).Load();
 
-                if (perm.ChildPermissions != null)
+                if (perm.ChildPermissions == null || perm.ChildPermissions.Count == 0)
                 {
-                    foreach (Permission child in perm.ChildPermissions)
-                    {
-                        RemoveAccountPerm(account, child.Name, false);
-                    }
+                    if (!permSet.PermissionsSetPermission.Select(p => p.Permission).Any(p => p.Name == permname))
+                        return 2;
+                    var permSetPerm = db.PermissionSetPermissions.Where(p => p.PermissionId == perm.Id && p.PermissionSetId == permSet.Id).SingleOrDefault();
+                    permSet.PermissionsSetPermission.Remove(permSetPerm);
                 }
-
-                account.Perms.Remove(perm);
-                db.Permissions.Remove(perm);
-
-                if (first)
-                    db.SaveChanges();
+                else
+                {
+                    RemovePerm_Rec(permSet, perm, db);
+                }
+                db.Entry(permSet).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                db.SaveChanges();
             }
+            return 0;
+        }
 
-            return true;
+        private static void RemovePerm_Rec(PermissionSet permSet, Permission perm, ServerDbContext db)
+        {
+            if (perm.ChildPermissions == null || perm.ChildPermissions.Count == 0)
+            {
+                if (!permSet.PermissionsSetPermission.Select(p => p.Permission).Any(p => p.Id == perm.Id))
+                    return;
+
+                var permSetPerm = db.PermissionSetPermissions.Where(p => p.PermissionId == perm.Id && p.PermissionSetId == permSet.Id).SingleOrDefault();
+                permSet.PermissionsSetPermission.Remove(permSetPerm);
+            }
+            else
+            {
+                foreach (Permission child in perm.ChildPermissions)
+                {
+                    RemovePerm_Rec(permSet, child, db);
+                }
+            }
         }
 
         public static List<string> ListAccountPerms(Account account)
@@ -62,7 +112,7 @@ namespace SemiRP.Utils
             {
                 db.Accounts.Attach(account);
 
-                foreach (Permission perm in account.Perms)
+                foreach (Permission perm in account.GetPerms())
                 {
                     result.AddRange(ListAccountPermChildren(account, perm.Name));
                 }
@@ -78,12 +128,12 @@ namespace SemiRP.Utils
             {
                 db.Accounts.Attach(account);
 
-                if (!account.Perms.Any(p => p.Name == permname))
+                if (!account.GetPerms().Any(p => p.Name == permname))
                     return result;
 
-                var perm = account.Perms.Where(p => p.Name == permname).First();
+                var perm = account.GetPerms().Where(p => p.Name == permname).First();
 
-                result.Add(perm.ParentPermission == null ? permname : perm.ParentPermission.Name + "/" + permname);
+                result.Add(permname);
 
                 if (perm.ChildPermissions != null)
                 {

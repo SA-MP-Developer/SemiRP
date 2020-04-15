@@ -25,9 +25,25 @@ namespace SemiRP
         public DbSet<GroupRank> GroupRanks { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<PermissionSet> PermissionSets { get; set; }
+        public DbSet<PermissionSetPermission> PermissionSetPermissions { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Phone> Phones { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PermissionSetPermission>()
+                .HasKey(bc => new { bc.PermissionId, bc.PermissionSetId });
+            modelBuilder.Entity<PermissionSetPermission>()
+                .HasOne(bc => bc.Permission)
+                .WithMany(b => b.PermissionsSetPermission)
+                .HasForeignKey(bc => bc.PermissionId);
+            modelBuilder.Entity<PermissionSetPermission>()
+                .HasOne(bc => bc.PermissionSet)
+                .WithMany(c => c.PermissionsSetPermission)
+                .HasForeignKey(bc => bc.PermissionSetId);
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

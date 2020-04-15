@@ -46,5 +46,7 @@ namespace SemiRP.Models
         public string Name { get => name; set => name = value; }
         public Permission ParentPermission { get => parentPermission; set => parentPermission = value; }
         public List<Permission> ChildPermissions { get => childPermissions; set => childPermissions = value; }
+
+        public IList<PermissionSetPermission> PermissionsSetPermission { get; set; }
     }
 }

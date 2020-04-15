@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 
 namespace SemiRP.Models
@@ -19,7 +21,6 @@ namespace SemiRP.Models
         private string name;
         private uint age;
         private int level;
-        private List<Permission> perms;
         private List<GroupRank> groupRanks;
         private List<Group> groupOwner;
         private List<Building> buildingOwner;
@@ -33,13 +34,12 @@ namespace SemiRP.Models
 
         }
 
-        public Character(int id, Account account, string name, uint age, int level, List<Permission> perms, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Container inventory, SpawnLocation spawnlocation)
+        public Character(int id, Account account, string name, uint age, int level, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Container inventory, SpawnLocation spawnlocation)
         {
             this.Id = id;
             this.Account = account;
             this.Name = name;
             this.Age = age;
-            this.Perms = perms;
             this.GroupRanks = groupRanks;
             this.GroupOwner = groupOwner;
             this.BuildingOwner = buildingOwner;
@@ -47,12 +47,16 @@ namespace SemiRP.Models
             this.Level = level;
             this.SpawnLocation = spawnlocation;
         }
+        public IList<Permission> GetPerms()
+        {
+            return PermsSet.PermissionsSetPermission.Select(p => p.Permission).ToList();
+        }
+
         [Key]
         public int Id { get => id; set => id = value; }
         public Account Account { get => account; set => account = value; }
         public string Name { get => name; set => name = value; }
         public uint Age { get => age; set => age = value; }
-        public List<Permission> Perms { get => perms; set => perms = value; }
         public List<GroupRank> GroupRanks { get => groupRanks; set => groupRanks = value; }
         public List<Group> GroupOwner { get => groupOwner; set => groupOwner = value; }
         public List<Building> BuildingOwner { get => buildingOwner; set => buildingOwner = value; }
@@ -60,5 +64,7 @@ namespace SemiRP.Models
         public CharSex Sex { get; set; }
         public int Level { get => level; set => level = value; }
         public SpawnLocation SpawnLocation { get => spawnlocation; set => spawnlocation = value; }
+        [ForeignKey("PermissionSet")]
+        public PermissionSet PermsSet { get; set; }
     }
 }
