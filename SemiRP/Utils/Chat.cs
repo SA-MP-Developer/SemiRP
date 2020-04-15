@@ -39,12 +39,12 @@ namespace SemiRP.Utils
 
         public static void SendMeChat(Player from, string message)
         {
-            SendRangedChat(from, Commands.ChatCommands.PROXIMITY_RADIUS, Color.HotPink, "* " + from.Name + " " + message);
+            SendRangedChat(from, SemiRP.Constants.PROXIMITY_RADIUS, Color.HotPink, "* " + from.Name + " " + message);
         }
 
         public static void SendDoChat(Player from, string message)
         {
-            SendRangedChat(from, Commands.ChatCommands.PROXIMITY_RADIUS, Color.HotPink, "* (" + from.Name + ") " + message);
+            SendRangedChat(from, SemiRP.Constants.PROXIMITY_RADIUS, Color.HotPink, "* (" + from.Name + ") " + message);
         }
         public static void ErrorChat(Player player, string message)
         {

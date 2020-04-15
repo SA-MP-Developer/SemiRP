@@ -8,9 +8,7 @@ namespace SemiRP.Commands
 {
     class ChatCommands
     {
-        public const float PROXIMITY_RADIUS = 15.0f;
-        public const float PROXIMITY_SHOUT_FACTOR = 1.5f;
-        public const float PROXIMITY_WHISPER = 5.0f;
+       
 
 
 
@@ -29,19 +27,19 @@ namespace SemiRP.Commands
         [Command("crier", "c", "shout", "s")]
         private static void ShoutCommand(Player sender, string message)
         {
-            Utils.Chat.SendGradientRangedChat(sender, PROXIMITY_RADIUS * PROXIMITY_SHOUT_FACTOR, Color.White, sender.Name + " crie : " + message);
+            Utils.Chat.SendGradientRangedChat(sender, SemiRP.Constants.PROXIMITY_RADIUS * SemiRP.Constants.PROXIMITY_SHOUT_FACTOR, Color.White, sender.Name + " crie : " + message);
         }
 
         [Command("b", "(")]
         private static void OocCommand(Player sender, string message)
         {
-            Utils.Chat.SendGradientRangedChat(sender, PROXIMITY_RADIUS, Color.White, "(( " + sender.Name + "[" + sender.Id + "] : " + message + " ))");
+            Utils.Chat.SendGradientRangedChat(sender, SemiRP.Constants.PROXIMITY_RADIUS, Color.White, "(( " + sender.Name + "[" + sender.Id + "] : " + message + " ))");
         }
 
         [Command("chuchotter", "chu", "whisper", "wh", "w")]
         private static void WhisperCommand(Player sender, Player receiver, string message)
         {
-            if (sender.Position.DistanceTo(receiver.Position) > PROXIMITY_WHISPER)
+            if (sender.Position.DistanceTo(receiver.Position) > SemiRP.Constants.PROXIMITY_WHISPER)
             {
                 sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] Vous êtes trop loin du joueur ciblé.");
                 return;

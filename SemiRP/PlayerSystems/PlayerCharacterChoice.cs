@@ -31,7 +31,7 @@ namespace SemiRP.PlayerSystems
             {
                 playerChars = db.Characters.Select(c => c).Where(c => c.Account == player.AccountData)
                     .Include(s => s.SpawnLocation)
-                    .Include(c => c.Perms)
+                    .Include(c => c.PermsSet).ThenInclude(p => p.PermissionsSetPermission).ThenInclude(p => p.Permission)
                     .Include(c => c.GroupRanks)
                     .Include(c => c.GroupOwner)
                     .Include(c => c.BuildingOwner)
@@ -50,11 +50,10 @@ namespace SemiRP.PlayerSystems
 
                 foreach (Character chr in playerChars)
                 {
-                    Console.WriteLine("Spawn " + chr.Name + " : " + chr.SpawnLocation.Position.ToString());
                     charList.AddItem(chr.Name + " (" + Utils.SexUtils.SexToString(chr.Sex) + ", " + chr.Age + " ans)");
                 }
 
-                if (playerChars.Count < Player.MAX_CHARACTERS)
+                if (playerChars.Count < SemiRP.Constants.MAX_CHARACTERS)
                 {
                     charList.AddItem("Créer un autre personnage...");
                 }
@@ -93,6 +92,8 @@ namespace SemiRP.PlayerSystems
                         chr.Age = (uint)e.Data["age"];
                         chr.Sex = (Character.CharSex)e.Data["sex"];
                         chr.SpawnLocation = chrSpawn;
+
+                        player.ActiveCharacter = chr;
 
                         db.Add(chr);
                         db.SaveChanges();

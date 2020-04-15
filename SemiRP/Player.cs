@@ -19,9 +19,6 @@ namespace SemiRP
     [PooledType]
     public class Player : BasePlayer
     {
-        public const int PASSWORD_MAX_ATTEMPTS = 3;
-        public const int MAX_CHARACTERS = 2;
-
         #region Overrides of BasePlayer
 
         public Account AccountData { get; set; }
@@ -38,17 +35,20 @@ namespace SemiRP
             using (var db = new ServerDbContext())
             {
                 userExist = db.Accounts.Any(a => a.Username == this.Name);
-                
+
                 if (userExist)
-                    AccountData = db.Accounts.Include(a => a.Perms)
+                {
+                    AccountData = db.Accounts.Include(a => a.PermsSet)
+                        .ThenInclude(p => p.PermissionsSetPermission).ThenInclude(p => p.Permission)
                         .Single(a => a.Username == this.Name);
+                }
             }
 
             this.ToggleSpectating(true);
 
             if (userExist)
             {
-                PlayerLogin login = new PlayerLogin(this, PASSWORD_MAX_ATTEMPTS);
+                PlayerLogin login = new PlayerLogin(this, SemiRP.Constants.PASSWORD_MAX_ATTEMPTS);
                 login.DialogEnded += (sender, e) =>
                 {
                     using (var db = new ServerDbContext())
@@ -80,6 +80,9 @@ namespace SemiRP
                     }
 
                     using var db = new ServerDbContext();
+
+                    PermissionSet permSet = new PermissionSet();
+
                     Account acc = new Account
                     {
                         Email = (string)e.Data["email"],
@@ -87,13 +90,16 @@ namespace SemiRP
                         Nickname = this.Name,
                         Password = (string)e.Data["password"],
                         LastConnectionIP = this.IP,
-                        LastConnectionTime = DateTime.Now
+                        LastConnectionTime = DateTime.Now,
+                        PermsSet = permSet
                     };
 
                     db.Add(acc);
                     db.SaveChanges();
 
-                    this.AccountData = db.Accounts.Single(a => a.Username == this.Name);
+                    this.AccountData = db.Accounts.Include(a => a.PermsSet)
+                        .ThenInclude(p => p.PermissionsSetPermission).ThenInclude(p => p.Permission)
+                        .Single(a => a.Username == this.Name);
 
                     PlayerCharacterChoice chrChoiceMenu = new PlayerCharacterChoice(this);
                     chrChoiceMenu.Show();
@@ -121,9 +127,9 @@ namespace SemiRP
                     if(p != this)
                     {
                         float distance = this.Position.DistanceTo(p.Position);
-                        if (distance < Commands.ChatCommands.PROXIMITY_RADIUS)
+                        if (distance < SemiRP.Constants.PROXIMITY_RADIUS)
                         {
-                            float darkenAmount = Math.Clamp(distance / Commands.ChatCommands.PROXIMITY_RADIUS, 0f, 0.8f);
+                            float darkenAmount = Math.Clamp(distance / SemiRP.Constants.PROXIMITY_RADIUS, 0f, 0.8f);
                             Color col = Color.White.Darken(darkenAmount);
                             p.SendClientMessage(col, this.Name + " dit (Tél.) : " + e.Text);
                         }
@@ -135,9 +141,9 @@ namespace SemiRP
                 foreach (Player p in Player.All)
                 {
                     float distance = this.Position.DistanceTo(p.Position);
-                    if (distance < Commands.ChatCommands.PROXIMITY_RADIUS)
+                    if (distance < SemiRP.Constants.PROXIMITY_RADIUS)
                     {
-                        float darkenAmount = Math.Clamp(distance / Commands.ChatCommands.PROXIMITY_RADIUS, 0f, 0.8f);
+                        float darkenAmount = Math.Clamp(distance / SemiRP.Constants.PROXIMITY_RADIUS, 0f, 0.8f);
                         Color col = Color.White.Darken(darkenAmount);
                         p.SendClientMessage(col, this.Name + " dit : " + e.Text);
                     }
