@@ -16,7 +16,7 @@ namespace SemiRP.Commands
         [Command("help", "aide", "h", "a")]
         private static void Help(Player sender)
         {
-            if (!Utils.PermissionsChecker.IsModerator(sender))
+            if (!sender.AccountData.HavePerm("admin.cmd.help"))
                 return;
 
             Utils.Chat.AdminChat(sender, "/help");
@@ -26,7 +26,7 @@ namespace SemiRP.Commands
         [Command("goto", "gt")]
         private static void Goto(Player sender, Player target)
         {
-            if (!Utils.PermissionsChecker.IsModerator(sender))
+            if (!sender.AccountData.HavePerm("admin.cmds.goto"))
                 return;
 
             var tppos = target.Position;
@@ -42,7 +42,7 @@ namespace SemiRP.Commands
         [Command("gethere", "gh")]
         private static void Gethere(Player sender, Player target)
         {
-            if (!Utils.PermissionsChecker.IsModerator(sender))
+            if (!sender.AccountData.HavePerm("admin.cmds.gethere"))
                 return;
 
             var tppos = sender.Position;
@@ -58,7 +58,7 @@ namespace SemiRP.Commands
         [Command("slap")]
         private static void Slap(Player sender, Player target)
         {
-            if (!Utils.PermissionsChecker.IsModerator(sender))
+            if (!sender.AccountData.HavePerm("admin.cmds.slap"))
                 return;
 
             target.Position = new Vector3(target.Position.X, target.Position.Y, target.Position.Z + 10f);
@@ -70,7 +70,7 @@ namespace SemiRP.Commands
         [Command("pm", "mp")]
         private static void PrivateMessage(Player sender, Player target, string message)
         {
-            if (!Utils.PermissionsChecker.IsModerator(sender))
+            if (!sender.AccountData.HavePerm("admin.cmds.pm"))
                 return;
 
             Utils.Chat.AdminChat(sender, Color.Yellow + "[PM] " + Color.White + sender.AccountData.Nickname + " : " + message);
@@ -83,10 +83,20 @@ namespace SemiRP.Commands
             [Command("add", "a")]
             private static void Add(Player sender, Player target, string perm)
             {
-                if (!Utils.PermissionsChecker.IsServerOwner(sender))
+                if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
                     return;
 
-                Utils.Permissions.AddAccountPerm(target.AccountData, perm);
+                var ret = Utils.Permissions.AddPerm(target.AccountData.PermsSet, perm);
+                if (ret == 1)
+                {
+                    Utils.Chat.AdminChat(sender, "La permission \"" + perm + "\" n'éxiste pas.");
+                    return;
+                }
+                else if (ret == 2)
+                {
+                    Utils.Chat.AdminChat(sender, "La permission \"" + perm + "\" est déjà attribuée à " + Color.Red + target.Name + Color.White + " (" + target.Id + ").");
+                    return;
+                }
 
                 Utils.Chat.AdminChat(sender, "Vous avez ajouté la permission \"" + perm + "\" à " + Color.Red + target.Name + Color.White + " (" + target.Id + ").");
                 Utils.Chat.AdminChat(target, Color.Red + sender.AccountData.Nickname + Color.White + " vous a ajouté la permission \"" + perm + "\".");
@@ -95,10 +105,20 @@ namespace SemiRP.Commands
             [Command("remove", "rm")]
             private static void Remove(Player sender, Player target, string perm)
             {
-                if (!Utils.PermissionsChecker.IsServerOwner(sender))
+                if (!sender.AccountData.HavePerm("admin.cmds.perms.remove"))
                     return;
 
-                Utils.Permissions.RemoveAccountPerm(target.AccountData, perm);
+                var ret = Utils.Permissions.RemovePerm(target.AccountData.PermsSet, perm);
+                if (ret == 1)
+                {
+                    Utils.Chat.AdminChat(sender, "La permission \"" + perm + "\" n'éxiste pas.");
+                    return;
+                }
+                else if(ret == 2)
+                {
+                    Utils.Chat.AdminChat(sender, "La permission \"" + perm + "\" n'est pas attribuée à " + Color.Red + target.Name + Color.White + " (" + target.Id + ").");
+                    return;
+                }
 
                 Utils.Chat.AdminChat(sender, "Vous avez enlevé la permission \"" + perm + "\" à " + Color.Red + target.Name + Color.White + " (" + target.Id + ").");
                 Utils.Chat.AdminChat(target, Color.Red + sender.AccountData.Nickname + Color.White + " vous a enlevé la permission \"" + perm + "\".");
@@ -107,7 +127,7 @@ namespace SemiRP.Commands
             [Command("list", "ls")]
             private static void Show(Player sender, Player target, string perm = "")
             {
-                if (!Utils.PermissionsChecker.IsAdmin(sender))
+                if (!sender.AccountData.HavePerm("admin.cmds.perms.list"))
                     return;
 
                 List<string> permsStrings;
