@@ -27,8 +27,7 @@ namespace SemiRP.PlayerSystems
         private void BuildInventoryDialog(Player player)
         {
             listInventory = new TablistDialog("Inventaire", new[] { "Nom", "Quantité" }, "Sélectionner", "Quitter");
-            int maxSpaceContainer = player.ActiveCharacter.Inventory.Type.MaxSpace;
-            String nameContainer = player.ActiveCharacter.Inventory.Type.Name;
+            int maxSpaceContainer = player.ActiveCharacter.Inventory.MaxSpace;
             List<Item> listItemsContainer = player.ActiveCharacter.Inventory.ListItems;
             int i = 0;
             foreach(Item item in listItemsContainer)
