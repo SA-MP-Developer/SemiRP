@@ -20,7 +20,6 @@ namespace SemiRP
         public DbSet<Building> Buildings { get; set; }
         public DbSet<Character> Characters { get; set; }
         public DbSet<Container> Containers { get; set; }
-        public DbSet<ContainerType> ContainerTypes { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupRank> GroupRanks { get; set; }
         public DbSet<Item> Items { get; set; }
