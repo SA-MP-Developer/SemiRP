@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SemiRP.Models.ContainerHeritage;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,7 +25,7 @@ namespace SemiRP.Models
         private List<GroupRank> groupRanks;
         private List<Group> groupOwner;
         private List<Building> buildingOwner;
-        private Container inventory;
+        private Inventory inventory;
         private SpawnLocation spawnlocation;
 
         
@@ -34,7 +35,7 @@ namespace SemiRP.Models
 
         }
 
-        public Character(int id, Account account, string name, uint age, int level, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Container inventory, SpawnLocation spawnlocation)
+        public Character(int id, Account account, string name, uint age, int level, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Inventory inventory, SpawnLocation spawnlocation)
         {
             this.Id = id;
             this.Account = account;
@@ -60,7 +61,7 @@ namespace SemiRP.Models
         public List<GroupRank> GroupRanks { get => groupRanks; set => groupRanks = value; }
         public List<Group> GroupOwner { get => groupOwner; set => groupOwner = value; }
         public List<Building> BuildingOwner { get => buildingOwner; set => buildingOwner = value; }
-        public Container Inventory { get => inventory; set => inventory = value; }
+        public Inventory Inventory { get => inventory; set => inventory = value; }
         public CharSex Sex { get; set; }
         public int Level { get => level; set => level = value; }
         public SpawnLocation SpawnLocation { get => spawnlocation; set => spawnlocation = value; }
