@@ -17,7 +17,11 @@ namespace SemiRP
             "admin.cmds.perms",
             "admin.cmds.perms.add",
             "admin.cmds.perms.remove",
-            "admin.cmds.perms.list"
+            "admin.cmds.perms.list",
+            "admin.cmds.give",
+            "admin.cmds.give.phone",
+            "admin.cmds.give.gun",
+            "admin.cmds.give.money"
         };
     }
 }

@@ -12,6 +12,21 @@ namespace SemiRP.Utils.ItemUtils
 {
     public class PhoneHelper
     {
+        public static Phone CreatePhone()
+        {
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            Random numberRandom = new Random();
+            String number = null;
+            do {
+                number = numberRandom.Next(10000, 99999).ToString();
+            } while (dbContext.Phones.Select(x => x).Where(x => x.Number == number).Any());
+            Phone phone = new Phone(number, false, false, null, false);
+            return phone;
+        }
+        public static void DisplayPhoneNumber(Player player)
+        {
+            Utils.Chat.CallChat(player, "Votre numéro est : "+GetDefaultPhone(player.ActiveCharacter).Number+".");
+        }
         public static List<Phone> GetAllPhone()
         {
 

@@ -12,7 +12,7 @@ using System.Text;
 namespace SemiRP.Commands
 {
     [CommandGroup("t", "phone", "telephone")]
-    class PhoneCommands
+    public class PhoneCommands
     {
         [Command("sms")]
         private static void SendSMS(Player sender, string number, string message)
@@ -36,6 +36,11 @@ namespace SemiRP.Commands
         private static void HangUp(Player sender)
         {
             PhoneHelper.HangUp(sender);
+        }
+        [Command("numero", "num")]
+        private static void Number(Player sender)
+        {
+            PhoneHelper.DisplayPhoneNumber(sender);
         }
     }
 }

@@ -3,6 +3,9 @@ using SampSharp.GameMode;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.SAMP.Commands;
 using SemiRP.Models;
+using SemiRP.Models.ItemHeritage;
+using SemiRP.Utils.ContainerUtils;
+using SemiRP.Utils.ItemUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +22,7 @@ namespace SemiRP.Commands
             if (!sender.AccountData.HavePerm("admin.cmd.help"))
                 return;
 
-            Utils.Chat.AdminChat(sender, "/help");
+            Utils.Chat.AdminChat(sender, "/help /goto /gethere /slap /pm /perm /give");
             
         }
 
@@ -147,6 +150,19 @@ namespace SemiRP.Commands
                 {
                     sender.SendClientMessage(permname);
                 }
+            }
+        }
+        [CommandGroup("give")]
+        class GiveItems
+        {
+            [Command("phone")]
+            private static void GiveObject(Player sender, Player target)
+            {
+                if (!sender.AccountData.HavePerm("admin.cmds.give.phone"))
+                    return;
+                Phone phone = PhoneHelper.CreatePhone();
+                InventoryHelper.AddItemToCharacter(target.ActiveCharacter, phone);
+                
             }
         }
     }

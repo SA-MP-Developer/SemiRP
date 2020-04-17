@@ -9,13 +9,29 @@ namespace SemiRP.Utils.ContainerUtils
 {
     public class InventoryHelper
     {
-        public static Inventory GetInventory(Character character)
+        public static Inventory GetAllItems(Character character)
         {
-            using(var db = new ServerDbContext())
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            return dbContext.Characters.Select(x => x).Where(x => x == character).FirstOrDefault().Inventory;
+        }
+        public static Item GetItemByName(Character character, String name)
+        {
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            return dbContext.Characters.Select(x => x).Where(x => x == character).FirstOrDefault().Inventory.ListItems.Select(x=>x).Where(x=>x.Name == name).FirstOrDefault();
+        }
+        public static bool AddItemToCharacter(Character character, Item item)
+        {
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            Inventory inv = dbContext.Characters.Select(x => x).Where(x => x == character).FirstOrDefault().Inventory;
+            if(inv.ListItems.Count() < inv.MaxSpace)
             {
-                return db.Characters.Select(x => x).Where(x => x == character).FirstOrDefault().Inventory;
+                inv.ListItems.Add(item);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
-        
     }
 }
