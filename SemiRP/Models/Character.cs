@@ -46,7 +46,6 @@ namespace SemiRP.Models
             this.BuildingOwner = buildingOwner;
             this.Inventory = inventory;
             this.Level = level;
-            this.SpawnLocation = spawnlocation;
         }
         public IList<Permission> GetPerms()
         {
@@ -55,17 +54,17 @@ namespace SemiRP.Models
 
         [Key]
         public int Id { get => id; set => id = value; }
-        public Account Account { get => account; set => account = value; }
+        public virtual Account Account { get => account; set => account = value; }
         public string Name { get => name; set => name = value; }
         public uint Age { get => age; set => age = value; }
-        public List<GroupRank> GroupRanks { get => groupRanks; set => groupRanks = value; }
-        public List<Group> GroupOwner { get => groupOwner; set => groupOwner = value; }
-        public List<Building> BuildingOwner { get => buildingOwner; set => buildingOwner = value; }
-        public Inventory Inventory { get => inventory; set => inventory = value; }
+        public virtual List<GroupRank> GroupRanks { get => groupRanks; set => groupRanks = value; }
+        public virtual List<Group> GroupOwner { get => groupOwner; set => groupOwner = value; }
+        public virtual List<Building> BuildingOwner { get => buildingOwner; set => buildingOwner = value; }
+        public virtual Inventory Inventory { get => inventory; set => inventory = value; }
         public CharSex Sex { get; set; }
         public int Level { get => level; set => level = value; }
-        public SpawnLocation SpawnLocation { get => spawnlocation; set => spawnlocation = value; }
+        public virtual SpawnLocation SpawnLocation { get; set; }
         [ForeignKey("PermissionSet")]
-        public PermissionSet PermsSet { get; set; }
+        public virtual PermissionSet PermsSet { get; set; }
     }
 }

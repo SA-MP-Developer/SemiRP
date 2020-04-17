@@ -11,23 +11,11 @@ namespace SemiRP.Utils.ItemUtils
     {
         public static List<Item> GetAllItem()
         {
-            
-            using (var db = new ServerDbContext())
-            {
-                return db.Items.ToList();
-            }
+            return ((GameMode)GameMode.Instance).DbContext.Items.ToList();
         }
         public static List<Item> GetItemByName(string name)
         {
-            using (var db = new ServerDbContext())
-            {
-                return db.Items.Select(x=>x).Where(w=>w.Name == name).ToList();
-            }
+            return ((GameMode)GameMode.Instance).DbContext.Items.Select(x=>x).Where(w=>w.Name == name).ToList();
         }
-
-        
-
-
-
     }
 }

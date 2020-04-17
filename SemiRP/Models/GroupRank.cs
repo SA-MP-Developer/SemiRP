@@ -24,6 +24,6 @@ namespace SemiRP.Models
         [Key]
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
-        public Group ParentGroup { get => parentGroup; set => parentGroup = value; }
+        public virtual Group ParentGroup { get => parentGroup; set => parentGroup = value; }
     }
 }

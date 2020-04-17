@@ -34,7 +34,7 @@ namespace SemiRP.Models
 
         [Key]
         public int Id { get => id; set => id = value; }
-        public List<Item> ListItems { get => listItems; set => listItems = value; }
+        public virtual List<Item> ListItems { get => listItems; set => listItems = value; }
         public string Name { get => name; set => name = value; }
         public int MaxSpace { get => maxSpace; set => maxSpace = value; }
     }

@@ -30,6 +30,6 @@ namespace SemiRP.Models
         public string Name { get => name; set => name = value; }
         public double Weight { get => weight; set => weight = value; }
         public int Quantity { get => quantity; set => quantity = value; }
-        public Container CurrentContainer { get => currentContainer; set => currentContainer = value; }
+        public virtual Container CurrentContainer { get => currentContainer; set => currentContainer = value; }
     }
 }

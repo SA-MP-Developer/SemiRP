@@ -58,6 +58,6 @@ namespace SemiRP.Models
         public string LastConnectionIP { get => lastConnectionIP; set => lastConnectionIP = value; }
         public DateTime LastConnectionTime { get => lastConnectionTime; set => lastConnectionTime = value; }
         [ForeignKey("PermissionSet")]
-        public PermissionSet PermsSet { get; set; }
+        public virtual PermissionSet PermsSet { get; set; }
     }
 }

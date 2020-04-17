@@ -9,6 +9,6 @@ namespace SemiRP.Models.ContainerHeritage
     public class Inventory : Container
     {
         [Required]
-        public Character Owner { get; set; }
+        public virtual Character Owner { get; set; }
     }
 }

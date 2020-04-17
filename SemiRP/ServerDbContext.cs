@@ -49,7 +49,7 @@ namespace SemiRP
             if (!optionsBuilder.IsConfigured)
             {
 #if DEBUG
-                
+                optionsBuilder.UseLazyLoadingProxies();
                 optionsBuilder.UseMySql("",
                     mySqlOptions => mySqlOptions.ServerVersion(new Version(10, 4, 12), ServerType.MariaDb))
                     .EnableDetailedErrors();

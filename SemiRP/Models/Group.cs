@@ -28,9 +28,9 @@ namespace SemiRP.Models
 
         [Key]
         public int Id { get => id; set => id = value; }
-        public Character Owner { get => owner; set => owner = value; }
+        public virtual Character Owner { get => owner; set => owner = value; }
         public string Name { get => name; set => name = value; }
         public DateTime DateCreation { get => dateCreation; set => dateCreation = value; }
-        public List<GroupRank> ListRank { get => listRank; set => listRank = value; }
+        public virtual List<GroupRank> ListRank { get => listRank; set => listRank = value; }
     }
 }

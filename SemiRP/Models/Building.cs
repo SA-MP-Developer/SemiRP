@@ -41,10 +41,10 @@ namespace SemiRP.Models
 
         [Key]
         public int Id { get => id; set => id = value; }
-        public Character Owner { get => owner; set => owner = value; }
+        public virtual Character Owner { get => owner; set => owner = value; }
         public string Name { get => name; set => name = value; }
-        public Container Container { get => container; set => container = value; }
-        public Group OwnerGroup { get => ownerGroup; set => ownerGroup = value; }
+        public virtual Container Container { get => container; set => container = value; }
+        public virtual Group OwnerGroup { get => ownerGroup; set => ownerGroup = value; }
         public bool OnSale { get => onSale; set => onSale = value; }
         public bool Salable { get => salable; set => salable = value; }
     }

@@ -44,9 +44,9 @@ namespace SemiRP.Models
         [Key]
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
-        public Permission ParentPermission { get => parentPermission; set => parentPermission = value; }
-        public List<Permission> ChildPermissions { get => childPermissions; set => childPermissions = value; }
+        public virtual Permission ParentPermission { get => parentPermission; set => parentPermission = value; }
+        public virtual List<Permission> ChildPermissions { get => childPermissions; set => childPermissions = value; }
 
-        public IList<PermissionSetPermission> PermissionsSetPermission { get; set; }
+        public virtual IList<PermissionSetPermission> PermissionsSetPermission { get; set; }
     }
 }

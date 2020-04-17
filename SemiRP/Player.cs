@@ -26,22 +26,22 @@ namespace SemiRP
 
         public bool AcceptMP { get; set; }
 
+        private ServerDbContext dbContext;
+
         public override void OnConnected(EventArgs e)
         {
             base.OnConnected(e);
 
+            dbContext = ((GameMode)GameMode.Instance).DbContext;
+
             bool userExist = false;
             
-            using (var db = new ServerDbContext())
-            {
-                userExist = db.Accounts.Any(a => a.Username == this.Name);
+            userExist = dbContext.Accounts.Any(a => a.Username == this.Name);
 
-                if (userExist)
-                {
-                    AccountData = db.Accounts.Include(a => a.PermsSet)
-                        .ThenInclude(p => p.PermissionsSetPermission).ThenInclude(p => p.Permission)
-                        .Single(a => a.Username == this.Name);
-                }
+            if (userExist)
+            {
+                AccountData = dbContext.Accounts
+                    .Single(a => a.Username == this.Name);
             }
 
             this.ToggleSpectating(true);
@@ -51,15 +51,12 @@ namespace SemiRP
                 PlayerLogin login = new PlayerLogin(this, SemiRP.Constants.PASSWORD_MAX_ATTEMPTS);
                 login.DialogEnded += (sender, e) =>
                 {
-                    using (var db = new ServerDbContext())
-                    {
-                        db.Accounts.Attach(this.AccountData);
+                    dbContext.Accounts.Attach(this.AccountData);
 
-                        this.AccountData.LastConnectionIP = this.IP;
-                        this.AccountData.LastConnectionTime = DateTime.Now;
+                    this.AccountData.LastConnectionIP = this.IP;
+                    this.AccountData.LastConnectionTime = DateTime.Now;
 
-                        db.SaveChanges();
-                    }
+                    dbContext.SaveChanges();
 
                     PlayerCharacterChoice chrChoiceMenu = new PlayerCharacterChoice(this);
                     chrChoiceMenu.Show();
@@ -79,9 +76,6 @@ namespace SemiRP
                         return;
                     }
 
-                    using var db = new ServerDbContext();
-
-                    PermissionSet permSet = new PermissionSet();
 
                     Account acc = new Account
                     {
@@ -91,15 +85,13 @@ namespace SemiRP
                         Password = (string)e.Data["password"],
                         LastConnectionIP = this.IP,
                         LastConnectionTime = DateTime.Now,
-                        PermsSet = permSet
+                        PermsSet = new PermissionSet()
                     };
 
-                    db.Add(acc);
-                    db.SaveChanges();
+                    dbContext.Add(acc);
+                    dbContext.SaveChanges();
 
-                    this.AccountData = db.Accounts.Include(a => a.PermsSet)
-                        .ThenInclude(p => p.PermissionsSetPermission).ThenInclude(p => p.Permission)
-                        .Single(a => a.Username == this.Name);
+                    this.AccountData = dbContext.Accounts.Single(a => a.Username == this.Name);
 
                     PlayerCharacterChoice chrChoiceMenu = new PlayerCharacterChoice(this);
                     chrChoiceMenu.Show();
@@ -114,7 +106,8 @@ namespace SemiRP
         {
             base.OnText(e);
             e.SendToPlayers = false;
-            if (Utils.ItemUtils.PhoneHelper.GetDefaultPhone(this.ActiveCharacter).IsCalling)
+            var defaultPhone = Utils.ItemUtils.PhoneHelper.GetDefaultPhone(this.ActiveCharacter);
+            if (defaultPhone != null && defaultPhone.IsCalling)
             {
                 Phone phone = Utils.ItemUtils.PhoneHelper.GetDefaultPhone(this.ActiveCharacter);
                 Phone phoneCall = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(phone.PhoneNumberCaller);
