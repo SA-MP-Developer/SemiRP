@@ -12,6 +12,12 @@ namespace SemiRP.Models.ItemHeritage
         private bool isRinging;
         private string phoneNumberCaller;
         private bool isCalling;
+
+        public Phone()
+        {
+
+        }
+
         public Phone(string number, bool defaultPhone, bool isRinging, string phoneNumberCaller, bool isCalling)
         {
             this.Number = number;
