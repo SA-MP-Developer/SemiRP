@@ -54,6 +54,7 @@ namespace SemiRP
                             perm.ParentPermission = prevPerm;
 
                         dbContext.Permissions.Add(perm);
+                        dbPerms.Add(perm);
                         Console.WriteLine("Added " + tmpPath);
                     }
                     else
