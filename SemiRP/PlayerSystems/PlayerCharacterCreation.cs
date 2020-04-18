@@ -7,6 +7,7 @@ using SemiRP.Models;
 using SemiRP.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using static SemiRP.Models.Character;
@@ -63,6 +64,13 @@ namespace SemiRP.PlayerSystems
 
                 var regex = new Regex(@"[A-Z][a-z]+_[A-Z][a-z]+([A-Z][a-z]+)*");
                 if (!regex.IsMatch(eventArg.InputText))
+                {
+                    nameDialog.Show(eventArg.Player);
+                    return;
+                }
+
+                ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+                if (dbContext.Accounts.Where(x=>x.Username ==eventArg.InputText).Any() || dbContext.Characters.Where(x => x.Name == eventArg.InputText).Any()) // if Account or Character already exist with this name
                 {
                     nameDialog.Show(eventArg.Player);
                     return;
