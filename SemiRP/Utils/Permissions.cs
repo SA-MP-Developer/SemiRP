@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Castle.Core.Internal;
+using Microsoft.EntityFrameworkCore;
 using SampSharp.GameMode.SAMP;
 using SemiRP.Models;
 using System;
@@ -20,7 +21,7 @@ namespace SemiRP.Utils
             if (!dbContext.Permissions.Any(p => p.Name == permname))
                 return 1;
 
-            if (permSet.PermissionsSetPermission.Select(p => p.Permission).Any(p => p.Name == permname))
+            if (permSet.PermissionsSetPermission.IsNullOrEmpty() && permSet.PermissionsSetPermission.Select(p => p.Permission).Any(p => p.Name == permname))
                 return 2;
 
             var perm = dbContext.Permissions.Single(p => p.Name == permname);
@@ -33,7 +34,6 @@ namespace SemiRP.Utils
             {
                 AddPerm_Rec(permSet, perm);
             }
-            dbContext.Entry(permSet).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             dbContext.SaveChanges();
             return 0;
         }
@@ -76,7 +76,6 @@ namespace SemiRP.Utils
             {
                 RemovePerm_Rec(permSet, perm, dbContext);
             }
-            dbContext.Entry(permSet).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             dbContext.SaveChanges();
             return 0;
         }
