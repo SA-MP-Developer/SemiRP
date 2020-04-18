@@ -13,6 +13,7 @@ using SampSharp.Core.Callbacks;
 using SemiRP.PlayerSystems;
 using Microsoft.EntityFrameworkCore;
 using SemiRP.Models.ItemHeritage;
+using System.Text.RegularExpressions;
 
 namespace SemiRP
 {
@@ -45,6 +46,18 @@ namespace SemiRP
                 AccountData = dbContext.Accounts
                     .Single(a => a.Username == this.Name);
             }
+            else
+            {
+                Character charactere = dbContext.Characters.Select(x=>x).Where(a => a.Name == this.Name).FirstOrDefault();
+                if (charactere !=null)
+                {
+                    this.Name = charactere.Account.Username;
+                    AccountData = dbContext.Accounts
+                    .Single(a => a.Username == this.Name);
+                    userExist = true;
+                }
+            }
+
 
             this.ToggleSpectating(true);
 
@@ -69,6 +82,45 @@ namespace SemiRP
             else
             {
                 PlayerRegistration regMenu = new PlayerRegistration();
+
+                var regex = new Regex(@"[A-Z][a-z]+_[A-Z][a-z]+([A-Z][a-z]+)*");
+                if (regex.IsMatch(this.Name))
+                {
+                    InputDialog nameChangerDialog = new InputDialog("Changement de nom",
+                                               "Bienvenue sur le serveur.\nCe compte n'existe pas, cependant, nous avons détecté que vous utilisez un nom Roleplay.\n" +
+                                               "Ce serveur utilise un système de compte avec personnage, vous créerez votre personnage par la suite.\n" +
+                                               "Il est donc inutile de garder un nom de compte respectant le format roleplay Prénom_Nom.\n" +
+                                               "Nous vous proposons donc de le changer ou non suivant votre souhait. Vous pouvez très bien garder le format Prénom_Nom mais il ne correspondera\n" +
+                                               "pas au nom de votre personnage.\n" +
+                                               "Veuillez écrire le nom du compte que vous souhaitez utiliser (max 24 charactères) :",
+                                               false, "Confirmer", "Retour");
+                    nameChangerDialog.Response += (sender, eventArg) =>
+                    {
+                        if (eventArg.DialogButton == DialogButton.Right)
+                        {
+                            nameChangerDialog.Show(this);
+                            return;
+                        }
+                        if(eventArg.InputText.Length > 24)
+                        {
+                            nameChangerDialog.Show(this);
+                            return;
+                        }
+                        if(dbContext.Accounts.Where(x => x.Username == eventArg.InputText).Any() || dbContext.Characters.Where(x => x.Name == eventArg.InputText).Any())
+                        {
+                            nameChangerDialog.Show(this);
+                            return;
+                        }
+                        this.Name = eventArg.InputText;
+                        regMenu.Show(this);
+
+
+                    };
+                    nameChangerDialog.Show(this);
+                    return;
+                }
+
+                
 
                 regMenu.GetMenu().Ended += (sender, e) =>
                 {
