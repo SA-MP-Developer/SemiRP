@@ -200,5 +200,31 @@ namespace SemiRP.Utils.ItemUtils
             dbContext.Phones.Remove(phone);
             dbContext.SaveChanges();
         }
+        public static bool AddContactToPhoneBook(ContactPhone contactPhone, Phone phone)
+        {
+            if(phone.MaxContact >= phone.PhoneBook.Count())
+            {
+                phone.PhoneBook.Add(contactPhone);
+                return true;
+            }
+            return false;
+        }
+        public static bool RemoveContactFromPhoneBook(String name, Phone phone)
+        {
+            if (phone.PhoneBook.RemoveAll(x=>x.name == name) > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public static ContactPhone CreateContact(String name, String number)
+        {
+            ContactPhone contactPhone = new ContactPhone(name, number);
+            return contactPhone;
+        }
+        
     }
 }
