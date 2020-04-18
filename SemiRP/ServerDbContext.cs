@@ -26,7 +26,8 @@ namespace SemiRP
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<PermissionSet> PermissionSets { get; set; }
         public DbSet<PermissionSetPermission> PermissionSetPermissions { get; set; }
-        public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<VehicleModel> VehicleModels { get; set; }
+        public DbSet<VehicleData> Vehicles { get; set; }
         public DbSet<Phone> Phones { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<Gun> Gun { get; set; }

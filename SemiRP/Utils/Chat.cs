@@ -30,7 +30,7 @@ namespace SemiRP.Utils
                 float distance = from.Position.DistanceTo(p.Position);
                 if (distance <= radius)
                 {
-                    float darkenAmount = Math.Clamp(distance / (radius), 0f, 0.8f);
+                    float darkenAmount = Math.Clamp(distance / (radius), 0f, Constants.Chat.RANGED_CHAT_FINAL_COLOR_PERC);
                     Color col = baseColor.Darken(darkenAmount);
                     p.SendClientMessage(col, message);
                 }
@@ -39,7 +39,9 @@ namespace SemiRP.Utils
 
         public static void SendMeChat(Player from, string message)
         {
-            SendRangedChat(from, SemiRP.Constants.PROXIMITY_RADIUS, Constants.Chat.ME, "* " + from.Name + " " + message);
+            var text = "* " + from.Name + " " + message;
+            SendRangedChat(from, SemiRP.Constants.PROXIMITY_RADIUS, Constants.Chat.ME, text);
+            from.SetChatBubble(text, Constants.Chat.ME, Constants.Chat.CHAT_BUBBLE_ME_RANGE, (int)(text.Length / Constants.Chat.CHAT_BUBBLE_TIME_FACTOR));
         }
 
         public static void SendDoChat(Player from, string message)
