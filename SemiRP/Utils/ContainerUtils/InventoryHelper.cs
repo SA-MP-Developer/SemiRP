@@ -23,6 +23,9 @@ namespace SemiRP.Utils.ContainerUtils
         {
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             Inventory inv = dbContext.Characters.Select(x => x).Where(x => x == character).FirstOrDefault().Inventory;
+            if (inv == null)
+                return false;
+
             if(inv.ListItems.Count() < inv.MaxSpace)
             {
                 inv.ListItems.Add(item);
