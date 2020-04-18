@@ -21,7 +21,7 @@ namespace SemiRP.Utils
             if (!dbContext.Permissions.Any(p => p.Name == permname))
                 return 1;
 
-            if (permSet.PermissionsSetPermission.IsNullOrEmpty() && permSet.PermissionsSetPermission.Select(p => p.Permission).Any(p => p.Name == permname))
+            if (permSet.PermissionsSetPermission.Select(p => p.Permission).Any(p => p.Name == permname))
                 return 2;
 
             var perm = dbContext.Permissions.Single(p => p.Name == permname);

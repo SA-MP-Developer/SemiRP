@@ -7,6 +7,11 @@ namespace SemiRP.Models
 {
     public class PermissionSet
     {
+        public PermissionSet()
+        {
+            PermissionsSetPermission = new List<PermissionSetPermission>();
+        }
+
         [Key]
         public int Id { get; set; }
         public virtual IList<PermissionSetPermission> PermissionsSetPermission { get; set; }

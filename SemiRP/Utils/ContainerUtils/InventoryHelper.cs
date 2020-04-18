@@ -29,6 +29,7 @@ namespace SemiRP.Utils.ContainerUtils
             if(inv.ListItems.Count() < inv.MaxSpace)
             {
                 inv.ListItems.Add(item);
+                dbContext.SaveChanges();
                 return true;
             }
             else

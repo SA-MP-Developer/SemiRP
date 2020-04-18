@@ -218,13 +218,14 @@ namespace SemiRP.Commands
                 {
                     Chat.AdminChat(sender, "Le téléphone \""+phone.Number+"\" bien été ajouté à "+target.ActiveCharacter.Name);
                     Chat.InfoChat(target, "L'administrateur "+sender.ActiveCharacter.Name+" vous a ajouté un téléphone :\"" + phone.Number + "\".");
+                    ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+                    dbContext.SaveChanges();
                 }
                 else
                 {
                     Chat.ErrorChat(sender, "Le téléphone n'a pas pu être ajouté à l'utilisateur.");
                     PhoneHelper.DeletePhone(phone);
                 }
-                
             }
         }
     }

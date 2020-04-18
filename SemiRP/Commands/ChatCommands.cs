@@ -1,5 +1,6 @@
 ﻿using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.SAMP.Commands;
+using SemiRP.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace SemiRP.Commands
 {
     class ChatCommands
     {
-       
+
 
 
 
@@ -66,6 +67,21 @@ namespace SemiRP.Commands
 
             sender.SendClientMessage(Color.Yellow, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
             receiver.SendClientMessage(Color.Yellow, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
+        }
+
+        [Command("activermp", "activerpm", "togglemp"," togglepm")]
+        private static void TogglePm(Player sender)
+        {
+            if (sender.AcceptMP)
+            {
+                sender.AcceptMP = false;
+                sender.SendClientMessage(Color.White, "[" + Color.Yellow + "INFO" + Color.White + "] Vous avez désactivé vos message privés (mp).");
+            }
+            else
+            {
+                sender.AcceptMP = true;
+                sender.SendClientMessage(Color.White, "[" + Color.Yellow + "INFO" + Color.White + "] Vous avez activé vos message privés (mp).");
+            }
         }
     }
 }

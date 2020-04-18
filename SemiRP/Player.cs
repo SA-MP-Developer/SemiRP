@@ -32,6 +32,8 @@ namespace SemiRP
         {
             base.OnConnected(e);
 
+            AcceptMP = true;
+
             dbContext = ((GameMode)GameMode.Instance).DbContext;
 
             bool userExist = false;

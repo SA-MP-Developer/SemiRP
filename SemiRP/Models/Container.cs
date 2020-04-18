@@ -15,11 +15,13 @@ namespace SemiRP.Models
 
         public Container()
         {
+            ListItems = new List<Item>();
         }
 
         public Container(int maxSpace)
         {
             this.MaxSpace = maxSpace;
+            ListItems = new List<Item>();
         }
 
         public Container(int id, List<Item> items, int maxSpace)

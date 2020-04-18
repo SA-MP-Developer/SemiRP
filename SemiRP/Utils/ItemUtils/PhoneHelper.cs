@@ -21,43 +21,41 @@ namespace SemiRP.Utils.ItemUtils
                 number = numberRandom.Next(10000, 99999).ToString();
             } while (dbContext.Phones.Select(x => x).Where(x => x.Number == number).Any());
             Phone phone = new Phone(number, false, false, null, false);
+            dbContext.SaveChanges();
             return phone;
         }
         public static void DisplayPhoneNumber(Player player)
         {
-            Utils.Chat.CallChat(player, "Votre numéro est : "+GetDefaultPhone(player.ActiveCharacter).Number+".");
+            Phone phone = GetDefaultPhone(player.ActiveCharacter);
+            if (phone != null)
+                Utils.Chat.CallChat(player, "Votre numéro est : "+GetDefaultPhone(player.ActiveCharacter).Number+".");
+            else
+                Utils.Chat.CallChat(player, "Vous n'avez pas de téléphone.");
         }
         public static List<Phone> GetAllPhone()
         {
-
-            using (var db = new ServerDbContext())
-            {
-                return db.Phones.ToList();
-            }
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            return dbContext.Phones.ToList();
         }
         public static Phone GetPhoneByNumber(string number)
         {
-            using (var db = new ServerDbContext())
-            {
-                return db.Phones.Select(x => x).Where(w => w.Number == number).FirstOrDefault();
-            }
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            return dbContext.Phones.Select(x => x).Where(w => w.Number == number).FirstOrDefault();
         }
         public static Character GetPhoneOwner(Phone phone)
         {
-            using (var db = new ServerDbContext())
-            {
-                Container container = db.Containers.Select(x => x).Where(w => w == phone.CurrentContainer).FirstOrDefault();
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            Container container = dbContext.Containers.Select(x => x).Where(w => w == phone.CurrentContainer).FirstOrDefault();
                 if(container != null)
                 {
-                    Character character = db.Characters.Select(x => x).Where(w => w.Inventory == container).FirstOrDefault();
+                    Character character = dbContext.Characters.Select(x => x).Where(w => w.Inventory == container).FirstOrDefault();
                     return character;
                 }
                 return null;
-            }
         }
         public static Phone GetDefaultPhone(Character character)
         {
-            return GetAllPhone().Select(x => x).Where(x => x.DefaultPhone == true).FirstOrDefault();
+            return GetAllPhone().Select(x => x).Where(x => x.CurrentContainer == character.Inventory).Where(x => x.DefaultPhone == true).FirstOrDefault();
         }
         public static void SendSMS(Player sender, string number, string message)
         {
@@ -71,7 +69,7 @@ namespace SemiRP.Utils.ItemUtils
             Character character = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneReceiver);
             Player receiver = PlayerHelper.SearchCharacter(character);
             Phone phoneSender = ContainerHelper.CheckPlayerPhone(sender);
-            if (!receiver.IsConnected)
+            if (receiver == null || !receiver.IsConnected)
             {
                 Chat.ErrorChat(sender, "Le joueur n'est pas connecté.");
                 return;
@@ -195,6 +193,7 @@ namespace SemiRP.Utils.ItemUtils
                 return;
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             dbContext.Phones.Remove(phone);
+            dbContext.SaveChanges();
         }
     }
 }
