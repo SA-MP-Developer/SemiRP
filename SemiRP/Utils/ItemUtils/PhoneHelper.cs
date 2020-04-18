@@ -98,6 +98,11 @@ namespace SemiRP.Utils.ItemUtils
                 Chat.ErrorChat(sender, "Le joueur n'est pas connecté.");
                 return;
             }
+            if(phoneReceiver == phoneSender)
+            {
+                Chat.ErrorChat(sender, "Vous ne pouvez pas vous appeler vous même.");
+                return;
+            }
             Chat.CallChat(sender, "Appel en cours...");
             
             if(receiver != null) // If a player has the phone
