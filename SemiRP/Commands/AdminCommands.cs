@@ -4,6 +4,7 @@ using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.SAMP.Commands;
 using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
+using SemiRP.Utils;
 using SemiRP.Utils.ContainerUtils;
 using SemiRP.Utils.ItemUtils;
 using System;
@@ -208,7 +209,21 @@ namespace SemiRP.Commands
                 if (!sender.AccountData.HavePerm("admin.cmds.give.phone"))
                     return;
                 Phone phone = PhoneHelper.CreatePhone();
-                InventoryHelper.AddItemToCharacter(target.ActiveCharacter, phone);
+                if(Utils.ItemUtils.PhoneHelper.GetDefaultPhone(target.ActiveCharacter) == null)
+                {
+                    phone.DefaultPhone = true;
+                }
+                
+                if(InventoryHelper.AddItemToCharacter(target.ActiveCharacter, phone))
+                {
+                    Chat.AdminChat(sender, "Le téléphone \""+phone.Number+"\" bien été ajouté à "+target.ActiveCharacter.Name);
+                    Chat.InfoChat(target, "L'administrateur "+sender.ActiveCharacter.Name+" vous a ajouté un téléphone :\"" + phone.Number + "\".");
+                }
+                else
+                {
+                    Chat.ErrorChat(sender, "Le téléphone n'a pas pu être ajouté à l'utilisateur.");
+                    PhoneHelper.DeletePhone(phone);
+                }
                 
             }
         }
