@@ -20,7 +20,7 @@ namespace SemiRP.Utils.ItemUtils
             do {
                 number = numberRandom.Next(10000, 99999).ToString();
             } while (dbContext.Phones.Select(x => x).Where(x => x.Number == number).Any());
-            Phone phone = new Phone(number, false, false, null, false);
+            Phone phone = new Phone(number, false, false, null, false,5);
             dbContext.SaveChanges();
             return phone;
         }
