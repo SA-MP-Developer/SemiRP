@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Query.Internal;
 using SampSharp.GameMode;
+using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.SAMP.Commands;
+using SampSharp.GameMode.World;
 using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils;
@@ -52,7 +54,6 @@ namespace SemiRP.Commands
             var tppos = sender.Position;
             if (target.InAnyVehicle)
             {
-                Console.WriteLine("Vehicle :" + target.Version.ToString());
                 target.Vehicle.Position = new Vector3(tppos.X + 2.5f, tppos.Y, tppos.Z);
             }
             else
@@ -178,6 +179,28 @@ namespace SemiRP.Commands
                 {
                     sender.SendClientMessage(permname);
                 }
+            }
+        }
+
+        [CommandGroup("vehicule", "v")]
+        class Vehicule
+        {
+            [Command("create")]
+            private static void Create(Player sender, BaseVehicle vehicle)
+            {
+                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.create"))
+                    return;
+            }
+
+            [Command("spawntmp", "tmp")]
+            private static void SpawnTmp(Player sender, VehicleModelType vehicule)
+            {
+                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.spawntmp"))
+                    return;
+
+                var veh = BaseVehicle.Create(vehicule, sender.Position, 0.0f, 0, 0);
+                sender.PutInVehicle(veh);
+                Utils.Chat.AdminChat(sender, "Vous avez créé un véhicule temporaire (" + Constants.Chat.HIGHLIGHT + vehicule + Color.White + ").");
             }
         }
 

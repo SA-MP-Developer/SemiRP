@@ -24,7 +24,10 @@ namespace SemiRP
             "admin.cmds.give",
             "admin.cmds.give.phone",
             "admin.cmds.give.gun",
-            "admin.cmds.give.money"
+            "admin.cmds.give.money",
+            "admin.cmds.vehicule",
+            "admin.cmds.vehicule.spawntmp",
+            "admin.cmds.vehicule.create",
         };
     }
 }
