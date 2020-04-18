@@ -75,7 +75,7 @@ namespace SemiRP.Utils.ItemUtils
                 return;
             }
             Chat.SMSChat(sender, "Message envoyé à " + number + " : " + message);
-            Chat.SMSChat(receiver, "Message reçu de" + phoneSender.Number + " : " + message);
+            Chat.SMSChat(receiver, "Message reçu de " + phoneSender.Number + " : " + message);
         }
         public static void Call(Player sender, string number)
         {

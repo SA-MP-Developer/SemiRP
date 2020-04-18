@@ -70,6 +70,10 @@ namespace SemiRP.Utils
         {
             player.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] (" + numero + ") " + message);
         }
+        public static void ChatInCall(Player player, string denomination, string numero, string message)
+        {
+            player.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] "+denomination+" (" + numero + ") " + message);
+        }
         public static void InfoChat(Player player, string message)
         {
             player.SendClientMessage(Color.White, "[" + Color.DarkRed + "INFO" + Color.White + "] " + message);

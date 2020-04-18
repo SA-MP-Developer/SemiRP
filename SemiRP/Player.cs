@@ -115,11 +115,11 @@ namespace SemiRP
                 Phone phoneCall = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(phone.PhoneNumberCaller);
                 Character characterCall = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneCall);
                 Player playerCall = Utils.PlayerUtils.PlayerHelper.SearchCharacter(characterCall);
-                Utils.Chat.ChatInCall(playerCall, phone.Number, e.Text);
-                Utils.Chat.ChatInCall(this, phoneCall.Number, e.Text);
+                Utils.Chat.ChatInCall(playerCall,"Vous", phone.Number, e.Text);
+                Utils.Chat.ChatInCall(this,"La personne", phoneCall.Number, e.Text);
                 foreach (Player p in Player.All)
                 {
-                    if(p != this)
+                    if(p != this && p != playerCall)
                     {
                         float distance = this.Position.DistanceTo(p.Position);
                         if (distance < SemiRP.Constants.PROXIMITY_RADIUS)
