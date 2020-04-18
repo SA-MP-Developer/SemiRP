@@ -9,10 +9,6 @@ namespace SemiRP.Commands
 {
     class ChatCommands
     {
-
-
-
-
         [Command("me")]
         private static void MeCommand(Player sender, string message)
         {
@@ -55,18 +51,18 @@ namespace SemiRP.Commands
         {
             if (!receiver.IsConnected)
             {
-                sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] le joueur id " + receiver.Id + " n'est pas connecté.");
+                Utils.Chat.ErrorChat(sender, "le joueur id " + receiver.Id + " n'est pas connecté.");
                 return;
             }
 
             if (!receiver.AcceptMP)
             {
-                sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] " + receiver.Name + " n'accepte pas de MP.");
+                Utils.Chat.ErrorChat(sender, receiver.Name + " n'accepte pas de MP.");
                 return;
             }
 
-            sender.SendClientMessage(Color.Yellow, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
-            receiver.SendClientMessage(Color.Yellow, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
+            sender.SendClientMessage(Constants.Chat.PM, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
+            receiver.SendClientMessage(Constants.Chat.PM, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
         }
 
         [Command("activermp", "activerpm", "togglemp"," togglepm")]
@@ -75,12 +71,12 @@ namespace SemiRP.Commands
             if (sender.AcceptMP)
             {
                 sender.AcceptMP = false;
-                sender.SendClientMessage(Color.White, "[" + Color.Yellow + "INFO" + Color.White + "] Vous avez désactivé vos message privés (mp).");
+                Utils.Chat.InfoChat(sender, "Vous avez " + Constants.Chat.HIGHLIGHT + "désactivé" + Color.White + " vos message privés (mp).");
             }
             else
             {
                 sender.AcceptMP = true;
-                sender.SendClientMessage(Color.White, "[" + Color.Yellow + "INFO" + Color.White + "] Vous avez activé vos message privés (mp).");
+                Utils.Chat.InfoChat(sender, "Vous avez " + Constants.Chat.HIGHLIGHT + "activé" + Color.White + " vos message privés (mp).");
             }
         }
     }

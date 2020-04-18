@@ -39,44 +39,44 @@ namespace SemiRP.Utils
 
         public static void SendMeChat(Player from, string message)
         {
-            SendRangedChat(from, SemiRP.Constants.PROXIMITY_RADIUS, Color.HotPink, "* " + from.Name + " " + message);
+            SendRangedChat(from, SemiRP.Constants.PROXIMITY_RADIUS, Constants.Chat.ME, "* " + from.Name + " " + message);
         }
 
         public static void SendDoChat(Player from, string message)
         {
-            SendRangedChat(from, SemiRP.Constants.PROXIMITY_RADIUS, Color.HotPink, "* (" + from.Name + ") " + message);
+            SendRangedChat(from, SemiRP.Constants.PROXIMITY_RADIUS, Constants.Chat.ME, "* " + message + " ((" + from.Name + "))");
         }
         public static void ErrorChat(Player player, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] "+message);
+            player.SendClientMessage(Color.White, "[" + Constants.Chat.ERROR_TAG + "ERREUR" + Color.White + "] "+message);
         }
         public static void AdminChat(Player player, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Color.Red + "ADMIN" + Color.White + "] " + message);
+            player.SendClientMessage(Color.White, "[" + Constants.Chat.ADMIN_TAG + "ADMIN" + Color.White + "] " + message);
         }
         public static void HelpChat(Player player, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Color.DeepSkyBlue + "AIDE" + Color.White + "] " + message);
+            player.SendClientMessage(Color.White, "[" + Constants.Chat.HELP_TAG + "AIDE" + Color.White + "] " + message);
         }
         public static void CallChat(Player player, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] " + message);
+            player.SendClientMessage(Color.White, "[" + Constants.Chat.TEL_TAG + "APPEL" + Color.White + "] " + message);
         }
         public static void SMSChat(Player player, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Color.OrangeRed + "SMS" + Color.White + "] " + message);
+            player.SendClientMessage(Color.White, "[" + Constants.Chat.SMS_TAG + "SMS" + Color.White + "] " + message);
         }
         public static void ChatInCall(Player player, string numero, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] (" + numero + ") : " + message);
+            player.SendClientMessage(Color.White, "[" + Constants.Chat.TEL_TAG + "APPEL" + Color.White + "] (" + numero + ") : " + message);
         }
         public static void ChatInCall(Player player, string denomination, string numero, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Color.DarkRed + "APPEL" + Color.White + "] "+denomination+" (" + numero + ") : " + message);
+            player.SendClientMessage(Color.White, "[" + Constants.Chat.TEL_TAG + "APPEL" + Color.White + "] "+denomination+" (" + numero + ") : " + message);
         }
         public static void InfoChat(Player player, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Color.DarkRed + "INFO" + Color.White + "] " + message);
+            player.SendClientMessage(Color.White, "[" + Constants.Chat.INFO_TAG + "INFO" + Color.White + "] " + message);
         }
 
 
