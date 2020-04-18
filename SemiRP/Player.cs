@@ -209,6 +209,13 @@ namespace SemiRP
             this.Spawn();
         }
 
+        public override void OnSpawned(SpawnEventArgs e)
+        {
+            base.OnSpawned(e);
+
+            this.Skin = (int)this.ActiveCharacter.Skin;
+        }
+
         #endregion
     }
 }
