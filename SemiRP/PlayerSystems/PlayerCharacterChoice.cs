@@ -4,6 +4,7 @@ using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.World;
 using SemiRP.Models;
+using SemiRP.Models.ContainerHeritage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,12 +79,21 @@ namespace SemiRP.PlayerSystems
                     chrSpawn.RotY = 0f;
                     chrSpawn.RotZ = 269.4686f;
 
+                    Inventory inv = new Inventory();
+                    inv.MaxSpace = Constants.CHARACTER_INVENTORY_SIZE;
+
                     Character chr = new Character();
                     chr.Account = player.AccountData;
                     chr.Name = (string)e.Data["name"];
                     chr.Age = (uint)e.Data["age"];
                     chr.Sex = (Character.CharSex)e.Data["sex"];
+                    chr.Skin = 26;
                     chr.SpawnLocation = chrSpawn;
+                    chr.Inventory = inv;
+                    chr.PermsSet = new PermissionSet();
+                    chr.GroupOwner = new List<Group>();
+                    chr.GroupRanks = new List<GroupRank>();
+                    chr.BuildingOwner = new List<Building>();
 
                     player.ActiveCharacter = chr;
 

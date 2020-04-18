@@ -150,7 +150,7 @@ namespace SemiRP
                 return;
 
             this.ToggleSpectating(false);
-            this.SetSpawnInfo(NoTeam, 26, this.ActiveCharacter.SpawnLocation.Position, this.ActiveCharacter.SpawnLocation.RotZ);
+            this.SetSpawnInfo(NoTeam, (int)this.ActiveCharacter.Skin, this.ActiveCharacter.SpawnLocation.Position, this.ActiveCharacter.SpawnLocation.RotZ);
             this.Name = this.ActiveCharacter.Name;
             this.Spawn();
         }
