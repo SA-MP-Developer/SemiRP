@@ -20,10 +20,10 @@ namespace SemiRP.Commands
         [Command("help", "aide", "h", "a")]
         private static void Help(Player sender)
         {
-            if (!sender.AccountData.HavePerm("admin.cmd.help"))
+            if (!sender.AccountData.HavePerm("admin.cmds.help"))
                 return;
 
-            Utils.Chat.AdminChat(sender, "/help /goto /gethere /slap /pm /perm /give");
+            Utils.Chat.AdminChat(sender, "help, goto, gethere, slap, pm, perm, give, set, freeze");
             
         }
 
@@ -89,10 +89,10 @@ namespace SemiRP.Commands
             if (!sender.AccountData.HavePerm("admin.cmds.freeze"))
                 return;
 
-            target.ToggleControllable(false);
+            target.ToggleControllable(true);
 
-            Utils.Chat.AdminChat(sender, "Vous avez freeze " + Color.Red + target.Name + Color.White + " (" + target.Id + ").");
-            Utils.Chat.AdminChat(target, "Vous avez été freeze par " + Color.Red + sender.AccountData.Nickname + Color.White + ".");
+            Utils.Chat.AdminChat(sender, "Vous avez défreeze " + Color.Red + target.Name + Color.White + " (" + target.Id + ").");
+            Utils.Chat.AdminChat(target, "Vous avez été défreeze par " + Color.Red + sender.AccountData.Nickname + Color.White + ".");
         }
 
         [Command("pm", "mp")]
@@ -101,8 +101,8 @@ namespace SemiRP.Commands
             if (!sender.AccountData.HavePerm("admin.cmds.pm"))
                 return;
 
-            Utils.Chat.AdminChat(sender, Color.Yellow + "[PM] " + Color.White + sender.AccountData.Nickname + " : " + message);
-            Utils.Chat.AdminChat(target, Color.Yellow + "[PM] " + Color.White + sender.AccountData.Nickname + " : " + message);
+            Utils.Chat.AdminChat(sender, "["+Color.Yellow + "PM " + Color.White +"]"+ sender.AccountData.Nickname + " : " + message);
+            Utils.Chat.AdminChat(target, "["+Color.Yellow + "PM " + Color.White +"]"+ sender.AccountData.Nickname + " : " + message);
         }
 
         [CommandGroup("permission", "perm")]
