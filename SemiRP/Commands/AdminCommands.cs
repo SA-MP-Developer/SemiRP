@@ -70,6 +70,30 @@ namespace SemiRP.Commands
             Utils.Chat.AdminChat(target, "Vous avez été slapé par " + Color.Red  + sender.AccountData.Nickname + Color.White + ".");
         }
 
+        [Command("freeze")]
+        private static void Freeze(Player sender, Player target)
+        {
+            if (!sender.AccountData.HavePerm("admin.cmds.freeze"))
+                return;
+
+            target.ToggleControllable(false);
+
+            Utils.Chat.AdminChat(sender, "Vous avez freeze " + Color.Red + target.Name + Color.White + " (" + target.Id + ").");
+            Utils.Chat.AdminChat(target, "Vous avez été freeze par " + Color.Red + sender.AccountData.Nickname + Color.White + ".");
+        }
+
+        [Command("unfreeze")]
+        private static void UnFreeze(Player sender, Player target)
+        {
+            if (!sender.AccountData.HavePerm("admin.cmds.freeze"))
+                return;
+
+            target.ToggleControllable(false);
+
+            Utils.Chat.AdminChat(sender, "Vous avez freeze " + Color.Red + target.Name + Color.White + " (" + target.Id + ").");
+            Utils.Chat.AdminChat(target, "Vous avez été freeze par " + Color.Red + sender.AccountData.Nickname + Color.White + ".");
+        }
+
         [Command("pm", "mp")]
         private static void PrivateMessage(Player sender, Player target, string message)
         {
@@ -86,8 +110,8 @@ namespace SemiRP.Commands
             [Command("add", "a")]
             private static void Add(Player sender, Player target, string perm)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
-                    return;
+                //if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
+                //    return;
 
                 var ret = Utils.Permissions.AddPerm(target.AccountData.PermsSet, perm);
                 if (ret == 1)
@@ -152,6 +176,29 @@ namespace SemiRP.Commands
                 }
             }
         }
+
+        [CommandGroup("set")]
+        class Set
+        {
+            [Command("skin")]
+            private static void SetSkin(Player sender, Player target, int skinid)
+            {
+                if (!sender.AccountData.HavePerm("admin.cmds.set.skin"))
+                    return;
+
+                if (skinid < 0 || 311 < skinid)
+                {
+                    Utils.Chat.AdminChat(sender, "Le skin ID " + skinid + " n'est pas valide, l'id d'un skin doit être entre 0 et 311.");
+                }
+
+                target.ActiveCharacter.Skin = (uint)skinid;
+                target.Skin = skinid;
+
+                Utils.Chat.AdminChat(sender, "Vous avez mis le skin " + skinid + " à " + Color.Red + target.Name + Color.White + " (" + target.Id + ").");
+                Utils.Chat.AdminChat(target, Color.Red + sender.AccountData.Nickname + Color.White + " vous a mis le skin " + skinid + ".");
+            }
+        }
+
         [CommandGroup("give")]
         class GiveItems
         {
