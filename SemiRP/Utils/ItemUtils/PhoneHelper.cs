@@ -189,5 +189,12 @@ namespace SemiRP.Utils.ItemUtils
             phoneCaller.PhoneNumberCaller = null;
             
         }
+        public static void DeletePhone(Phone phone)
+        {
+            if (phone == null)
+                return;
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.Phones.Remove(phone);
+        }
     }
 }
