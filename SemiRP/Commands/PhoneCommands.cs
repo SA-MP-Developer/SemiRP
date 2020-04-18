@@ -42,5 +42,39 @@ namespace SemiRP.Commands
         {
             PhoneHelper.DisplayPhoneNumber(sender);
         }
+
+        [CommandGroup("contact", "c")]
+        public class Contact
+        {
+            [Command("ajouter", "aj")]
+            private static void AddContact(Player sender, String name, String number)
+            {
+                try
+                {
+                    PhoneHelper.AddContactToPhoneBook(PhoneHelper.CreateContact(name, number), PhoneHelper.GetDefaultPhone(sender.ActiveCharacter));
+                    Utils.Chat.InfoChat(sender, "Le contact " + name + " (" + number + ") a bien été ajouté au répertoire du téléphone par défaut.");
+
+                }
+                catch(Exception e)
+                {
+                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être ajouté dans le répertoire à cause d'une erreur.");
+                }
+            }
+            [Command("retirer", "re")]
+            private static void RemoveContact(Player sender, String name)
+            {
+                try
+                {
+                    PhoneHelper.RemoveContactFromPhoneBook(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter));
+                    Utils.Chat.InfoChat(sender, "Le contact " + name + " a bien été supprimé du répertoire du téléphone par défaut.");
+                }
+                catch(Exception e)
+                {
+                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être supprimé du répertoire à cause d'une erreur.");
+                }
+                
+            }
+        }
+        
     }
 }
