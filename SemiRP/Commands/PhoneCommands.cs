@@ -74,6 +74,45 @@ namespace SemiRP.Commands
                 }
                 
             }
+            [Command("appeler", "appel")]
+            private static void CallContact(Player sender, String name)
+            {
+                try
+                {
+                    PhoneHelper.Call(sender, PhoneHelper.GetContactByName(name,PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number);
+                }
+                catch (Exception e)
+                {
+                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être appelé à cause d'une erreur.");
+                }
+
+            }
+            [Command("numero", "num")]
+            private static void NumberContact(Player sender, String name)
+            {
+                try
+                {
+                    Utils.Chat.ErrorChat(sender,"Le numéro du contact est : "+PhoneHelper.GetContactByName(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number);
+                }
+                catch (Exception e)
+                {
+                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être appelé à cause d'une erreur.");
+                }
+
+            }
+            [Command("sms")]
+            private static void SMSContact(Player sender, String name, String message)
+            {
+                try
+                {
+                    PhoneHelper.SendSMS(sender, PhoneHelper.GetContactByName(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number,message);
+                }
+                catch (Exception e)
+                {
+                    Utils.Chat.ErrorChat(sender, "Le SMS n'a pas pu être envoyé à cause d'une erreur.");
+                }
+
+            }
         }
         
     }
