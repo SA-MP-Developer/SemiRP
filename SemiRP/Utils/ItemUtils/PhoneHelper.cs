@@ -211,7 +211,7 @@ namespace SemiRP.Utils.ItemUtils
         }
         public static bool RemoveContactFromPhoneBook(String name, Phone phone)
         {
-            if (phone.PhoneBook.RemoveAll(x=>x.name == name) > 0)
+            if (phone.PhoneBook.RemoveAll(x=>x.Name == name) > 0)
             {
                 return true;
             }

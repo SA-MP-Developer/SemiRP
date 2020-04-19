@@ -7,14 +7,6 @@ namespace SemiRP.Models.ItemHeritage
 {
     public class Phone : Item
     {
-        private string number;
-        private bool defaultPhone;
-        private bool isRinging;
-        private string phoneNumberCaller;
-        private bool isCalling;
-        private List<ContactPhone> phoneBook;
-        private int maxContact;
-
         public Phone()
         {
 
@@ -22,25 +14,24 @@ namespace SemiRP.Models.ItemHeritage
 
         public Phone(string number, bool defaultPhone, bool isRinging, string phoneNumberCaller, bool isCalling, int maxContact)
         {
-            this.number = number;
-            this.defaultPhone = defaultPhone;
-            this.isRinging = isRinging;
-            this.phoneNumberCaller = phoneNumberCaller;
-            this.isCalling = isCalling;
-            this.MaxContact = maxContact;
-            this.phoneBook = new List<ContactPhone>();
+            Number = number;
+            DefaultPhone = defaultPhone;
+            IsRinging = IsRinging;
+            PhoneNumberCaller = phoneNumberCaller;
+            IsCalling = isCalling;
+            MaxContact = maxContact;
         }
 
 
-        public string Number { get => number; set => number = value; }
-        public bool DefaultPhone { get => defaultPhone; set => defaultPhone = value; }
+        public string Number { get; set; }
+        public bool DefaultPhone { get; set; }
         [NotMapped]
-        public bool IsRinging { get => isRinging; set => isRinging = value; }
+        public bool IsRinging { get; set; }
         [NotMapped]
-        public string PhoneNumberCaller { get => phoneNumberCaller; set => phoneNumberCaller = value; }
+        public string PhoneNumberCaller { get; set; }
         [NotMapped]
-        public bool IsCalling { get => isCalling; set => isCalling = value; }
+        public bool IsCalling { get; set; }
         public List<ContactPhone> PhoneBook { get; set; }
-        public int MaxContact { get => maxContact; set => maxContact = value; }
+        public int MaxContact { get; set; }
     }
 }
