@@ -66,9 +66,9 @@ namespace SemiRP.Utils
         {
             player.SendClientMessage(Color.White, "[" + Constants.Chat.SMS_TAG + "SMS" + Color.White + "] " + message);
         }
-        public static void ChatInCall(Player player, string numero, string message)
+        public static void ChatInCall(Player player, string denomination, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Constants.Chat.TEL_TAG + "APPEL" + Color.White + "] (" + numero + ") : " + message);
+            player.SendClientMessage(Color.White, "[" + Constants.Chat.TEL_TAG + "APPEL" + Color.White + "] " + denomination + " : " + message);
         }
         public static void ChatInCall(Player player, string denomination, string numero, string message)
         {
