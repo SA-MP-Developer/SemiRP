@@ -31,7 +31,7 @@ namespace SemiRP.Models.ItemHeritage
         public string PhoneNumberCaller { get; set; }
         [NotMapped]
         public bool IsCalling { get; set; }
-        public List<ContactPhone> PhoneBook { get; set; }
+        public virtual List<ContactPhone> PhoneBook { get; set; }
         public int MaxContact { get; set; }
     }
 }
