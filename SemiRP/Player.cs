@@ -87,6 +87,35 @@ namespace SemiRP
             {
                 PlayerRegistration regMenu = new PlayerRegistration();
 
+                regMenu.GetMenu().Ended += (sender, e) =>
+                {
+                    if (!(e.Data.ContainsKey("password") && e.Data.ContainsKey("email")))
+                    {
+                        regMenu.Show(this);
+                        return;
+                    }
+
+
+                    Account acc = new Account
+                    {
+                        Email = (string)e.Data["email"],
+                        Username = this.Name,
+                        Nickname = this.Name,
+                        Password = (string)e.Data["password"],
+                        LastConnectionIP = this.IP,
+                        LastConnectionTime = DateTime.Now,
+                        PermsSet = new PermissionSet()
+                    };
+
+                    dbContext.Add(acc);
+                    dbContext.SaveChanges();
+
+                    this.AccountData = dbContext.Accounts.Single(a => a.Username == this.Name);
+
+                    PlayerCharacterChoice chrChoiceMenu = new PlayerCharacterChoice(this);
+                    chrChoiceMenu.Show();
+                };
+
                 var regex = new Regex(@"[A-Z][a-z]+_[A-Z][a-z]+([A-Z][a-z]+)*");
                 if (regex.IsMatch(this.Name))
                 {
@@ -123,37 +152,6 @@ namespace SemiRP
                     nameChangerDialog.Show(this);
                     return;
                 }
-
-                
-
-                regMenu.GetMenu().Ended += (sender, e) =>
-                {
-                    if (!(e.Data.ContainsKey("password") && e.Data.ContainsKey("email")))
-                    {
-                        regMenu.Show(this);
-                        return;
-                    }
-
-
-                    Account acc = new Account
-                    {
-                        Email = (string)e.Data["email"],
-                        Username = this.Name,
-                        Nickname = this.Name,
-                        Password = (string)e.Data["password"],
-                        LastConnectionIP = this.IP,
-                        LastConnectionTime = DateTime.Now,
-                        PermsSet = new PermissionSet()
-                    };
-
-                    dbContext.Add(acc);
-                    dbContext.SaveChanges();
-
-                    this.AccountData = dbContext.Accounts.Single(a => a.Username == this.Name);
-
-                    PlayerCharacterChoice chrChoiceMenu = new PlayerCharacterChoice(this);
-                    chrChoiceMenu.Show();
-                };
 
                 regMenu.Show(this);
             }
