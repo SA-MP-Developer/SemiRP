@@ -63,16 +63,14 @@ namespace SemiRP.Utils.ItemUtils
 
             if (phoneReceiver is null)
             {
-                Chat.ErrorChat(sender, "Le numéro " + number + " n'est pas attribué.");
-                return;
+                throw new Exception("Le numéro " + number + " n'est pas attribué.");
             }
             Character character = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneReceiver);
             Player receiver = PlayerHelper.SearchCharacter(character);
             Phone phoneSender = ContainerHelper.CheckPlayerPhone(sender);
             if (receiver == null || !receiver.IsConnected)
             {
-                Chat.ErrorChat(sender, "Le joueur n'est pas connecté.");
-                return;
+                throw new Exception("Le joueur n'est pas connecté.");
             }
             Chat.SMSChat(sender, "Message envoyé à " + number + " : " + message);
             Chat.SMSChat(receiver, "Message reçu de " + phoneSender.Number + " : " + message);
@@ -82,12 +80,11 @@ namespace SemiRP.Utils.ItemUtils
             Phone phoneReceiver = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(number);
             if (phoneReceiver is null)
             {
-                Chat.ErrorChat(sender, "le numéro " + number + " n'est pas attribué.");
-                return;
+                throw new Exception("le numéro " + number + " n'est pas attribué.");
             }
             if (phoneReceiver.IsRinging || phoneReceiver.IsCalling)
             {
-                Chat.ErrorChat(sender, "le numéro " + number + " est déjà en cours d'appel.");
+                throw new Exception("le numéro " + number + " est déjà en cours d'appel.");
             }
             Character character = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneReceiver);
             Player receiver = PlayerHelper.SearchCharacter(character);
@@ -95,13 +92,11 @@ namespace SemiRP.Utils.ItemUtils
 
             if (!receiver.IsConnected)
             {
-                Chat.ErrorChat(sender, "Le joueur n'est pas connecté.");
-                return;
+                throw new Exception("Le joueur n'est pas connecté.");
             }
             if(phoneReceiver == phoneSender)
             {
-                Chat.ErrorChat(sender, "Vous ne pouvez pas vous appeler vous même.");
-                return;
+                throw new Exception("Vous ne pouvez pas vous appeler vous même.");
             }
             Chat.CallChat(sender, "Appel en cours...");
             
@@ -159,8 +154,7 @@ namespace SemiRP.Utils.ItemUtils
         {
             if (!GetDefaultPhone(player.ActiveCharacter).IsRinging)
             {
-                Chat.ErrorChat(player, "Vous n'avez aucun appel.");
-                return;
+                throw new Exception("Vous n'avez aucun appel.");
             }
             Phone phonePlayer = GetDefaultPhone(player.ActiveCharacter);
             Phone phoneCaller = GetPhoneByNumber(phonePlayer.PhoneNumberCaller);
@@ -177,8 +171,7 @@ namespace SemiRP.Utils.ItemUtils
         {
             if (!GetDefaultPhone(player.ActiveCharacter).IsCalling)
             {
-                Chat.ErrorChat(player, "Vous n'êtes pas en appel.");
-                return;
+                throw new Exception("Vous n'êtes pas en appel.");
             }
             Phone phonePlayer = GetDefaultPhone(player.ActiveCharacter);
             Phone phoneCaller = GetPhoneByNumber(phonePlayer.PhoneNumberCaller);
@@ -200,33 +193,33 @@ namespace SemiRP.Utils.ItemUtils
             dbContext.Phones.Remove(phone);
             dbContext.SaveChanges();
         }
-        public static bool AddContactToPhoneBook(ContactPhone contactPhone, Phone phone)
+        public static void AddContactToPhoneBook(ContactPhone contactPhone, Phone phone)
         {
             if(phone.MaxContact >= phone.PhoneBook.Count())
             {
                 if(phone.PhoneBook.Any(x=>x.Name == contactPhone.Name))
                 {
-                    return false;
+                    throw new Exception("Contact avec le même nom déjà existant.");
                 }
                 else
                 {
                     phone.PhoneBook.Add(contactPhone);
-                    return true;
+                    ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+                    dbContext.SaveChanges();
                 }
-                
-                
             }
-            return false;
         }
-        public static bool RemoveContactFromPhoneBook(String name, Phone phone)
+        public static void RemoveContactFromPhoneBook(String name, Phone phone)
         {
             if (phone.PhoneBook.RemoveAll(x=>x.Name == name) > 0)
             {
-                return true;
+                ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+                dbContext.SaveChanges();
+                return;
             }
             else
             {
-                return false;
+                throw new Exception("Le contact n'a pas été trouvé.");
             }
         }
         public static ContactPhone CreateContact(String name, String number)
