@@ -20,6 +20,7 @@ namespace SemiRP.Models.ItemHeritage
             PhoneNumberCaller = phoneNumberCaller;
             IsCalling = isCalling;
             MaxContact = maxContact;
+            PhoneBook = new List<ContactPhone>();
         }
 
 
