@@ -204,8 +204,17 @@ namespace SemiRP.Utils.ItemUtils
         {
             if(phone.MaxContact >= phone.PhoneBook.Count())
             {
-                phone.PhoneBook.Add(contactPhone);
-                return true;
+                if(phone.PhoneBook.Any(x=>x.Name == contactPhone.Name))
+                {
+                    return false;
+                }
+                else
+                {
+                    phone.PhoneBook.Add(contactPhone);
+                    return true;
+                }
+                
+                
             }
             return false;
         }
@@ -224,6 +233,11 @@ namespace SemiRP.Utils.ItemUtils
         {
             ContactPhone contactPhone = new ContactPhone(name, number);
             return contactPhone;
+        }
+        public static ContactPhone GetContactByName(String name, Phone phone)
+        {
+            ContactPhone contact = phone.PhoneBook.Select(x => x).Where(x => x.Name == name).FirstOrDefault();
+            return contact;
         }
         
     }
