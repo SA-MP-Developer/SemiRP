@@ -171,8 +171,8 @@ namespace SemiRP
                 Phone phoneCall = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(phone.PhoneNumberCaller);
                 Character characterCall = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneCall);
                 Player playerCall = Utils.PlayerUtils.PlayerHelper.SearchCharacter(characterCall);
-                Utils.Chat.ChatInCall(playerCall,"Vous", phone.Number, e.Text);
-                Utils.Chat.ChatInCall(this,"La personne", phoneCall.Number, e.Text);
+                Utils.Chat.ChatInCall(playerCall, "La personne", phone.Number, e.Text);
+                Utils.Chat.ChatInCall(this,"Vous", e.Text);
                 foreach (Player p in Player.All)
                 {
                     if(p != this && p != playerCall)
