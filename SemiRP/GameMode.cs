@@ -24,6 +24,13 @@ namespace SemiRP
         {
             base.OnInitialized(e);
 
+            this.DisableInteriorEnterExits();
+            this.EnableStuntBonusForAll(false);
+            this.AllowInteriorWeapons(true);
+            this.ManualVehicleEngineAndLights();
+            this.ShowPlayerMarkers(SampSharp.GameMode.Definitions.PlayerMarkersMode.Off);
+            this.ShowNameTags(false);
+
             dbContext = new ServerDbContext();
 
             Console.WriteLine("\n--------------------------------------------");

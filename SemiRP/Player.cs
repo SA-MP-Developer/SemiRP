@@ -33,6 +33,10 @@ namespace SemiRP
         {
             base.OnConnected(e);
 
+            this.SetSkillLevel(WeaponSkill.Pistol, 998);
+            this.SetSkillLevel(WeaponSkill.MicroUzi, 998);
+            this.SetSkillLevel(WeaponSkill.SawnoffShotgun, 998);
+
             AcceptMP = true;
 
             dbContext = ((GameMode)GameMode.Instance).DbContext;
