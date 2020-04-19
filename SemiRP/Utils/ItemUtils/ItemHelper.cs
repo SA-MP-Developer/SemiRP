@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
+using SemiRP.Utils.PlayerUtils;
 
 namespace SemiRP.Utils.ItemUtils
 {
@@ -16,6 +17,28 @@ namespace SemiRP.Utils.ItemUtils
         public static List<Item> GetItemByName(string name)
         {
             return ((GameMode)GameMode.Instance).DbContext.Items.Select(x=>x).Where(w=>w.Name == name).ToList();
+        }
+        public static Item GetNearestItemOfCharacter(Character character)
+        {
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            Player player = PlayerHelper.SearchCharacter(character);
+            Item item = dbContext.Items.OrderBy(x => player.GetDistanceFromPoint(x.SpawnLocation.Position)).First();
+            if(item != null)
+            {
+                return item;
+            }
+            else
+            {
+                throw new Exception("Aucun objet.");
+            }
+            
+        }
+        public static void ItemIsCloseEnoughOfPlayer(Player player, Item item)
+        {
+            if (item.SpawnLocation.Position.DistanceTo(player.Position) > Constants.Item.PROXIMITY_RADIUS)
+            {
+                throw new Exception("Aucun objet à proximité.");
+            }
         }
     }
 }

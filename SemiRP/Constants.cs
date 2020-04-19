@@ -32,5 +32,9 @@ namespace SemiRP
             public static Color PM = Color.Yellow;
             public static Color ADMIN_PM = Color.Red;
         }
+        public static class Item
+        {
+            public static float PROXIMITY_RADIUS = 1.0f;
+        }
     }
 }
