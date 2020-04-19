@@ -17,30 +17,66 @@ namespace SemiRP.Commands
         [Command("sms")]
         private static void SendSMS(Player sender, string number, string message)
         {
-            PhoneHelper.SendSMS(sender, number, message);
+            try
+            {
+                PhoneHelper.SendSMS(sender, number, message);
+            }
+            catch (Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "Le sms n'a pas pu être envoyé à cause d'une erreur : " + e.Message);
+            }
         }
 
         [Command("appel","appeler")]
         private static void Call(Player sender, string number)
         {
-            PhoneHelper.Call(sender, number);
+            try
+            {
+                PhoneHelper.Call(sender, number);
+            }
+            catch (Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "L'appel n'a pas pu être démarré à cause d'une erreur : " + e.Message);
+            }
         }
 
         [Command("dec", "decrocher")]
         private static void PickUp(Player sender)
         {
-            PhoneHelper.PickUp(sender);
+            try
+            {
+                PhoneHelper.PickUp(sender);
+            }
+            catch (Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "L'appel n'a pas pu être démarré à cause d'une erreur : " + e.Message);
+            }
         }
 
         [Command("rac", "raccrocher")]
         private static void HangUp(Player sender)
         {
-            PhoneHelper.HangUp(sender);
+            try
+            {
+                PhoneHelper.HangUp(sender);
+            }
+            catch (Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "L'appel n'a pas pu être fini à cause d'une erreur : " + e.Message);
+            }
         }
         [Command("numero", "num")]
         private static void Number(Player sender)
         {
-            PhoneHelper.DisplayPhoneNumber(sender);
+            try
+            {
+                PhoneHelper.DisplayPhoneNumber(sender);
+            }
+            catch(Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "Le numéro n'a pas pu être affiché à cause d'une erreur : " + e.Message);
+            }
+            
         }
 
         [CommandGroup("contact", "c")]
@@ -51,13 +87,15 @@ namespace SemiRP.Commands
             {
                 try
                 {
-                    PhoneHelper.AddContactToPhoneBook(PhoneHelper.CreateContact(name, number), PhoneHelper.GetDefaultPhone(sender.ActiveCharacter));
+                    Phone phone = PhoneHelper.GetDefaultPhone(sender.ActiveCharacter);
+                    ContactPhone contactPhone = PhoneHelper.CreateContact(name, number);
+                    PhoneHelper.AddContactToPhoneBook(contactPhone, phone);
                     Utils.Chat.InfoChat(sender, "Le contact " + name + " (" + number + ") a bien été ajouté au répertoire du téléphone par défaut.");
 
                 }
                 catch(Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être ajouté dans le répertoire à cause d'une erreur.");
+                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être ajouté dans le répertoire à cause d'une erreur : "+e.Message);
                 }
             }
             [Command("retirer", "re")]
@@ -70,7 +108,7 @@ namespace SemiRP.Commands
                 }
                 catch(Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être supprimé du répertoire à cause d'une erreur.");
+                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être supprimé du répertoire à cause d'une erreur : "+e.Message);
                 }
                 
             }
@@ -83,7 +121,7 @@ namespace SemiRP.Commands
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être appelé à cause d'une erreur.");
+                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être appelé à cause d'une erreur : " + e.Message);
                 }
 
             }
@@ -92,11 +130,11 @@ namespace SemiRP.Commands
             {
                 try
                 {
-                    Utils.Chat.ErrorChat(sender,"Le numéro du contact est : "+PhoneHelper.GetContactByName(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number);
+                    Utils.Chat.InfoChat(sender,"Le numéro du contact est : "+PhoneHelper.GetContactByName(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number);
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être appelé à cause d'une erreur.");
+                    Utils.Chat.ErrorChat(sender, "Le numéro du contact n'a pas pu être affiché à cause d'une erreur : " + e.Message);
                 }
 
             }
@@ -109,7 +147,7 @@ namespace SemiRP.Commands
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le SMS n'a pas pu être envoyé à cause d'une erreur.");
+                    Utils.Chat.ErrorChat(sender, "Le SMS n'a pas pu être envoyé à cause d'une erreur : "+e.Message);
                 }
 
             }
