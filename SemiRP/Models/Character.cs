@@ -26,13 +26,14 @@ namespace SemiRP.Models
         private List<Group> groupOwner;
         private List<Building> buildingOwner;
         private Inventory inventory;
+        private Item itemInHand;
 
         public Character()
         {
 
         }
 
-        public Character(int id, Account account, string name, uint age, int level, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Inventory inventory)
+        public Character(int id, Account account, string name, uint age, int level, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Inventory inventory, Item itemInHand)
         {
             this.Id = id;
             this.Account = account;
@@ -43,6 +44,7 @@ namespace SemiRP.Models
             this.BuildingOwner = buildingOwner;
             this.Inventory = inventory;
             this.Level = level;
+            this.ItemInHand = itemInHand;
         }
         public IList<Permission> GetPerms()
         {
@@ -64,5 +66,6 @@ namespace SemiRP.Models
         public virtual SpawnLocation SpawnLocation { get; set; }
         [ForeignKey("PermissionSet")]
         public virtual PermissionSet PermsSet { get; set; }
+        public virtual Item ItemInHand { get => itemInHand; set => itemInHand = value; }
     }
 }
