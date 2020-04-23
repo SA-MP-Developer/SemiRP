@@ -40,5 +40,13 @@ namespace SemiRP.Utils.ItemUtils
                 throw new Exception("Aucun objet à proximité.");
             }
         }
+        public static void RemoveItemFromPlayerHand(Player player)
+        {
+            if(player.ActiveCharacter.ItemInHand == null)
+            {
+                throw new Exception("Aucun objet dans les mains.");
+            }
+            player.ActiveCharacter.ItemInHand = null;
+        }
     }
 }
