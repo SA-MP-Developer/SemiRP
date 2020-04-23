@@ -16,8 +16,25 @@ namespace SemiRP
 
         public const int CHARACTER_INVENTORY_SIZE = 50;
 
+        public static class Vehicle
+        {
+            public static float SPEED_MAGIC = 181.5f;
+            public static float LOCK_RANGE = 3.0f;
+            public static float HOOD_RANGE = 4.0f;
+            public static float STOPPED_CONSUMPTION = 0.0001f;
+
+            public static int MS500_TIMER = 500;
+        }
+
         public static class Chat
         {
+            public static float CHAT_BUBBLE_ME_RANGE = 10.0f;
+            public static float CHAT_BUBBLE_TALK_RANGE = 15.0f;
+
+            public static float RANGED_CHAT_FINAL_COLOR_PERC = 0.5f;
+
+            public static float CHAT_BUBBLE_TIME_FACTOR = 2.0f;
+
             public static Color ADMIN_TAG = Color.Red;
             public static Color INFO_TAG = Color.LemonChiffon;
             public static Color SMS_TAG = Color.YellowGreen;

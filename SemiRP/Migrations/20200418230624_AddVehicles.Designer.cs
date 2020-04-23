@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SemiRP;
 
 namespace SemiRP.Migrations
 {
     [DbContext(typeof(ServerDbContext))]
-    partial class ServerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200418230624_AddVehicles")]
+    partial class AddVehicles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,9 +222,6 @@ namespace SemiRP.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SpawnLocationId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Weight")
                         .HasColumnType("double");
 
@@ -230,33 +229,9 @@ namespace SemiRP.Migrations
 
                     b.HasIndex("CurrentContainerId");
 
-                    b.HasIndex("SpawnLocationId");
-
                     b.ToTable("Items");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Item");
-                });
-
-            modelBuilder.Entity("SemiRP.Models.ItemHeritage.ContactPhone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Number")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int?>("PhoneId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhoneId");
-
-                    b.ToTable("ContactPhone");
                 });
 
             modelBuilder.Entity("SemiRP.Models.Permission", b =>
@@ -360,22 +335,13 @@ namespace SemiRP.Migrations
                     b.Property<float>("Fuel")
                         .HasColumnType("float");
 
-                    b.Property<float>("FuelConsumption")
-                        .HasColumnType("float");
-
-                    b.Property<float>("MaxFuel")
-                        .HasColumnType("float");
-
-                    b.Property<float>("Mileage")
-                        .HasColumnType("float");
+                    b.Property<int>("Model")
+                        .HasColumnType("int");
 
                     b.Property<int?>("OwnerId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SpawnLocationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -386,35 +352,7 @@ namespace SemiRP.Migrations
 
                     b.HasIndex("SpawnLocationId");
 
-                    b.HasIndex("TypeId");
-
                     b.ToTable("Vehicles");
-                });
-
-            modelBuilder.Entity("SemiRP.Models.VehicleModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("BasePrice")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ContainerSize")
-                        .HasColumnType("int");
-
-                    b.Property<float>("FuelConsumption")
-                        .HasColumnType("float");
-
-                    b.Property<float>("MaxFuel")
-                        .HasColumnType("float");
-
-                    b.Property<int>("Model")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VehicleModels");
                 });
 
             modelBuilder.Entity("SemiRP.Models.ContainerHeritage.Inventory", b =>
@@ -437,9 +375,6 @@ namespace SemiRP.Migrations
 
                     b.Property<bool>("DefaultPhone")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("MaxContact")
-                        .HasColumnType("int");
 
                     b.Property<string>("Number")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -511,17 +446,6 @@ namespace SemiRP.Migrations
                     b.HasOne("SemiRP.Models.Container", "CurrentContainer")
                         .WithMany("ListItems")
                         .HasForeignKey("CurrentContainerId");
-
-                    b.HasOne("SemiRP.Models.SpawnLocation", "SpawnLocation")
-                        .WithMany()
-                        .HasForeignKey("SpawnLocationId");
-                });
-
-            modelBuilder.Entity("SemiRP.Models.ItemHeritage.ContactPhone", b =>
-                {
-                    b.HasOne("SemiRP.Models.ItemHeritage.Phone", null)
-                        .WithMany("PhoneBook")
-                        .HasForeignKey("PhoneId");
                 });
 
             modelBuilder.Entity("SemiRP.Models.Permission", b =>
@@ -559,10 +483,6 @@ namespace SemiRP.Migrations
                     b.HasOne("SemiRP.Models.SpawnLocation", "SpawnLocation")
                         .WithMany()
                         .HasForeignKey("SpawnLocationId");
-
-                    b.HasOne("SemiRP.Models.VehicleModel", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId");
                 });
 
             modelBuilder.Entity("SemiRP.Models.ContainerHeritage.Inventory", b =>

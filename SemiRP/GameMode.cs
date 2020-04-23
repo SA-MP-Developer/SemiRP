@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using SampSharp.GameMode;
+using SampSharp.GameMode.Definitions;
+using SampSharp.GameMode.SAMP;
 using SemiRP.Models;
 
 namespace SemiRP
@@ -12,11 +14,16 @@ namespace SemiRP
         #region Overrides of BaseMode
 
         private ServerDbContext dbContext;
-
         public ServerDbContext DbContext { get { return dbContext; } }
+
+        private Timer vehicleTimer;
+
         protected override void OnExited(EventArgs e)
         {
             base.OnExited(e);
+
+            vehicleTimer.Dispose();
+
             dbContext.Dispose();
         }
 
@@ -79,6 +86,56 @@ namespace SemiRP
             }
             Console.WriteLine("[Perms] Done.");
 
+            Console.WriteLine("[VehicleModels] Begining checking...");
+            InitializeVehicleModel();
+            Console.WriteLine("[VehicleModels] Done.");
+
+            Console.WriteLine("[Vehicles] Begining loading...");
+            List<VehicleData> vehList = dbContext.Vehicles.ToList();
+
+            foreach (VehicleData vData in vehList)
+            {
+                try
+                {
+                    Utils.Vehicles.Helper.CreateFromData(vData);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Can't spawn vehicle id " + vData.Id + ".");
+                }
+            }
+
+            Console.WriteLine("[Vehicles] Done.");
+
+            Console.WriteLine("[Timers] Setup timers...");
+            vehicleTimer = new Timer(Constants.Vehicle.MS500_TIMER, true);
+            vehicleTimer.Tick += Vehicle.GlobalTimer;
+            Console.WriteLine("Vehicle timer");
+
+            Console.WriteLine("[Timers] Done.");
+
+        }
+
+        private void InitializeVehicleModel()
+        {
+            foreach (VehicleModel model in Lists.VehicleModelList.Models)
+            {
+                if (!dbContext.VehicleModels.Any(m => m.Model == model.Model))
+                {
+                    Console.WriteLine("Adding " + nameof(model.Model));
+                    dbContext.VehicleModels.Add(model);
+                }
+                else
+                {
+                    var tmpModel = dbContext.VehicleModels.First(m => m.Model == model.Model);
+                    model.FuelConsumption = tmpModel.FuelConsumption;
+                    model.BasePrice = tmpModel.BasePrice;
+                    model.MaxFuel = tmpModel.MaxFuel;
+                    model.ContainerSize = tmpModel.ContainerSize;
+                    Console.WriteLine("Model : " + model.Model + " | Fuel : " + model.MaxFuel + " | Cons. : " + model.FuelConsumption);
+                }
+            }
+            dbContext.SaveChanges();
         }
 
         #endregion

@@ -218,6 +218,39 @@ namespace SemiRP
             this.Skin = (int)this.ActiveCharacter.Skin;
         }
 
+        public override void OnExitVehicle(PlayerVehicleEventArgs e)
+        {
+            base.OnExitVehicle(e);
+            if (((Vehicle)e.Vehicle).Data.Temporary)
+                e.Vehicle.Dispose();
+        }
+
+        public override void OnEnterVehicle(EnterVehicleEventArgs e)
+        {
+            base.OnEnterVehicle(e);
+            var vehicle = (Vehicle)e.Vehicle;
+            if (vehicle.Locked)
+            {
+                this.ToggleControllable(false);
+                this.ToggleControllable(true);
+                this.ClearAnimations(true);
+            }
+        }
+
+        public override void OnUpdate(PlayerUpdateEventArgs e)
+        {
+            base.OnUpdate(e);
+            
+            if (this.Vehicle != null)
+            {
+                if (((Vehicle)this.Vehicle).Data.Fuel == 0)
+                {
+                    this.Vehicle.Engine = false;
+                }
+            }
+
+        }
+
         #endregion
     }
 }
