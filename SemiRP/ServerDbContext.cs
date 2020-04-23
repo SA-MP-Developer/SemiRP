@@ -29,6 +29,7 @@ namespace SemiRP
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Phone> Phones { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<Gun> Gun { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
