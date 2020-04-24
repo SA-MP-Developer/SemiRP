@@ -116,8 +116,8 @@ namespace SemiRP.Commands
             [Command("add", "a")]
             private static void Add(Player sender, Player target, string perm)
             {
-                //if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
-                //    return;
+                if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
+                    return;
 
                 var ret = Utils.Permissions.AddPerm(target.AccountData.PermsSet, perm);
                 if (ret == 1)
