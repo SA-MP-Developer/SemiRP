@@ -393,6 +393,40 @@ namespace SemiRP.Commands
                     PhoneHelper.DeletePhone(phone);
                 }
             }
+            [Command("gun")]
+            private static void GiveGun(Player sender, Player target, int idGun)
+            {
+                if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
+                    return;
+
+                try
+                {
+                    target.GiveWeapon((Weapon)idGun, 500);
+                    Chat.AdminChat(sender, "L'arme " + Color.Aqua + Data.Weapons.WeaponsDictionnary.GetValueOrDefault(idGun) + Color.White + " a bien été ajouté au joueur " + target.ActiveCharacter.Name + ".");
+                    Chat.InfoChat(target, "L'administrateur " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a donné une arme : " + Color.Aqua + Data.Weapons.WeaponsDictionnary.GetValueOrDefault(idGun) + Color.White + ".");
+                }
+                catch (Exception e)
+                {
+                    Chat.ErrorChat(sender, "L'arme n'a pas pu être donné au joueur.");
+                }
+            }
+            [Command("gun")]
+            private static void GiveGun(Player sender, Player target, int idGun, int ammo)
+            {
+                if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
+                    return;
+                try
+                {
+                    target.GiveWeapon((Weapon)idGun, ammo);
+                    Chat.AdminChat(sender, "L'arme "+Color.Aqua+Data.Weapons.WeaponsDictionnary.GetValueOrDefault(idGun)+Color.White+" avec "+ Color.Aqua + ammo + Color.White + " munitions a bien été ajouté au joueur "+target.ActiveCharacter.Name+".");
+                    Chat.InfoChat(target, "L'administrateur " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a donné une arme : " + Color.Aqua + Data.Weapons.WeaponsDictionnary.GetValueOrDefault(idGun) + Color.White + ".");
+                }
+                catch (Exception e)
+                {
+                    Chat.ErrorChat(sender, "L'arme n'a pas pu être donné au joueur.");
+                }
+                
+            }
         }
     }
 }
