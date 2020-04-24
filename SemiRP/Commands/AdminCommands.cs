@@ -288,6 +288,67 @@ namespace SemiRP.Commands
                 Utils.Chat.AdminChat(sender, "Vous vous êtes téléporté au véhicule ID " + Constants.Chat.HIGHLIGHT + nearestVeh.Id + Color.White + " (bdd : " + nearestVeh.Data.Id + ").");
             }
 
+            [Command("heal", "reparer")]
+            private static void Heal(Player sender, int id = -1)
+            {
+                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.heal"))
+                    return;
+
+                if (sender.Vehicle == null && id == -1)
+                {
+                    Utils.Chat.AdminChat(sender, "Vous n'avez pas choisi de véhicule.");
+                    return;
+                }
+
+                Vehicle vehicle = null;
+
+                if (id != -1)
+                {
+                    if (!Vehicle.All.Any(v => v.Id == id))
+                    {
+                        Utils.Chat.AdminChat(sender, "Ce véhicule n'éxiste pas.");
+                        return;
+                    }
+                    vehicle = (Vehicle)Vehicle.All.Where(v => v.Id == id).First();
+                }
+                else
+                    vehicle = (Vehicle)sender.Vehicle;
+
+                vehicle.Health = 1000;
+                vehicle.Data.Dammages = 1000;
+                Utils.Chat.AdminChat(sender, "Vous venez de réparer le véhicule ID " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd : " + vehicle.Data.Id + ").");
+            }
+
+            [Command("fill", "remplir")]
+            private static void Fill(Player sender, int id = -1)
+            {
+                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.fill"))
+                    return;
+
+                if (sender.Vehicle == null && id == -1)
+                {
+                    Utils.Chat.AdminChat(sender, "Vous n'avez pas choisi de véhicule.");
+                    return;
+                }
+
+                Vehicle vehicle = null;
+
+                if (id != -1)
+                {
+                    if (!Vehicle.All.Any(v => v.Id == id))
+                    {
+                        Utils.Chat.AdminChat(sender, "Ce véhicule n'éxiste pas.");
+                        return;
+                    }
+                    vehicle = (Vehicle)Vehicle.All.Where(v => v.Id == id).First();
+                }
+                else
+                    vehicle = (Vehicle)sender.Vehicle;
+
+                vehicle.Data.Fuel = vehicle.Data.MaxFuel;
+                Utils.Chat.AdminChat(sender, "Vous venez de remplir le véhicule ID " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd : " + vehicle.Data.Id + ").");
+            }
+
             [Command("infos", "info", "i")]
             private static void Infos(Player sender, int id = -1)
             {
@@ -312,14 +373,7 @@ namespace SemiRP.Commands
                     vehicle = (Vehicle)Vehicle.All.Where(v => v.Id == id).First();
                 }
                 else
-                {
-                    if (sender.Vehicle == null)
-                    {
-                        Utils.Chat.AdminChat(sender, "Vous n'êtes pas dans un véhicule.");
-                        return;
-                    }
                     vehicle = (Vehicle)sender.Vehicle;
-                }
 
                 Utils.Chat.AdminChat(sender, "==== Informations du véhicule ID " + vehicle.Id + " ====");
                 Utils.Chat.AdminChat(sender, "ID BDD : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Id);
@@ -333,17 +387,17 @@ namespace SemiRP.Commands
 
                 var ownerPlayer = Utils.PlayerUtils.PlayerHelper.SearchCharacter(vehicle.Data.Owner);
                 if (ownerPlayer == null)
-                    Utils.Chat.AdminChat(sender, "Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Name + "(Compte : " + vehicle.Data.Owner.Account.Id + ")");
+                    Utils.Chat.AdminChat(sender, "Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Name + " (Compte : " + vehicle.Data.Owner.Account.Id + ")");
                 else
-                    Utils.Chat.AdminChat(sender, "Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Name + "(Compte : " + vehicle.Data.Owner.Account.Id + ") (connecté, id : " +  ownerPlayer.Id + ")");
+                    Utils.Chat.AdminChat(sender, "Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Name + " (Compte : " + vehicle.Data.Owner.Account.Id + ") (connecté, id : " +  ownerPlayer.Id + ")");
 
                 foreach (Character borrower in vehicle.Data.Borrowers)
                 {
                     var borrowerPlayer = Utils.PlayerUtils.PlayerHelper.SearchCharacter(borrower);
                     if (borrowerPlayer == null)
-                        Utils.Chat.AdminChat(sender, "Borrower : " + Constants.Chat.HIGHLIGHT + borrower.Name + "(Compte : " + borrower.Account.Id + ")");
+                        Utils.Chat.AdminChat(sender, "Borrower : " + Constants.Chat.HIGHLIGHT + borrower.Name + " (Compte : " + borrower.Account.Id + ")");
                     else
-                        Utils.Chat.AdminChat(sender, "Borrower : " + Constants.Chat.HIGHLIGHT + borrower.Name + "(Compte : " + borrower.Account.Id + ") (connecté, id : " + borrowerPlayer.Id + ")");
+                        Utils.Chat.AdminChat(sender, "Borrower : " + Constants.Chat.HIGHLIGHT + borrower.Name + " (Compte : " + borrower.Account.Id + ") (connecté, id : " + borrowerPlayer.Id + ")");
                 }
 
                 Utils.Chat.AdminChat(sender, "Health : " + Constants.Chat.HIGHLIGHT + vehicle.Health);
