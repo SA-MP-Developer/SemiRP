@@ -47,6 +47,8 @@ namespace SemiRP.Utils.ItemUtils
                 throw new Exception("Aucun objet dans les mains.");
             }
             player.ActiveCharacter.ItemInHand = null;
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.SaveChanges();
         }
     }
 }
