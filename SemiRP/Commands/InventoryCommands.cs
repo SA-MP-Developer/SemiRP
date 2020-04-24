@@ -25,7 +25,7 @@ namespace SemiRP.Commands
             }
             catch(Exception e)
             {
-                Utils.Chat.ErrorChat(player, "L'ajout de l'objet dans l'inventaire à échoué.");
+                Utils.Chat.ErrorChat(player, "L'ajout de l'objet dans l'inventaire à échoué : "+e.Message);
             }
         }
         
@@ -41,7 +41,7 @@ namespace SemiRP.Commands
             }
             catch (Exception e)
             {
-                Utils.Chat.ErrorChat(player, "Une erreur s'est produite avec l'inventaire l'inventaire.");
+                Utils.Chat.ErrorChat(player, "Une erreur s'est produite avec l'inventaire l'inventaire : "+e.Message);
             }
         }
     }
