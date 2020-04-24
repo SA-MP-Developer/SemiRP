@@ -80,6 +80,16 @@ namespace SemiRP.Utils
         {
             player.SendClientMessage(Color.White, "[" + Constants.Chat.INFO_TAG + "INFO" + Color.White + "] " + message);
         }
+        public static void SendToAllAdmin(Player player, string message)
+        {
+            foreach (Player p in Player.All)
+            {
+                if (p.AccountData.HavePerm("admin"))
+                {
+                    p.SendClientMessage(Color.White, "[" + Constants.Chat.INFO_TAG + "INFO" + Color.White + "] " + "[JOUEUR:"+player.ActiveCharacter.Name+"] "+message);
+                }
+            }
+        }
 
 
     }
