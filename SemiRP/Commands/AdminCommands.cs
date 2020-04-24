@@ -5,6 +5,7 @@ using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.World;
+using SemiRP.Dialog;
 using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils;
@@ -28,6 +29,16 @@ namespace SemiRP.Commands
 
             Utils.Chat.AdminChat(sender, "help, goto, gethere, slap, pm, perm, give, set, freeze");
             
+        }
+
+        [Command("dialog", "d")]
+        private static void Dialog(Player sender)
+        {
+            if (!sender.AccountData.HavePerm("admin"))
+                return;
+
+            AdminDialog.ShowAdminDialog(sender);
+
         }
 
         [Command("goto", "gt")]
@@ -425,7 +436,6 @@ namespace SemiRP.Commands
                 {
                     Chat.ErrorChat(sender, "L'arme n'a pas pu être donné au joueur.");
                 }
-                
             }
         }
     }
