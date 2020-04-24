@@ -1,4 +1,5 @@
 ﻿using SampSharp.GameMode.SAMP.Commands;
+using SemiRP.Dialog;
 using SemiRP.Models;
 using SemiRP.Utils.ContainerUtils;
 using SemiRP.Utils.ItemUtils;
@@ -24,21 +25,25 @@ namespace SemiRP.Commands
             }
             catch(Exception e)
             {
-                Utils.Chat.ErrorChat(player, "L'ajout de l'objet dans l'inventaire à échoué : "+e.Message);
+                Utils.Chat.ErrorChat(player, "L'ajout de l'objet dans l'inventaire à échoué.");
             }
         }
-
-        [Command("prendre")]
-        private static void GetItemFromInventory(Player player, int slotNumber)
+        
+    }
+    public class InventoryCommand
+    {
+        [Command("inventaire", "inv", "sac", "i")]
+        private static void OpenInventory(Player player)
         {
             try
             {
-
+                InventoryDialog.ShowPlayerInventory(player);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Utils.Chat.ErrorChat(player, "Impossible de prendre l'objet depuis l'inventaire : " + e.Message);
+                Utils.Chat.ErrorChat(player, "Une erreur s'est produite avec l'inventaire l'inventaire.");
             }
         }
     }
+    
 }
