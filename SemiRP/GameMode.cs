@@ -132,7 +132,6 @@ namespace SemiRP
                     model.BasePrice = tmpModel.BasePrice;
                     model.MaxFuel = tmpModel.MaxFuel;
                     model.ContainerSize = tmpModel.ContainerSize;
-                    Console.WriteLine("Model : " + model.Model + " | Fuel : " + model.MaxFuel + " | Cons. : " + model.FuelConsumption);
                 }
             }
             dbContext.SaveChanges();

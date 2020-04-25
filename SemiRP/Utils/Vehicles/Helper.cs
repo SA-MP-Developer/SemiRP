@@ -52,28 +52,24 @@ namespace SemiRP.Utils.Vehicles
             }
         }
 
-        public static bool DestroyVehicle(int vehicle)
+        public static void DestroyVehicle(int vehicle)
         {
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
 
             if (!dbContext.Vehicles.Any(v => v.Id == vehicle))
-                return false;
+                throw new Exception("La destruction du véhicule ID " + vehicle + " a échouée.");
 
             var veh = dbContext.Vehicles.Single(v => v.Id == vehicle);
             dbContext.Vehicles.Remove(veh);
             dbContext.SaveChanges();
-
-            return true;
         }
 
-        public static bool DestroyVehicle(Vehicle vehicle)
+        public static void DestroyVehicle(Vehicle vehicle)
         {
             vehicle.Dispose();
 
-            if (vehicle.Data.Temporary)
-                return true;
-            else
-                return Utils.Vehicles.Helper.DestroyVehicle(vehicle.Data.Id);
+            if (!vehicle.Data.Temporary)
+                Utils.Vehicles.Helper.DestroyVehicle(vehicle.Data.Id);
         }
 
         public static Vehicle CreateFromData(VehicleData data)

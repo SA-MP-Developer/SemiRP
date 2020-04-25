@@ -127,8 +127,8 @@ namespace SemiRP.Commands
             [Command("add", "a")]
             private static void Add(Player sender, Player target, string perm)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
-                    return;
+                //if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
+                //    return;
 
                 var ret = Utils.Permissions.AddPerm(target.AccountData.PermsSet, perm);
                 if (ret == 1)
@@ -222,52 +222,23 @@ namespace SemiRP.Commands
             }
 
             [Command("destroy", "del", "rm", "d")]
-            private static void Destroy(Player sender, int vehicle = -1)
+            private static void Destroy(Player sender, int id = -1)
             {
                 if (!sender.AccountData.HavePerm("admin.cmds.vehicule.destroy"))
                     return;
 
-                if (vehicle == -1)
+                try
                 {
-                    if (!sender.InAnyVehicle)
-                    {
-                        Utils.Chat.AdminChat(sender, "Vous n'êtes pas dans un véhicule !");
-                        return;
-                    }
+                    Vehicle vehicle = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
 
-                    if (sender.Vehicle == null)
-                    {
-                        Utils.Chat.AdminChat(sender, "Ce véhicule n'est pas géré par le GameMode.");
-                        return;
-                    }
+                    Utils.Vehicles.Helper.DestroyVehicle(vehicle);
 
-                    Vehicle veh = (Vehicle)sender.Vehicle;
-
-                    if (!Utils.Vehicles.Helper.DestroyVehicle(veh))
-                    {
-                        Utils.Chat.AdminChat(sender, "Un problème est survenu lors de la destruction du véhicule.");
-                        return;
-                    }
-
-                    Utils.Chat.AdminChat(sender, "Vous avez détruit le véhicule.");
-                    return;
+                    Utils.Chat.AdminChat(sender, "Vous avez détruit le véhicule ID (bdd) " + Constants.Chat.HIGHLIGHT + vehicle.Data.Id + Color.White + ".");
                 }
-
-                ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
-
-                if (!dbContext.Vehicles.Any(v => v.Id == vehicle))
+                catch (Exception e)
                 {
-                    Utils.Chat.AdminChat(sender, "Le vehicule ID " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + " n'éxiste pas.");
-                    return;
+                    Utils.Chat.AdminChat(sender, e.Message);
                 }
-
-                if (!Utils.Vehicles.Helper.DestroyVehicle(vehicle))
-                {
-                    Utils.Chat.AdminChat(sender, "Un problème est survenu lors de la destruction du véhicule ID (bdd) " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ".");
-                    return;
-                }
-
-                Utils.Chat.AdminChat(sender, "Vous avez détruit le véhicule ID (bdd) " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ".");
             }
 
             [Command("tpnearest", "tpn")]
@@ -294,29 +265,17 @@ namespace SemiRP.Commands
                 if (!sender.AccountData.HavePerm("admin.cmds.vehicule.heal"))
                     return;
 
-                if (sender.Vehicle == null && id == -1)
+                try
                 {
-                    Utils.Chat.AdminChat(sender, "Vous n'avez pas choisi de véhicule.");
-                    return;
+                    Vehicle vehicle = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
+                    vehicle.Health = 1000;
+                    vehicle.Data.Dammages = 1000;
+                    Utils.Chat.AdminChat(sender, "Vous venez de réparer le véhicule ID " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd : " + vehicle.Data.Id + ").");
                 }
-
-                Vehicle vehicle = null;
-
-                if (id != -1)
+                catch (Exception e)
                 {
-                    if (!Vehicle.All.Any(v => v.Id == id))
-                    {
-                        Utils.Chat.AdminChat(sender, "Ce véhicule n'éxiste pas.");
-                        return;
-                    }
-                    vehicle = (Vehicle)Vehicle.All.Where(v => v.Id == id).First();
+                    Utils.Chat.AdminChat(sender, e.Message);
                 }
-                else
-                    vehicle = (Vehicle)sender.Vehicle;
-
-                vehicle.Health = 1000;
-                vehicle.Data.Dammages = 1000;
-                Utils.Chat.AdminChat(sender, "Vous venez de réparer le véhicule ID " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd : " + vehicle.Data.Id + ").");
             }
 
             [Command("fill", "remplir")]
@@ -325,28 +284,16 @@ namespace SemiRP.Commands
                 if (!sender.AccountData.HavePerm("admin.cmds.vehicule.fill"))
                     return;
 
-                if (sender.Vehicle == null && id == -1)
+                try
                 {
-                    Utils.Chat.AdminChat(sender, "Vous n'avez pas choisi de véhicule.");
-                    return;
+                    Vehicle vehicle = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
+                    vehicle.Data.Fuel = vehicle.Data.MaxFuel;
+                    Utils.Chat.AdminChat(sender, "Vous venez de remplir le véhicule ID " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd : " + vehicle.Data.Id + ").");
                 }
-
-                Vehicle vehicle = null;
-
-                if (id != -1)
+                catch (Exception e)
                 {
-                    if (!Vehicle.All.Any(v => v.Id == id))
-                    {
-                        Utils.Chat.AdminChat(sender, "Ce véhicule n'éxiste pas.");
-                        return;
-                    }
-                    vehicle = (Vehicle)Vehicle.All.Where(v => v.Id == id).First();
+                    Utils.Chat.AdminChat(sender, e.Message);
                 }
-                else
-                    vehicle = (Vehicle)sender.Vehicle;
-
-                vehicle.Data.Fuel = vehicle.Data.MaxFuel;
-                Utils.Chat.AdminChat(sender, "Vous venez de remplir le véhicule ID " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd : " + vehicle.Data.Id + ").");
             }
 
             [Command("infos", "info", "i")]
@@ -355,56 +302,21 @@ namespace SemiRP.Commands
                 if (!sender.AccountData.HavePerm("admin.cmds.vehicule.infos"))
                     return;
 
-                if (sender.Vehicle == null && id == -1)
+                try
                 {
-                    Utils.Chat.AdminChat(sender, "Vous n'avez pas choisi de véhicule.");
-                    return;
-                }
+                    Vehicle veh = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
+                    var strings = Utils.Vehicles.CmdHelper.DisplayAdminInfos(veh);
 
-                Vehicle vehicle = null;
-
-                if (id != -1)
-                {
-                    if (!Vehicle.All.Any(v => v.Id == id))
+                    Utils.Chat.AdminChat(sender, "======= Infos du véhicule =======");
+                    foreach (string line in strings)
                     {
-                        Utils.Chat.AdminChat(sender, "Ce véhicule n'éxiste pas.");
-                        return;
+                        Utils.Chat.AdminChat(sender, line);
                     }
-                    vehicle = (Vehicle)Vehicle.All.Where(v => v.Id == id).First();
                 }
-                else
-                    vehicle = (Vehicle)sender.Vehicle;
-
-                Utils.Chat.AdminChat(sender, "==== Informations du véhicule ID " + vehicle.Id + " ====");
-                Utils.Chat.AdminChat(sender, "ID BDD : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Id);
-                Utils.Chat.AdminChat(sender, "Position (x,y,z) : ("
-                    + Constants.Chat.HIGHLIGHT + vehicle.Position.X + Color.White + ","
-                    + Constants.Chat.HIGHLIGHT + vehicle.Position.Y + Color.White + ","
-                    + Constants.Chat.HIGHLIGHT + vehicle.Position.Z + Color.White + ")");
-
-                Utils.Chat.AdminChat(sender, "Model : " + Constants.Chat.HIGHLIGHT + vehicle.ModelInfo.Name);
-                Utils.Chat.AdminChat(sender, "Color 1 : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Color1 + Color.White + ", Color 2 : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Color2);
-
-                var ownerPlayer = Utils.PlayerUtils.PlayerHelper.SearchCharacter(vehicle.Data.Owner);
-                if (ownerPlayer == null)
-                    Utils.Chat.AdminChat(sender, "Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Name + " (Compte : " + vehicle.Data.Owner.Account.Id + ")");
-                else
-                    Utils.Chat.AdminChat(sender, "Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Name + " (Compte : " + vehicle.Data.Owner.Account.Id + ") (connecté, id : " +  ownerPlayer.Id + ")");
-
-                foreach (Character borrower in vehicle.Data.Borrowers)
+                catch (Exception e)
                 {
-                    var borrowerPlayer = Utils.PlayerUtils.PlayerHelper.SearchCharacter(borrower);
-                    if (borrowerPlayer == null)
-                        Utils.Chat.AdminChat(sender, "Borrower : " + Constants.Chat.HIGHLIGHT + borrower.Name + " (Compte : " + borrower.Account.Id + ")");
-                    else
-                        Utils.Chat.AdminChat(sender, "Borrower : " + Constants.Chat.HIGHLIGHT + borrower.Name + " (Compte : " + borrower.Account.Id + ") (connecté, id : " + borrowerPlayer.Id + ")");
+                    Utils.Chat.AdminChat(sender, e.Message);
                 }
-
-                Utils.Chat.AdminChat(sender, "Health : " + Constants.Chat.HIGHLIGHT + vehicle.Health);
-                Utils.Chat.AdminChat(sender, "Fuel : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Fuel.ToString("0.00") + Color.White + " | Fuel Tank : " + Constants.Chat.HIGHLIGHT + vehicle.Data.MaxFuel.ToString("0.0") + Color.White + " | Fuel Cons. : " + Constants.Chat.HIGHLIGHT + vehicle.Data.FuelConsumption.ToString("0.0"));
-                Utils.Chat.AdminChat(sender, "Mileage : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Mileage.ToString("0.000"));
-                Utils.Chat.AdminChat(sender, "Current Speed : " + Constants.Chat.HIGHLIGHT + vehicle.Speed);
-                Utils.Chat.AdminChat(sender, "Locked : " + Constants.Chat.HIGHLIGHT + (vehicle.Locked ? "YES" : "NO"));
             }
         }
 
