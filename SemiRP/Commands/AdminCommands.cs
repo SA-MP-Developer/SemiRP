@@ -44,81 +44,94 @@ namespace SemiRP.Commands
         [Command("goto", "gt")]
         private static void Goto(Player sender, Player target)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.goto"))
-                return;
+            try
+            {
+                AdminHelper.Goto(sender, target);
+                Utils.Chat.AdminChat(sender, "Vous vous êtes téléporté à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " s'est téléporté à vous.");
+            }
+            catch(Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "Erreur lors de la téléportation."+e.Message);
+            }
 
-            var tppos = target.Position;
-            if (sender.InAnyVehicle)
-                sender.Vehicle.Position = new Vector3(tppos.X + 2.5f, tppos.Y, tppos.Z);
-            else
-                sender.Position = new Vector3(tppos.X + 1f, tppos.Y, tppos.Z);
-
-            Utils.Chat.AdminChat(sender, "Vous vous êtes téléporté à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-            Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " s'est téléporté à vous.");
+            
         }
 
         [Command("gethere", "gh")]
         private static void Gethere(Player sender, Player target)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.gethere"))
-                return;
-
-            var tppos = sender.Position;
-            if (target.InAnyVehicle)
+            try
             {
-                target.Vehicle.Position = new Vector3(tppos.X + 2.5f, tppos.Y, tppos.Z);
+                AdminHelper.Gethere(sender, target);
+                Utils.Chat.AdminChat(sender, "Vous avez téléporté " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ") à vous.");
+                Utils.Chat.AdminChat(target, "Vous avez été téléporté par " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + ".");
             }
-            else
-                target.Position = new Vector3(tppos.X, tppos.Y, tppos.Z + 1f);
+            catch(Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "Erreur lors de la téléportation." + e.Message);
+            }
 
-            Utils.Chat.AdminChat(sender, "Vous avez téléporté " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ") à vous.");
-            Utils.Chat.AdminChat(target, "Vous avez été téléporté par " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + ".");
+            
         }
 
         [Command("slap")]
         private static void Slap(Player sender, Player target)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.slap"))
-                return;
+            try
+            {
+                AdminHelper.Slap(sender, target);
+                Utils.Chat.AdminChat(sender, "Vous avez slapé " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                Utils.Chat.AdminChat(target, "Vous avez été slapé par " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + ".");
+            }
+            catch(Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "Erreur lors du slap du joueur." + e.Message);
+            }
 
-            target.Position = new Vector3(target.Position.X, target.Position.Y, target.Position.Z + 10f);
-
-            Utils.Chat.AdminChat(sender, "Vous avez slapé " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-            Utils.Chat.AdminChat(target, "Vous avez été slapé par " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + ".");
+            
         }
 
         [Command("freeze")]
         private static void Freeze(Player sender, Player target)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.freeze"))
-                return;
-
-            target.ToggleControllable(false);
-
-            Utils.Chat.AdminChat(sender, "Vous avez freeze " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-            Utils.Chat.AdminChat(target, "Vous avez été freeze par " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + ".");
+            try
+            {
+                AdminHelper.Freeze(sender, target);
+                Utils.Chat.AdminChat(sender, "Vous avez freeze " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                Utils.Chat.AdminChat(target, "Vous avez été freeze par " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + ".");
+            }
+            catch(Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "Erreur lors du freeze du joueur." + e.Message);
+            }
         }
 
         [Command("unfreeze")]
         private static void UnFreeze(Player sender, Player target)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.freeze"))
-                return;
-
-            target.ToggleControllable(true);
-
-            Utils.Chat.AdminChat(sender, "Vous avez défreeze " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-            Utils.Chat.AdminChat(target, "Vous avez été défreeze par " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + ".");
+            try
+            {
+                AdminHelper.UnFreeze(sender, target);
+                Utils.Chat.AdminChat(sender, "Vous avez défreeze " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                Utils.Chat.AdminChat(target, "Vous avez été défreeze par " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + ".");
+            }
+            catch(Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "Erreur lors du unfreeze du joueur." + e.Message);
+            }
         }
 
         [Command("pm", "mp")]
         private static void PrivateMessage(Player sender, Player target, string message)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.pm"))
-                return;
-
-            Utils.Chat.AdminChat(sender, Constants.Chat.ADMIN_PM + "[PM] "+ sender.AccountData.Nickname + " : " + message);
-            Utils.Chat.AdminChat(target, Constants.Chat.ADMIN_PM + "[PM] " + sender.AccountData.Nickname + " : " + message);
+            try
+            {
+                AdminHelper.PrivateMessage(sender, target, message);
+            }
+            catch(Exception e){
+                Utils.Chat.ErrorChat(sender, "Erreur lors de l'envoie du PM." + e.Message);
+            }
         }
 
         [CommandGroup("permission", "perm")]
@@ -127,69 +140,43 @@ namespace SemiRP.Commands
             [Command("add", "a")]
             private static void Add(Player sender, Player target, string perm)
             {
-                //if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
-                //    return;
-
-                var ret = Utils.Permissions.AddPerm(target.AccountData.PermsSet, perm);
-                if (ret == 1)
+                try
                 {
-                    Utils.Chat.AdminChat(sender, "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" n'éxiste pas.");
-                    return;
+                    AdminHelper.PermissionAdd(sender, target, perm);
+                    Utils.Chat.AdminChat(sender, "Vous avez ajouté la permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                    Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a ajouté la permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\".");
                 }
-                else if (ret == 2)
+                catch(Exception e)
                 {
-                    Utils.Chat.AdminChat(sender, "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" est déjà attribuée à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-                    return;
+                    Utils.Chat.ErrorChat(sender, "Erreur lors de l'ajout de la permission." + e.Message);
                 }
-
-                Utils.Chat.AdminChat(sender, "Vous avez ajouté la permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-                Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a ajouté la permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\".");
             }
 
             [Command("remove", "rm")]
             private static void Remove(Player sender, Player target, string perm)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.perms.remove"))
-                    return;
-
-                var ret = Utils.Permissions.RemovePerm(target.AccountData.PermsSet, perm);
-                if (ret == 1)
+                try
                 {
-                    Utils.Chat.AdminChat(sender, "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" n'éxiste pas.");
-                    return;
+                    AdminHelper.PermissionRemove(sender, target, perm);
+                    Utils.Chat.AdminChat(sender, "Vous avez enlevé la permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                    Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a enlevé la permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\".");
                 }
-                else if(ret == 2)
+                catch(Exception e)
                 {
-                    Utils.Chat.AdminChat(sender, "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" n'est pas attribuée à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-                    return;
+                    Utils.Chat.ErrorChat(sender, "Erreur lors de la suppression de la permission." + e.Message);
                 }
-
-                Utils.Chat.AdminChat(sender, "Vous avez enlevé la permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-                Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a enlevé la permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\".");
             }
 
             [Command("list", "ls")]
             private static void Show(Player sender, Player target, string perm = "")
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.perms.list"))
-                    return;
-
-                List<string> permsStrings;
-
-                if (perm == "")
+                try
                 {
-                    permsStrings = Utils.Permissions.ListAccountPerms(target.AccountData);
-                    Utils.Chat.AdminChat(sender, "Permissions de " + Color.Red + target.Name + Color.White + " (" + target.Id + ") :");
+                    AdminHelper.PermissionsShow(sender, target, perm);
                 }
-                else
+                catch(Exception e)
                 {
-                    permsStrings = Utils.Permissions.ListAccountPermChildren(target.AccountData, perm);
-                    Utils.Chat.AdminChat(sender, "Permissions de " + Color.Red + target.Name + Color.White + " (" + target.Id + ") à partir de \"" + perm + "\" :");
-                }
-
-                foreach (string permname in permsStrings)
-                {
-                    sender.SendClientMessage(permname);
+                    Utils.Chat.ErrorChat(sender, "Erreur lors de l'affichage des permissions du joueur." + e.Message);
                 }
             }
         }
@@ -200,122 +187,98 @@ namespace SemiRP.Commands
             [Command("create", "c")]
             private static void Create(Player sender, Player target, VehicleModelType vehicle)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.create"))
-                    return;
-
-                var veh = Utils.Vehicles.Helper.CreateVehicle(target.ActiveCharacter, Utils.Vehicles.ModelHelper.ModelForModelType(vehicle), target.Position, target.Angle);
-                Utils.Chat.AdminChat(sender, "Vous avez créé un véhicule (" + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ") pour " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-                Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a créé le véhicule " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + " (id: " + veh.Data.Id + ").");
+                try
+                {
+                    int veh = AdminHelper.VehicleCreate(sender, target, vehicle);
+                    Utils.Chat.AdminChat(sender, "Vous avez créé un véhicule (" + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ") pour " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                    Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a créé le véhicule " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + " (id: " + veh + ").");
+                }
+                catch(Exception e)
+                {
+                    Utils.Chat.ErrorChat(sender, "Erreur lors de la création du véhicule." + e.Message);
+                }
             }
 
             [Command("spawntmp", "tmp")]
             private static void SpawnTmp(Player sender, VehicleModelType vehicle)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.spawntmp"))
-                    return;
-
-                var veh = Utils.Vehicles.Helper.CreateVehicle(sender.ActiveCharacter, Utils.Vehicles.ModelHelper.ModelForModelType(vehicle), sender.Position, sender.Angle, VehicleColor.BrighRed, VehicleColor.BrighRed, true);
-                veh.Data.FuelConsumption = 0;
-                sender.PutInVehicle(veh);
-                veh.Engine = true;
-                Utils.Chat.AdminChat(sender, "Vous avez créé un véhicule temporaire (" + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ").");
+                try
+                {
+                    AdminHelper.VehicleSpawnTmp(sender, vehicle);
+                    Utils.Chat.AdminChat(sender, "Vous avez créé un véhicule temporaire (" + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ").");
+                }
+                catch(Exception e)
+                {
+                    Utils.Chat.ErrorChat(sender, "Erreur lors de la création du véhicule temporaire." + e.Message);
+                }
             }
 
             [Command("destroy", "del", "rm", "d")]
             private static void Destroy(Player sender, int id = -1)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.destroy"))
-                    return;
-
                 try
                 {
-                    Vehicle vehicle = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
-
-                    Utils.Vehicles.Helper.DestroyVehicle(vehicle);
-
-                    Utils.Chat.AdminChat(sender, "Vous avez détruit le véhicule ID (bdd) " + Constants.Chat.HIGHLIGHT + vehicle.Data.Id + Color.White + ".");
+                    AdminHelper.VehicleDestroy(sender, id);
+                    Utils.Chat.AdminChat(sender, "Vous avez détruit le véhicule ID (bdd) " + Constants.Chat.HIGHLIGHT + id + Color.White + ".");
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.AdminChat(sender, e.Message);
+                    Utils.Chat.AdminChat(sender, "Erreur lors de la suppression du véhicule."+e.Message);
                 }
             }
 
             [Command("tpnearest", "tpn")]
             private static void TpTo(Player sender)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.tp"))
-                    return;
-
-                var nearestVeh = Utils.Vehicles.Helper.GetNearestVehicle(sender);
-
-                if (nearestVeh == null)
-                    return;
-
-                if (nearestVeh.Driver != null)
-                    sender.Position = new Vector3(nearestVeh.Position.X, nearestVeh.Position.Y, nearestVeh.Position.Z + 1f);
-                else
-                    sender.PutInVehicle(nearestVeh);
-                Utils.Chat.AdminChat(sender, "Vous vous êtes téléporté au véhicule ID " + Constants.Chat.HIGHLIGHT + nearestVeh.Id + Color.White + " (bdd : " + nearestVeh.Data.Id + ").");
+                try
+                {
+                    Vehicle nearestVeh = AdminHelper.VehicleTpTo(sender);
+                    Utils.Chat.AdminChat(sender, "Vous vous êtes téléporté au véhicule ID " + Constants.Chat.HIGHLIGHT + nearestVeh.Id + Color.White + " (bdd : " + nearestVeh.Data.Id + ").");
+                }
+                catch(Exception e)
+                {
+                    Utils.Chat.ErrorChat(sender, "Erreur lors de la téléportation du véhicule." + e.Message);
+                }
             }
 
             [Command("heal", "reparer")]
             private static void Heal(Player sender, int id = -1)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.heal"))
-                    return;
-
                 try
                 {
-                    Vehicle vehicle = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
-                    vehicle.Health = 1000;
-                    vehicle.Data.Dammages = 1000;
+                    Vehicle vehicle = AdminHelper.VehicleHeal(sender, id);
                     Utils.Chat.AdminChat(sender, "Vous venez de réparer le véhicule ID " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd : " + vehicle.Data.Id + ").");
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.AdminChat(sender, e.Message);
+                    Utils.Chat.AdminChat(sender, "Erreur lors de la réparation du véhicule."+e.Message);
                 }
             }
 
             [Command("fill", "remplir")]
             private static void Fill(Player sender, int id = -1)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.fill"))
-                    return;
-
                 try
                 {
-                    Vehicle vehicle = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
-                    vehicle.Data.Fuel = vehicle.Data.MaxFuel;
+                    Vehicle vehicle = AdminHelper.VehicleFill(sender, id);
                     Utils.Chat.AdminChat(sender, "Vous venez de remplir le véhicule ID " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd : " + vehicle.Data.Id + ").");
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.AdminChat(sender, e.Message);
+                    Utils.Chat.AdminChat(sender, "Erreur lors du remplissage du véhicule." + e.Message);
                 }
             }
 
             [Command("infos", "info", "i")]
             private static void Infos(Player sender, int id = -1)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.infos"))
-                    return;
-
                 try
                 {
-                    Vehicle veh = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
-                    var strings = Utils.Vehicles.CmdHelper.DisplayAdminInfos(veh);
-
-                    Utils.Chat.AdminChat(sender, "======= Infos du véhicule =======");
-                    foreach (string line in strings)
-                    {
-                        Utils.Chat.AdminChat(sender, line);
-                    }
+                    AdminHelper.VehicleInfos(sender, id);
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.AdminChat(sender, e.Message);
+                    Utils.Chat.AdminChat(sender, "Erreur lors de l'affichage des infos du véhicule." +e.Message);
                 }
             }
         }
@@ -326,20 +289,16 @@ namespace SemiRP.Commands
             [Command("skin")]
             private static void SetSkin(Player sender, Player target, int skinid)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.set.skin"))
-                    return;
-
-                if (skinid < 0 || 311 < skinid)
+                try
                 {
-                    Utils.Chat.AdminChat(sender, "Le skin ID " + Constants.Chat.HIGHLIGHT + skinid + Color.White + " n'est pas valide, l'id d'un skin doit être entre 0 et 311.");
-                    return;
+                    AdminHelper.SetSkin(sender, target, skinid);
+                    Utils.Chat.AdminChat(sender, "Vous avez mis le skin " + Constants.Chat.HIGHLIGHT + skinid + Color.White + " à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                    Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a mis le skin " + Constants.Chat.HIGHLIGHT + skinid + Color.White + ".");
                 }
-
-                target.ActiveCharacter.Skin = (uint)skinid;
-                target.Skin = skinid;
-
-                Utils.Chat.AdminChat(sender, "Vous avez mis le skin " + Constants.Chat.HIGHLIGHT + skinid + Color.White + " à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-                Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a mis le skin " + Constants.Chat.HIGHLIGHT + skinid + Color.White + ".");
+                catch(Exception e)
+                {
+                    Utils.Chat.AdminChat(sender, "Erreur lors du changement de skin." + e.Message);
+                }
             }
         }
 
@@ -347,60 +306,47 @@ namespace SemiRP.Commands
         class GiveItems
         {
             [Command("phone")]
-            private static void GiveObject(Player sender, Player target)
+            private static void GivePhone(Player sender, Player target)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.give.phone"))
-                    return;
-                Phone phone = PhoneHelper.CreatePhone();
-                if(Utils.ItemUtils.PhoneHelper.GetDefaultPhone(target.ActiveCharacter) == null)
+                try
                 {
-                    phone.DefaultPhone = true;
-                }
-                
-                if(InventoryHelper.AddItemToCharacter(target.ActiveCharacter, phone))
-                {
+                    Phone phone = AdminHelper.GivePhone(sender, target);
                     Chat.AdminChat(sender, "Le téléphone \"" + phone.Number + "\" bien été ajouté à " + target.ActiveCharacter.Name);
                     Chat.InfoChat(target, "L'administrateur " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a ajouté un téléphone :\"" + phone.Number + "\".");
-                    ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
-                    dbContext.SaveChanges();
                 }
-                else
+                catch(Exception e)
                 {
-                    Chat.ErrorChat(sender, "Le téléphone n'a pas pu être ajouté à l'utilisateur.");
-                    PhoneHelper.DeletePhone(phone);
+                    Utils.Chat.AdminChat(sender, "Erreur lors de donation du téléphone." + e.Message);
                 }
+                
             }
             [Command("gun")]
-            private static void GiveGun(Player sender, Player target, int idGun)
+            private static void GiveGun(Player sender, Player target, Weapon gun)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
-                    return;
 
                 try
                 {
-                    target.GiveWeapon((Weapon)idGun, 500);
-                    Chat.AdminChat(sender, "L'arme " + Color.Aqua + Data.Weapons.WeaponsDictionnary.GetValueOrDefault(idGun) + Color.White + " a bien été ajouté au joueur " + target.ActiveCharacter.Name + ".");
-                    Chat.InfoChat(target, "L'administrateur " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a donné une arme : " + Color.Aqua + Data.Weapons.WeaponsDictionnary.GetValueOrDefault(idGun) + Color.White + ".");
+                    AdminHelper.GiveGun(sender, target, gun);
+                    Chat.AdminChat(sender, "L'arme " + Color.Aqua + gun + Color.White + " a bien été ajouté au joueur " + target.ActiveCharacter.Name + ".");
+                    Chat.InfoChat(target, "L'administrateur " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a donné une arme : " + Color.Aqua + gun + Color.White + ".");
                 }
                 catch (Exception e)
                 {
-                    Chat.ErrorChat(sender, "L'arme n'a pas pu être donné au joueur.");
+                    Chat.ErrorChat(sender, "L'arme n'a pas pu être donné au joueur." + e.Message);
                 }
             }
             [Command("gun")]
-            private static void GiveGun(Player sender, Player target, int idGun, int ammo)
+            private static void GiveGun(Player sender, Player target, Weapon gun, int ammo)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
-                    return;
                 try
                 {
-                    target.GiveWeapon((Weapon)idGun, ammo);
-                    Chat.AdminChat(sender, "L'arme "+Color.Aqua+Data.Weapons.WeaponsDictionnary.GetValueOrDefault(idGun)+Color.White+" avec "+ Color.Aqua + ammo + Color.White + " munitions a bien été ajouté au joueur "+target.ActiveCharacter.Name+".");
-                    Chat.InfoChat(target, "L'administrateur " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a donné une arme : " + Color.Aqua + Data.Weapons.WeaponsDictionnary.GetValueOrDefault(idGun) + Color.White + ".");
+                    AdminHelper.GiveGun(sender, target, gun, ammo);
+                    Chat.AdminChat(sender, "L'arme " + Color.Aqua + gun + Color.White + " a bien été ajouté au joueur " + target.ActiveCharacter.Name + ".");
+                    Chat.InfoChat(target, "L'administrateur " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a donné une arme : " + Color.Aqua + gun + Color.White + ".");
                 }
                 catch (Exception e)
                 {
-                    Chat.ErrorChat(sender, "L'arme n'a pas pu être donné au joueur.");
+                    Chat.ErrorChat(sender, "L'arme n'a pas pu être donné au joueur." + e.Message);
                 }
             }
         }
