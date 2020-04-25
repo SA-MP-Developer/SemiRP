@@ -187,47 +187,22 @@ namespace SemiRP.Commands
             [Command("create", "c")]
             private static void Create(Player sender, Player target, VehicleModelType vehicle)
             {
-<<<<<<< HEAD
-                try
-                {
-                    int veh = AdminHelper.VehicleCreate(sender, target, vehicle);
-                    Utils.Chat.AdminChat(sender, "Vous avez créé un véhicule (" + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ") pour " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
-                    Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a créé le véhicule " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + " (id: " + veh + ").");
-                }
-                catch(Exception e)
-                {
-                    Utils.Chat.ErrorChat(sender, "Erreur lors de la création du véhicule." + e.Message);
-                }
-=======
                 if (!sender.AccountData.HavePerm("admin.cmds.vehicule.create"))
                     return;
 
                 Utils.Vehicles.CmdHelper.CreateVehicleForPlayer(target, vehicle);
                 Utils.Chat.AdminChat(sender, "Vous avez créé un véhicule (" + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ") pour " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
                 Utils.Chat.AdminChat(target, Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " vous a créé le véhicule " + Constants.Chat.HIGHLIGHT + vehicle + ".");
->>>>>>> vehicles: fix borrowers relationship, new speed calculation
             }
 
             [Command("spawntmp", "tmp")]
             private static void SpawnTmp(Player sender, VehicleModelType vehicle)
             {
-<<<<<<< HEAD
-                try
-                {
-                    AdminHelper.VehicleSpawnTmp(sender, vehicle);
-                    Utils.Chat.AdminChat(sender, "Vous avez créé un véhicule temporaire (" + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ").");
-                }
-                catch(Exception e)
-                {
-                    Utils.Chat.ErrorChat(sender, "Erreur lors de la création du véhicule temporaire." + e.Message);
-                }
-=======
                 if (!sender.AccountData.HavePerm("admin.cmds.vehicule.spawntmp"))
                     return;
 
                 Utils.Vehicles.CmdHelper.CreateTmpVehicleForPlayer(sender, vehicle);
                 Utils.Chat.AdminChat(sender, "Vous avez créé un véhicule temporaire (" + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ").");
->>>>>>> vehicles: fix borrowers relationship, new speed calculation
             }
 
             [Command("destroy", "del", "rm", "d")]
