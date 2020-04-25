@@ -14,14 +14,15 @@ namespace SemiRP.Commands
     {
 
         [Command("mettre")]
-        private static void PutItemInInventory (Player player){
-            
+        private static void PutItemInInventory (Player player)
+        {
             try
             {
                 Item item = ItemHelper.GetNearestItemOfCharacter(player.ActiveCharacter);
                 ItemHelper.ItemIsCloseEnoughOfPlayer(player, item);
                 InventoryHelper.AddItemToCharacter(player.ActiveCharacter, item);
                 Utils.Chat.InfoChat(player, "L'objet a été ajouté à l'inventaire.");
+
             }
             catch(Exception e)
             {

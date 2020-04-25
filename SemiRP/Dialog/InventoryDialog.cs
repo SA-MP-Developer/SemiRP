@@ -48,7 +48,8 @@ namespace SemiRP.Dialog
                 {
                     return;
                 }
-                if(player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem] == null) //  Put item in inventory
+                if(player.ActiveCharacter.Inventory.ListItems.Count <= EventArgs.ListItem
+                   || player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem] == null) //  Put item in inventory
                 {
                     if (player.Weapon != 0)
                     {
@@ -77,13 +78,13 @@ namespace SemiRP.Dialog
                 {
                     if(player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem] is Gun)
                     {
-                        player.ActiveCharacter.Inventory.ListItems.RemoveAt(EventArgs.ListItem); // Remove weapon from inventory
                         player.GiveWeapon((SampSharp.GameMode.Definitions.Weapon)((Gun)player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]).idWeapon, ((Gun)player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]).Quantity); // Give player weapon
+                        player.ActiveCharacter.Inventory.ListItems.RemoveAt(EventArgs.ListItem); // Remove weapon from inventory
                     }
                     else
                     {
-                        player.ActiveCharacter.Inventory.ListItems.RemoveAt(EventArgs.ListItem); // Remove item from inventory
                         player.ActiveCharacter.ItemInHand = player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]; // put in hand of player
+                        player.ActiveCharacter.Inventory.ListItems.RemoveAt(EventArgs.ListItem); // Remove item from inventory
                     }
                 }
             };
