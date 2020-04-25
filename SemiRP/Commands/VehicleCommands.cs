@@ -16,7 +16,7 @@ namespace SemiRP.Commands
         {
             var nearestVeh = Utils.Vehicles.Helper.GetNearestVehicle(sender, Constants.Vehicle.LOCK_RANGE);
 
-            if (nearestVeh != null && (nearestVeh.Data.Owner == sender.ActiveCharacter || nearestVeh.Data.Borrowers.Contains(sender.ActiveCharacter)))
+            if (nearestVeh != null && Utils.Vehicles.Helper.IsBorrowerOrOwner(sender, nearestVeh))
             {
                 if (nearestVeh.Locked)
                     Utils.Chat.SendMeChat(sender, "dévérouille son véhicule.");
@@ -31,7 +31,7 @@ namespace SemiRP.Commands
 
             var vehicle = ((Vehicle)sender.Vehicle);
 
-            if (vehicle.Data.Owner == sender.ActiveCharacter || vehicle.Data.Borrowers.Contains(sender.ActiveCharacter))
+            if (Utils.Vehicles.Helper.IsBorrowerOrOwner(sender, vehicle))
             {
                 if (vehicle.Locked)
                     Utils.Chat.SendMeChat(sender, "dévérouille son véhicule.");
@@ -53,7 +53,7 @@ namespace SemiRP.Commands
 
             var vehicle = ((Vehicle)sender.Vehicle);
 
-            if (vehicle.Data.Owner == sender.ActiveCharacter)
+            if (Utils.Vehicles.Helper.IsOwner(sender, vehicle))
             {
                 Utils.Chat.InfoChat(sender, "Vous avez garé votre véhicule, il réapparaitra désormais ici.");
                 vehicle.Data.SpawnLocation.Position = new SampSharp.GameMode.Vector3(vehicle.Position.X, vehicle.Position.Y, vehicle.Position.Z + 0.5f);
@@ -149,7 +149,7 @@ namespace SemiRP.Commands
                 Utils.Chat.ErrorChat(sender, "Ce véhicule n'a pas de moteur.");
             }
 
-            if (!(vehicle.Data.Owner == sender.ActiveCharacter || vehicle.Data.Borrowers.Contains(sender.ActiveCharacter)))
+            if (!Utils.Vehicles.Helper.IsBorrowerOrOwner(sender, vehicle))
             {
                 Utils.Chat.ErrorChat(sender, "Vous n'avez pas les clefs de ce véhicule.");
                 return;

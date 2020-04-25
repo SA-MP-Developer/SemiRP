@@ -5,6 +5,7 @@ using SampSharp.GameMode.World;
 using SemiRP.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
@@ -112,6 +113,16 @@ namespace SemiRP.Utils.Vehicles
             if (player.IsInRangeOfPoint(range, vehicle.Position))
                 return vehicle;
             return null;
+        }
+
+        public static bool IsOwner(Player sender, Vehicle vehicle)
+        {
+            return vehicle.Data.Owner == sender.ActiveCharacter;
+        }
+
+        public static bool IsBorrowerOrOwner(Player sender, Vehicle vehicle)
+        {
+            return IsOwner(sender, vehicle) || vehicle.Data.Borrowers.Select(b => b.Borrower).Any(b => b == sender.ActiveCharacter);
         }
     }
 }

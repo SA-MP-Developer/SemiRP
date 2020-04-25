@@ -17,20 +17,12 @@ namespace SemiRP.Models
             WOMAN = 1
         }
 
-        private int id;
-        private Account account;
-        private string name;
-        private uint age;
-        private int level;
-        private List<GroupRank> groupRanks;
-        private List<Group> groupOwner;
-        private List<Building> buildingOwner;
-        private Inventory inventory;
-        private Item itemInHand;
-
         public Character()
         {
-
+            this.GroupOwner = new List<Group>();
+            this.GroupRanks = new List<GroupRank>();
+            this.BuildingOwner = new List<Building>();
+            this.BorrowedVehicles = new List<VehicleDataBorrower>();
         }
 
         public Character(int id, Account account, string name, uint age, int level, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Inventory inventory, Item itemInHand)
@@ -45,6 +37,11 @@ namespace SemiRP.Models
             this.Inventory = inventory;
             this.Level = level;
             this.ItemInHand = itemInHand;
+
+            this.GroupOwner = new List<Group>();
+            this.GroupRanks = new List<GroupRank>();
+            this.BuildingOwner = new List<Building>();
+            this.BorrowedVehicles = new List<VehicleDataBorrower>();
         }
         public IList<Permission> GetPerms()
         {
@@ -52,20 +49,21 @@ namespace SemiRP.Models
         }
 
         [Key]
-        public int Id { get => id; set => id = value; }
-        public virtual Account Account { get => account; set => account = value; }
-        public string Name { get => name; set => name = value; }
-        public uint Age { get => age; set => age = value; }
+        public int Id { get; set; }
+        public virtual Account Account { get; set; }
+        public string Name { get; set; }
+        public uint Age { get; set; }
         public uint Skin { get; set; }
-        public virtual List<GroupRank> GroupRanks { get => groupRanks; set => groupRanks = value; }
-        public virtual List<Group> GroupOwner { get => groupOwner; set => groupOwner = value; }
-        public virtual List<Building> BuildingOwner { get => buildingOwner; set => buildingOwner = value; }
-        public virtual Inventory Inventory { get => inventory; set => inventory = value; }
+        public virtual List<GroupRank> GroupRanks { get; set; }
+        public virtual List<Group> GroupOwner { get; set; }
+        public virtual List<Building> BuildingOwner { get; set; }
+        public virtual Inventory Inventory { get; set; }
         public CharSex Sex { get; set; }
-        public int Level { get => level; set => level = value; }
+        public int Level { get; set; }
         public virtual SpawnLocation SpawnLocation { get; set; }
         [ForeignKey("PermissionSet")]
         public virtual PermissionSet PermsSet { get; set; }
-        public virtual Item ItemInHand { get => itemInHand; set => itemInHand = value; }
+        public virtual List<VehicleDataBorrower> BorrowedVehicles {get;set;}
+        public virtual Item ItemInHand { get; set; }
     }
 }

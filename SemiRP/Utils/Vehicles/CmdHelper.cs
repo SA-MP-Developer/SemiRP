@@ -1,4 +1,5 @@
-﻿using SampSharp.GameMode.SAMP;
+﻿using SampSharp.GameMode.Definitions;
+using SampSharp.GameMode.SAMP;
 using SemiRP.Models;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace SemiRP.Utils.Vehicles
             else
                 ret.Add("Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Name + " (Compte : " + vehicle.Data.Owner.Account.Id + ") (connecté, id : " + ownerPlayer.Id + ")");
 
-            foreach (Character borrower in vehicle.Data.Borrowers)
+            foreach (Character borrower in vehicle.Data.Borrowers.Select(b => b.Borrower).ToList())
             {
                 var borrowerPlayer = Utils.PlayerUtils.PlayerHelper.SearchCharacter(borrower);
                 if (borrowerPlayer == null)
@@ -67,6 +68,20 @@ namespace SemiRP.Utils.Vehicles
             ret.Add("Locked : " + Constants.Chat.HIGHLIGHT + (vehicle.Locked ? "YES" : "NO"));
 
             return ret;
+        }
+
+        public static void CreateTmpVehicleForPlayer(Player sender, VehicleModelType vehicle)
+        {
+            var veh = Utils.Vehicles.Helper.CreateVehicle(sender.ActiveCharacter, Utils.Vehicles.ModelHelper.ModelForModelType(vehicle), sender.Position, sender.Angle, VehicleColor.BrighRed, VehicleColor.BrighRed, true);
+            veh.Data.FuelConsumption = 0;
+            veh.Health = 100000;
+            sender.PutInVehicle(veh);
+            veh.Engine = true;
+        }
+
+        public static void CreateVehicleForPlayer(Player sender, VehicleModelType vehicle)
+        {
+            var veh = Utils.Vehicles.Helper.CreateVehicle(sender.ActiveCharacter, Utils.Vehicles.ModelHelper.ModelForModelType(vehicle), sender.Position, sender.Angle);
         }
     }
 }

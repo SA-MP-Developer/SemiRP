@@ -15,7 +15,7 @@ namespace SemiRP
 
         public bool Locked { get; set; }
         public float Speed { get {
-                return this.Velocity.Length * Constants.Vehicle.SPEED_MAGIC;
+                return (this.Velocity.Length * this.Velocity.Length) * Constants.Vehicle.SPEED_MAGIC;
             }
         }
 

@@ -11,7 +11,7 @@ namespace SemiRP.Models
     {
         public VehicleData()
         {
-            Borrowers = new List<Character>();
+            Borrowers = new List<VehicleDataBorrower>();
             Temporary = false;
         }
 
@@ -26,13 +26,35 @@ namespace SemiRP.Models
         public float FuelConsumption { get; set; }
         public float Dammages { get; set; }
         public virtual Character Owner { get; set; }
-        public virtual List<Character> Borrowers { get; set; }
+        public virtual List<VehicleDataBorrower> Borrowers { get; set; }
         public virtual Container Container { get; set; }
 
         public float Mileage { get; set; }
 
         [NotMapped]
         public bool Temporary { get; set; }
-        
+
+    }
+
+    public class VehicleDataBorrower
+    {
+        public VehicleDataBorrower()
+        {
+
+        }
+
+        public VehicleDataBorrower(VehicleData vehicle, Character borrower)
+        {
+            BorrowerId = borrower.Id;
+            Borrower = borrower;
+            VehicleId = vehicle.Id;
+            Vehicle = vehicle;
+        }
+
+        public int VehicleId { get; set; }
+        public virtual VehicleData Vehicle { get; set; }
+
+        public int BorrowerId { get; set; }
+        public virtual Character Borrower { get; set; }
     }
 }
