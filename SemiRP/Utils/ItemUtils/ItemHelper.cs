@@ -22,7 +22,7 @@ namespace SemiRP.Utils.ItemUtils
         {
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             Player player = PlayerHelper.SearchCharacter(character);
-            Item item = dbContext.Items.Where(i => i.CurrentContainer == null && i.SpawnLocation != null).ToList().OrderBy(x => x.Name.Length).FirstOrDefault();
+            Item item = dbContext.Items.Where(i => i.CurrentContainer == null && i.SpawnLocation != null).ToList().OrderBy(x => player.GetDistanceFromPoint(x.SpawnLocation.Position)).FirstOrDefault();
             if(item != null)
             {
                 return item;
