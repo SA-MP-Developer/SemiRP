@@ -21,6 +21,8 @@ namespace SemiRP.Models.ItemHeritage
             IsCalling = isCalling;
             MaxContact = maxContact;
             PhoneBook = new List<ContactPhone>();
+            this.Name = "Téléphone (" + number + ")";
+            this.Quantity = 1;
         }
 
 
