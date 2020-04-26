@@ -50,5 +50,20 @@ namespace SemiRP.Utils.ItemUtils
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             dbContext.SaveChanges();
         }
+        public static void DeleteItem(Item item)
+        {
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.Items.Remove(item);
+            dbContext.SaveChanges();
+        }
+        public static void PutItemInPlayerHand(Player player, Item item)
+        {
+            if(player.ActiveCharacter.ItemInHand != null)
+            {
+                throw new Exception("Le joueur a déjà un objet en main.");
+            }
+            player.ActiveCharacter.ItemInHand = item;
+        }
+
     }
 }
