@@ -57,6 +57,19 @@ namespace SemiRP.Utils.ItemUtils
         {
             return GetAllPhone().Select(x => x).Where(x => x.CurrentContainer == character.Inventory).Where(x => x.DefaultPhone == true).FirstOrDefault();
         }
+        public static void SetInHandDefaultPhone(Character character)
+        {
+            if (character.ItemInHand == null)
+                throw new Exception("Aucun téléphone en main. Veuillez en prendre un en main.");
+            if (!(character.ItemInHand is Phone))
+                throw new Exception("L'objet dans la main n'est pas un téléphone.");
+            Phone phone = GetDefaultPhone(character);
+            if (phone != null)
+                phone.DefaultPhone = false;
+
+            ((Phone)character.ItemInHand).DefaultPhone = true;
+
+        }
         public static void SendSMS(Player sender, string number, string message)
         {
             Phone phoneReceiver = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(number);
