@@ -1,4 +1,5 @@
 ﻿using SampSharp.GameMode.Display;
+using SemiRP.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,24 +8,21 @@ namespace SemiRP.Dialog
 {
     public class AdminDialog
     {
-        private static TablistDialog listAdmin;
-        private static TablistDialog listModeration;
-        private static TablistDialog listGive;
-        private static TablistDialog listVehicle;
-        private static TablistDialog listPerms;
+        private static ListDialog listAdmin;
+        private static ListDialog listModeration;
+        private static ListDialog listGive;
+        private static ListDialog listVehicle;
+        private static ListDialog listPerms;
 
         private static InputDialog responseDialog;
 
         public static void ShowAdminDialog(Player player)
         {
-            listAdmin = new TablistDialog("Administration",4, "Sélectionner", "Quitter");
-            listAdmin.Add(new[]
-            {
-                "Modération",
-                "Donner",
-                "Véhicule",
-                "Permissions"
-            });
+            listAdmin = new ListDialog("Administration", "Sélectionner", "Quitter");
+            listAdmin.AddItem("Modération");
+            listAdmin.AddItem("Donner");
+            listAdmin.AddItem("Véhicule");
+            listAdmin.AddItem("Permissions");
             listAdmin.Show(player);
             listAdmin.Response += (sender, EventArgs) =>
             {
@@ -61,16 +59,13 @@ namespace SemiRP.Dialog
         }
         private static void ShowModerationDialog(Player player)
         {
-            listModeration = new TablistDialog("Administration - Modération", 4, "Sélectionner", "Quitter");
-            listModeration.Add(new[]
-            {
-                "Se téléporter à",
-                "Téléporter à sois",
-                "Slap",
-                "Freeze",
-                "Unfreeze",
-                "Activer/Désactiver PM"
-            });
+            listModeration = new ListDialog("Administration - Modération", "Sélectionner", "Quitter");
+            listModeration.AddItem("Se téléporter à");
+            listModeration.AddItem("Téléporter à sois");
+            listModeration.AddItem("Slap");
+            listModeration.AddItem("Freeze");
+            listModeration.AddItem("Unfreeze");
+            listModeration.AddItem("Activer/Désactiver PM");
             listModeration.Show(player);
             listModeration.Response += (sender, EventArgs) =>
             {
@@ -83,11 +78,11 @@ namespace SemiRP.Dialog
                             {
                                 try
                                 {
-
+                                    
                                 }
                                 catch(Exception e)
                                 {
-                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de se téléporter au joueur.");
+                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de se téléporter au joueur." + e.Message);
                                 }
                             };
                             break;
@@ -103,7 +98,7 @@ namespace SemiRP.Dialog
                                 }
                                 catch (Exception e)
                                 {
-                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de téléporter le joueur.");
+                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de téléporter le joueur." + e.Message);
                                 }
                             };
                             break;
@@ -119,7 +114,7 @@ namespace SemiRP.Dialog
                                 }
                                 catch (Exception e)
                                 {
-                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de slap le joueur.");
+                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de slap le joueur." + e.Message);
                                 }
                             };
                             break;
@@ -135,7 +130,7 @@ namespace SemiRP.Dialog
                                 }
                                 catch (Exception e)
                                 {
-                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de freeze le joueur.");
+                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de freeze le joueur." + e.Message);
                                 }
                             };
                             break;
@@ -151,7 +146,7 @@ namespace SemiRP.Dialog
                                 }
                                 catch (Exception e)
                                 {
-                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible d'unfreeze le joueur.");
+                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible d'unfreeze le joueur." + e.Message);
                                 }
                             };
                             break;
@@ -164,7 +159,7 @@ namespace SemiRP.Dialog
                             }
                             catch (Exception e)
                             {
-                                Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible d'unfreeze le joueur.");
+                                Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible d'unfreeze le joueur." + e.Message);
                             }
                             break;
                         }
