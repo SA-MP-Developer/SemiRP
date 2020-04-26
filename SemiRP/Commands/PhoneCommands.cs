@@ -79,7 +79,21 @@ namespace SemiRP.Commands
             
         }
 
-        [CommandGroup("contact", "c")]
+        [Command("defaut", "default")]
+        private static void Default(Player sender)
+        {
+            try
+            {
+                PhoneHelper.SetInHandDefaultPhone(sender.ActiveCharacter);
+            }
+            catch (Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, "Le téléphone par défaut n'a pas pu être choisi : " + e.Message);
+            }
+
+        }
+
+        [CommandGroup("contact", "c", "contacts", "rep","repertoire")]
         public class Contact
         {
             [Command("ajouter", "aj")]
