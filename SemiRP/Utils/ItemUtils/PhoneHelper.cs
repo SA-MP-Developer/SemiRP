@@ -28,9 +28,9 @@ namespace SemiRP.Utils.ItemUtils
         {
             Phone phone = GetDefaultPhone(player.ActiveCharacter);
             if (phone != null)
-                Utils.Chat.CallChat(player, "Votre numéro est : "+GetDefaultPhone(player.ActiveCharacter).Number+".");
+                Utils.Chat.InfoChat(player, "Votre numéro est : "+GetDefaultPhone(player.ActiveCharacter).Number+".");
             else
-                Utils.Chat.CallChat(player, "Vous n'avez pas de téléphone.");
+                Utils.Chat.InfoChat(player, "Vous n'avez pas de téléphone.");
         }
         public static List<Phone> GetAllPhone()
         {
