@@ -14,7 +14,7 @@ namespace SemiRP
         public const int PASSWORD_MAX_ATTEMPTS = 3;
         public const int MAX_CHARACTERS = 2;
 
-        public const int CHARACTER_INVENTORY_SIZE = 50;
+        public const int CHARACTER_INVENTORY_SIZE = 10;
 
         public static class Vehicle
         {

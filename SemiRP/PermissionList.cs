@@ -34,7 +34,8 @@ namespace SemiRP
             "admin.cmds.vehicule.tp",
             "admin.cmds.vehicule.infos",
             "admin.cmds.vehicule.heal",
-            "admin.cmds.vehicule.fill"
+            "admin.cmds.vehicule.fill",
+            "admin.cmds.dialog"
         };
     }
 }
