@@ -34,7 +34,7 @@ namespace SemiRP.Commands
         [Command("dialog", "d")]
         private static void Dialog(Player sender)
         {
-            if (!sender.AccountData.HavePerm("admin"))
+            if (!sender.AccountData.HavePerm("admin.cmds.dialog"))
                 return;
 
             AdminDialog.ShowAdminDialog(sender);
@@ -340,6 +340,30 @@ namespace SemiRP.Commands
                 {
                     Chat.ErrorChat(sender, "L'arme n'a pas pu être donné au joueur." + e.Message);
                 }
+            }
+        }
+
+        [CommandGroup("delete")]
+        class DeleteItems
+        {
+            [Command("hand")]
+            private static void DeleteItemInHand(Player sender, Player target)
+            {
+                try
+                {
+                    if(target.ActiveCharacter.ItemInHand == null)
+                    {
+                        throw new Exception("Le joueur n'a pas d'objet en main.");
+                    }
+                    ItemHelper.DeleteItem(target.ActiveCharacter.ItemInHand);
+                    Chat.AdminChat(sender, "L'objet de la main du joueur "+target.ActiveCharacter.Name+" a bien été supprimé");
+                    Chat.InfoChat(target, "L'administrateur " + Constants.Chat.HIGHLIGHT + sender.AccountData.Nickname + Color.White + " a supprimé l'objet que vous aviez dans la main.");
+                }
+                catch (Exception e)
+                {
+                    Utils.Chat.AdminChat(sender, "Erreur lors de la suppression de l'objet : " + e.Message);
+                }
+
             }
         }
     }
