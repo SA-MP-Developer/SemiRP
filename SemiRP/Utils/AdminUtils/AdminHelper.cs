@@ -1,6 +1,7 @@
 ﻿using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
+using SemiRP.Data;
 using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils.ContainerUtils;
@@ -245,16 +246,38 @@ namespace SemiRP.Utils
         public static void GiveGun(Player sender, Player target, Weapon gun)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
-                throw new Exception();
+                throw new Exception("Tu n'as pas la permission.");
+            if (target.ActiveCharacter.ItemInHand != null)
+                throw new Exception("La main du joueur doit être vide.");
 
-                target.GiveWeapon(gun, 500);
+            Gun weapon = new Gun(); // Create Gun
+            weapon.idWeapon = gun;
+            weapon.Quantity = 500;
+            weapon.CurrentContainer = null;
+            weapon.SpawnLocation = null;
+            weapon.Name = Weapons.WeaponsDictionnary.GetValueOrDefault((int) gun);
+            target.ActiveCharacter.ItemInHand = weapon;
+            target.GiveWeapon(gun, 500);
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.SaveChanges();
         }
         public static void GiveGun(Player sender, Player target, Weapon gun, int ammo)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
                 throw new Exception();
+            if (target.ActiveCharacter.ItemInHand != null)
+                throw new Exception("La main du joueur doit être vide.");
 
+            Gun weapon = new Gun(); // Create Gun
+            weapon.idWeapon = gun;
+            weapon.Quantity = ammo;
+            weapon.CurrentContainer = null;
+            weapon.SpawnLocation = null;
+            weapon.Name = Weapons.WeaponsDictionnary.GetValueOrDefault((int)gun);
+            target.ActiveCharacter.ItemInHand = weapon;
             target.GiveWeapon(gun, ammo);
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.SaveChanges();
         }
     }
 }
