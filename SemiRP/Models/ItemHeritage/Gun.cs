@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SampSharp.GameMode.Definitions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,6 @@ namespace SemiRP.Models.ItemHeritage
 {
     public class Gun : Item
     {
-        public int idWeapon { get; set; }
+        public Weapon idWeapon { get; set; }
     }
 }
