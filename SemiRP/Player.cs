@@ -251,6 +251,16 @@ namespace SemiRP
 
         }
 
+        public override void OnWeaponShot(WeaponShotEventArgs e)
+        {
+            base.OnWeaponShot(e);
+            if(this.WeaponAmmo == 1)
+            {
+                this.ActiveCharacter.ItemInHand = null;
+                dbContext.SaveChanges();
+            }
+        }
+
         #endregion
     }
 }
