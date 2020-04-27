@@ -12,18 +12,20 @@ namespace SemiRP.Models
         private int quantity;
         private Container currentContainer;
         private SpawnLocation spawnLocation;
+        private int modelId;
 
         public Item()
         {
         }
 
-        public Item(int id, string name, int quantity, Container currentContainer, SpawnLocation spawnLocation)
+        public Item(int id, string name, int quantity, Container currentContainer, SpawnLocation spawnLocation, int modelId = -1)
         {
             this.Id = id;
             this.Name = name;
             this.Quantity = quantity;
             this.currentContainer = currentContainer;
             this.spawnLocation = spawnLocation;
+            this.ModelId = modelId;
         }
 
         [Key]
@@ -32,5 +34,6 @@ namespace SemiRP.Models
         public int Quantity { get => quantity; set => quantity = value; }
         public virtual Container CurrentContainer { get => currentContainer; set => currentContainer = value; }
         public virtual SpawnLocation SpawnLocation { get => spawnLocation; set => spawnLocation = value; }
+        public int ModelId { get => modelId; set => modelId = value; }
     }
 }
