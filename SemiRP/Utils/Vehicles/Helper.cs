@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace SemiRP.Utils.Vehicles
@@ -123,6 +124,30 @@ namespace SemiRP.Utils.Vehicles
         public static bool IsBorrowerOrOwner(Player sender, Vehicle vehicle)
         {
             return IsOwner(sender, vehicle) || vehicle.Data.Borrowers.Select(b => b.Borrower).Any(b => b == sender.ActiveCharacter);
+        }
+
+
+        public static void BorrowVehicle(Vehicle vehicle, Player borrower)
+        {
+            if (vehicle.Data.Borrowers.Select(b => b.Borrower).Any(b => b == borrower.ActiveCharacter))
+                throw new Exception("Ce joueur a déjà emprunté ce véhicule.");
+
+            vehicle.Data.Borrowers.Add(new VehicleDataBorrower(vehicle.Data, borrower.ActiveCharacter));
+            
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.SaveChanges();
+        }
+
+        public static void UnBorrowVehicle(Vehicle vehicle, Player borrower)
+        {
+            if (!vehicle.Data.Borrowers.Select(b => b.Borrower).Any(b => b == borrower.ActiveCharacter))
+                throw new Exception("Ce joueur n'emprunte pas ce véhicule.");
+
+            var vDataBorrower = vehicle.Data.Borrowers.Where(b => b.Borrower == borrower.ActiveCharacter).First();
+            vehicle.Data.Borrowers.Remove(vDataBorrower);
+
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.SaveChanges();
         }
     }
 }

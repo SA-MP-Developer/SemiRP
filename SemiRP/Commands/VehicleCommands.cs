@@ -1,9 +1,12 @@
-﻿using SampSharp.GameMode.Definitions;
+﻿using Castle.DynamicProxy.Contributors;
+using SampSharp.GameMode.Definitions;
+using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.World;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace SemiRP.Commands
@@ -166,6 +169,49 @@ namespace SemiRP.Commands
                 Utils.Chat.SendMeChat(sender, "allume le moteur de son véhicule.");
             vehicle.Engine = !vehicle.Engine;
         }
+
+        [Command("liste", "list")]
+        private static void List(Player sender)
+        {
+            if (!Vehicle.All.Any(v => ((Vehicle)v).Data.Owner == sender.ActiveCharacter))
+            {
+                Utils.Chat.ErrorChat(sender, "Vous n'avez pas de véhicules.");
+                return;
+            }
+
+            Utils.Chat.InfoChat(sender, "===== Vos véhicules =====");
+            foreach (string line in Utils.Vehicles.CmdHelper.ListPlayerVehicles(sender))
+            {
+                Utils.Chat.InfoChat(sender, line);
+            }
+        }
+
+        [Command("preter", "lend")]
+        private static void Lend(Player sender, Player target, int vehicle)
+        {
+            try
+            {
+                Vehicle veh = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, vehicle);
+
+                if (!Utils.Vehicles.Helper.IsOwner(sender, veh))
+                    throw new Exception("Vous n'êtes pas propriétaire de ce véhicule.");
+
+                if (veh.Data.Borrowers.Select(b => b.Borrower).Any(b => b == target.ActiveCharacter))
+                    throw new Exception("Vous prêtez déjà votre véhicule à ce joueur.");
+
+                Utils.Vehicles.Helper.BorrowVehicle(veh, target);
+                Utils.Chat.InfoChat(sender, "Vous avez prêté votre véhicule " + Constants.Chat.HIGHLIGHT + VehicleModelInfo.ForVehicle(veh).Name + Color.White
+                                            + " à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + ".");
+
+                ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+                dbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Utils.Chat.ErrorChat(sender, e.Message);
+            }
+        }
+
         [Command("coffre", "trunk")]
         private static void Trunk(Player sender)
         {

@@ -1,5 +1,6 @@
 ﻿using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
+using SampSharp.GameMode.World;
 using SemiRP.Models;
 using System;
 using System.Collections.Generic;
@@ -82,6 +83,20 @@ namespace SemiRP.Utils.Vehicles
         public static void CreateVehicleForPlayer(Player sender, VehicleModelType vehicle)
         {
             var veh = Utils.Vehicles.Helper.CreateVehicle(sender.ActiveCharacter, Utils.Vehicles.ModelHelper.ModelForModelType(vehicle), sender.Position, sender.Angle);
+        }
+
+        public static List<string> ListPlayerVehicles(Player player)
+        {
+            List<string> res = new List<string>();
+
+            foreach (Vehicle v in Vehicle.All.Where(v => ((Vehicle)v).Data.Owner == player.ActiveCharacter))
+            {
+
+                res.Add(Constants.Chat.HIGHLIGHT + VehicleModelInfo.ForVehicle(v).Name + " (ID : " + v.Data.Id + ")"+ Color.White
+                        + " | Kilometrage : " + Constants.Chat.HIGHLIGHT + v.Data.Mileage.ToString("#####0.0") + Color.White);
+            }
+
+            return res;
         }
     }
 }
