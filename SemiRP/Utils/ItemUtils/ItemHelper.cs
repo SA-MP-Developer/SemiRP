@@ -5,6 +5,7 @@ using System.Linq;
 using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils.PlayerUtils;
+using SampSharp.Streamer.World;
 
 namespace SemiRP.Utils.ItemUtils
 {
@@ -63,6 +64,19 @@ namespace SemiRP.Utils.ItemUtils
                 throw new Exception("Le joueur a déjà un objet en main.");
             }
             player.ActiveCharacter.ItemInHand = item;
+        }
+        public static void PutItemOnGround(Player player)
+        {
+            if (player.ActiveCharacter.ItemInHand == null)
+                throw new Exception("Aucun objet en main.");
+            if (player.ActiveCharacter.ItemInHand.ModelId == -1)
+                throw new Exception("Cet objet n'est pas posable.");
+            Item item = player.ActiveCharacter.ItemInHand;
+            item.SpawnLocation = new SpawnLocation(player.Position, player.Rotation.Z,player.Interior, player.VirtualWorld);
+            DynamicObject itemOnGround = new DynamicObject(item.ModelId, item.SpawnLocation.Position, item.SpawnLocation.Rotation, item.SpawnLocation.VirtualWorld, item.SpawnLocation.Interior);
+            RemoveItemFromPlayerHand(player);
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.SaveChanges();
         }
 
     }
