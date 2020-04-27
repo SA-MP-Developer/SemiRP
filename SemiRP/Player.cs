@@ -269,7 +269,15 @@ namespace SemiRP
         public override void OnDisconnected(DisconnectEventArgs e)
         {
             base.OnDisconnected(e);
-            GunHelper.SaveGunInHand(this);
+            try
+            {
+                GunHelper.SaveGunInHand(this);
+            }
+            catch(Exception exception)
+            {
+
+            }
+            
         }
         
         
