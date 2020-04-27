@@ -13,15 +13,15 @@ namespace SemiRP.Models
         {
         }
 
-        public SpawnLocation(Vector3 position, float rotation)
+        public SpawnLocation(Vector3 position, float rotation, int interior = 0, int virtualworld = 0)
         {
             Position = position;
             RotX = 0f;
             RotY = 0f;
             RotZ = rotation;
 
-            Interior = 0;
-            VirtualWorld = 0;
+            Interior = interior;
+            VirtualWorld = virtualworld;
         }
 
 
