@@ -29,7 +29,22 @@ namespace SemiRP.Commands
                 Utils.Chat.ErrorChat(player, "L'ajout de l'objet dans l'inventaire à échoué : "+e.Message);
             }
         }
-        
+
+        [Command("poser")]
+        private static void PutItemOnGround(Player player)
+        {
+            try
+            {
+                ItemHelper.PutItemOnGround(player);
+                Utils.Chat.InfoChat(player, "L'objet a été posé au sol.");
+
+            }
+            catch (Exception e)
+            {
+                Utils.Chat.ErrorChat(player, "L'objet n'a pas pu être posé au sol : " + e.Message);
+            }
+        }
+
     }
     public class InventoryCommand
     {
@@ -42,7 +57,7 @@ namespace SemiRP.Commands
             }
             catch (Exception e)
             {
-                Utils.Chat.ErrorChat(player, "Une erreur s'est produite avec l'inventaire l'inventaire : "+e.Message);
+                Utils.Chat.ErrorChat(player, "Une erreur s'est produite avec l'inventaire : "+e.Message);
             }
         }
     }
