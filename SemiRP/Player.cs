@@ -14,6 +14,7 @@ using SemiRP.PlayerSystems;
 using Microsoft.EntityFrameworkCore;
 using SemiRP.Models.ItemHeritage;
 using System.Text.RegularExpressions;
+using SemiRP.Utils.ItemUtils;
 
 namespace SemiRP
 {
@@ -216,6 +217,10 @@ namespace SemiRP
             base.OnSpawned(e);
 
             this.Skin = (int)this.ActiveCharacter.Skin;
+            if (this.ActiveCharacter.ItemInHand != null && this.ActiveCharacter.ItemInHand is Gun)
+            {
+                this.GiveWeapon(((Gun)this.ActiveCharacter.ItemInHand).idWeapon, this.ActiveCharacter.ItemInHand.Quantity);
+            }
         }
 
         public override void OnExitVehicle(PlayerVehicleEventArgs e)
@@ -261,6 +266,13 @@ namespace SemiRP
             }
         }
 
+        public override void OnDisconnected(DisconnectEventArgs e)
+        {
+            base.OnDisconnected(e);
+            GunHelper.SaveGunInHand(this);
+        }
+        
+        
         #endregion
     }
 }
