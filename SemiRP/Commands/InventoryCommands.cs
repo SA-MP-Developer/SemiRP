@@ -13,7 +13,7 @@ namespace SemiRP.Commands
     public class InventoryCommands
     {
 
-        [Command("mettre")]
+        [Command("ramasser")]
         private static void PutItemInInventory (Player player)
         {
             try
