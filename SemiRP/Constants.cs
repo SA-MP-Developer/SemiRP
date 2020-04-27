@@ -16,12 +16,14 @@ namespace SemiRP
 
         public const int CHARACTER_INVENTORY_SIZE = 10;
 
+        public const int SAVE_TIMER = 2000;
+
         public static class Vehicle
         {
             public static float SPEED_MAGIC = 181.5f;
             public static float LOCK_RANGE = 3.0f;
             public static float HOOD_RANGE = 4.0f;
-            public static float STOPPED_CONSUMPTION = 0.0001f;
+            public static float STOPPED_CONSUMPTION_FACTOR = 0.00001f;
 
             public static int MS500_TIMER = 500;
         }

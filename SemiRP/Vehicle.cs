@@ -61,7 +61,7 @@ namespace SemiRP
         {
             foreach (Vehicle v in Vehicle.All)
             {
-                float dist = v.Speed * (Constants.Vehicle.MS500_TIMER / (float)60000 / 60);
+                float dist = v.Speed * (Constants.Vehicle.MS500_TIMER / (float)60000 / 30);
                 v.Data.Mileage += dist;
 
                 if (v.Data.Fuel < 0.02f)
@@ -70,7 +70,7 @@ namespace SemiRP
                 if (v.Engine && v.Data.Fuel != 0f)
                 {
                     if (v.Speed == 0)
-                        v.Data.Fuel -= Constants.Vehicle.STOPPED_CONSUMPTION;
+                        v.Data.Fuel -= v.Data.FuelConsumption * Constants.Vehicle.STOPPED_CONSUMPTION_FACTOR;
                     else
                         v.Data.Fuel -= dist * (v.Data.FuelConsumption / 100);
                 }

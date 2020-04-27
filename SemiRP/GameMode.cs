@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using Newtonsoft.Json.Bson;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
@@ -16,6 +17,8 @@ namespace SemiRP
         private ServerDbContext dbContext;
         public ServerDbContext DbContext { get { return dbContext; } }
 
+        private Timer saveTimer;
+
         private Timer vehicleTimer;
 
         protected override void OnExited(EventArgs e)
@@ -23,6 +26,7 @@ namespace SemiRP
             base.OnExited(e);
 
             vehicleTimer.Dispose();
+            saveTimer.Dispose();
 
             dbContext.Dispose();
         }
@@ -111,6 +115,9 @@ namespace SemiRP
             vehicleTimer = new Timer(Constants.Vehicle.MS500_TIMER, true);
             vehicleTimer.Tick += Vehicle.GlobalTimer;
             Console.WriteLine("Vehicle timer");
+            saveTimer = new Timer(Constants.SAVE_TIMER, true);
+            saveTimer.Tick += this.SaveTimer;
+            Console.WriteLine("Save timer");
 
             Console.WriteLine("[Timers] Done.");
 
@@ -135,6 +142,11 @@ namespace SemiRP
                 }
             }
             dbContext.SaveChanges();
+        }
+
+        private void SaveTimer(Object sender, EventArgs e)
+        {
+            this.dbContext.SaveChanges();
         }
 
         #endregion
