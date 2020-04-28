@@ -15,6 +15,10 @@ using Microsoft.EntityFrameworkCore;
 using SemiRP.Models.ItemHeritage;
 using System.Text.RegularExpressions;
 using SemiRP.Utils.ItemUtils;
+using SampSharp.Streamer;
+using SampSharp.Streamer.World;
+using System.Runtime.CompilerServices;
+using SampSharp.GameMode;
 
 namespace SemiRP
 {
@@ -29,6 +33,8 @@ namespace SemiRP
         public bool AcceptMP { get; set; }
 
         private ServerDbContext dbContext;
+
+        private DynamicTextLabel nameLabel;
 
         public override void OnConnected(EventArgs e)
         {
@@ -217,10 +223,26 @@ namespace SemiRP
             base.OnSpawned(e);
 
             this.Skin = (int)this.ActiveCharacter.Skin;
+            this.Interior = this.ActiveCharacter.SpawnLocation.Interior;
+            this.VirtualWorld = this.ActiveCharacter.SpawnLocation.VirtualWorld;
+
             if (this.ActiveCharacter.ItemInHand != null && this.ActiveCharacter.ItemInHand is Gun)
             {
                 this.GiveWeapon(((Gun)this.ActiveCharacter.ItemInHand).idWeapon, this.ActiveCharacter.ItemInHand.Quantity);
             }
+
+            nameLabel = new DynamicTextLabel(this.Name + "(" + this.Id + ")" + "\r\n" + Constants.Chat.ME + Utils.PlayerUtils.PlayerHelper.HealthToDescription(this), Color.White,
+                            new Vector3(0, 0, 0.5), Constants.PLAYER_LABEL_DIST, attachedPlayer: this, testLOS: true);
+            nameLabel.Interior = this.Interior;
+            nameLabel.World = this.VirtualWorld;
+            nameLabel.HideForPlayer(this);
+        }
+
+        public override void OnTakeDamage(DamageEventArgs e)
+        {
+            base.OnTakeDamage(e);
+
+            nameLabel.Text = this.Name + "(" + this.Id + ")" + "\r\n" + Constants.Chat.ME + Utils.PlayerUtils.PlayerHelper.HealthToDescription(this);
         }
 
         public override void OnExitVehicle(PlayerVehicleEventArgs e)
@@ -279,8 +301,16 @@ namespace SemiRP
             }
             
         }
-        
-        
+
+        public override void OnDeath(DeathEventArgs e)
+        {
+            base.OnDeath(e);
+
+            nameLabel.Dispose();
+            nameLabel = null;
+        }
+
+
         #endregion
     }
 }

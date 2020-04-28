@@ -18,6 +18,8 @@ namespace SemiRP
 
         public const int SAVE_TIMER = 2000;
 
+        public const float PLAYER_LABEL_DIST = 12.5f;
+
         public static class Vehicle
         {
             public static float SPEED_MAGIC = 181.5f;

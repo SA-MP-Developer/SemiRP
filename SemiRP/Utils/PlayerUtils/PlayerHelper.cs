@@ -22,5 +22,29 @@ namespace SemiRP.Utils.PlayerUtils
             }
             return null;
         }
+
+        public static string HealthToDescription(Player player)
+        {
+            if (player.Health > 95.0f)
+            {
+                return "* En parfaite santé";
+            }
+            else if (player.Health > 80.0f)
+            {
+                return "* Quelques égratignures";
+            }
+            else if (player.Health > 50.0f)
+            {
+                return "* Des blessures importantes";
+            }
+            else if (player.Health > 25.0f)
+            {
+                return "* Très mal en point";
+            }
+            else
+            {
+                return "* Proche de la mort";
+            }
+        }
     }
 }
