@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace SemiRP.Models
@@ -38,6 +39,7 @@ namespace SemiRP.Models
         public virtual Container CurrentContainer { get => currentContainer; set => currentContainer = value; }
         public virtual SpawnLocation SpawnLocation { get => spawnLocation; set => spawnLocation = value; }
         public int ModelId { get => modelId; set => modelId = value; }
+        [NotMapped]
         public DynamicObject DynamicObject { get; set; }
     }
 }
