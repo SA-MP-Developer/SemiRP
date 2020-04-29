@@ -256,6 +256,7 @@ namespace SemiRP.Utils
             weapon.CurrentContainer = null;
             weapon.SpawnLocation = null;
             weapon.Name = Weapons.WeaponsDictionnary.GetValueOrDefault((int) gun);
+            weapon.ModelId = WeaponsModelId.WeaponsModelIdDictionnary.GetValueOrDefault((int)gun);
             target.ActiveCharacter.ItemInHand = weapon;
             target.GiveWeapon(gun, 500);
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
@@ -274,6 +275,7 @@ namespace SemiRP.Utils
             weapon.CurrentContainer = null;
             weapon.SpawnLocation = null;
             weapon.Name = Weapons.WeaponsDictionnary.GetValueOrDefault((int)gun);
+            weapon.ModelId = WeaponsModelId.WeaponsModelIdDictionnary.GetValueOrDefault((int)gun);
             target.ActiveCharacter.ItemInHand = weapon;
             target.GiveWeapon(gun, ammo);
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;

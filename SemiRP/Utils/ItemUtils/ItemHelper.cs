@@ -6,6 +6,7 @@ using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils.PlayerUtils;
 using SampSharp.Streamer.World;
+using SampSharp.GameMode;
 
 namespace SemiRP.Utils.ItemUtils
 {
@@ -48,6 +49,7 @@ namespace SemiRP.Utils.ItemUtils
                 throw new Exception("Aucun objet dans les mains.");
             }
             player.ActiveCharacter.ItemInHand = null;
+            player.ResetWeapons();
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             dbContext.SaveChanges();
         }
@@ -72,8 +74,10 @@ namespace SemiRP.Utils.ItemUtils
             if (player.ActiveCharacter.ItemInHand.ModelId == -1)
                 throw new Exception("Cet objet n'est pas posable.");
             Item item = player.ActiveCharacter.ItemInHand;
-            item.SpawnLocation = new SpawnLocation(player.Position, player.Rotation.Z,player.Interior, player.VirtualWorld);
-            DynamicObject itemOnGround = new DynamicObject(item.ModelId, item.SpawnLocation.Position, item.SpawnLocation.Rotation, item.SpawnLocation.VirtualWorld, item.SpawnLocation.Interior);
+            Vector3 position = new Vector3(player.Position.X, player.Position.Y, player.Position.Z-0.9);
+            Vector3 rotation = new Vector3(90, 0, 0);
+            item.SpawnLocation = new SpawnLocation(position, rotation,player.Interior, player.VirtualWorld);
+            item.DynamicObject = new DynamicObject(item.ModelId, item.SpawnLocation.Position, item.SpawnLocation.Rotation, item.SpawnLocation.VirtualWorld, item.SpawnLocation.Interior);
             RemoveItemFromPlayerHand(player);
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             dbContext.SaveChanges();
