@@ -14,19 +14,17 @@ namespace SemiRP.Commands
     {
 
         [Command("ramasser")]
-        private static void PutItemInInventory (Player player)
+        private static void PutItemInPlayerHand (Player player)
         {
             try
             {
-                Item item = ItemHelper.GetNearestItemOfCharacter(player.ActiveCharacter);
-                ItemHelper.ItemIsCloseEnoughOfPlayer(player, item);
-                InventoryHelper.AddItemToCharacter(player.ActiveCharacter, item);
-                Utils.Chat.InfoChat(player, "L'objet a été ajouté à l'inventaire.");
+                ItemHelper.RemoveItemFromGround(player);
+                Utils.Chat.InfoChat(player, "L'objet a été ramassé.");
 
             }
             catch(Exception e)
             {
-                Utils.Chat.ErrorChat(player, "L'ajout de l'objet dans l'inventaire à échoué : "+e.Message);
+                Utils.Chat.ErrorChat(player, "Impossible de ramasser l'objet : "+e.Message);
             }
         }
 
