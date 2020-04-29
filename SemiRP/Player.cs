@@ -242,7 +242,8 @@ namespace SemiRP
         {
             base.OnTakeDamage(e);
 
-            nameLabel.Text = this.Name + "(" + this.Id + ")" + "\r\n" + Constants.Chat.ME + Utils.PlayerUtils.PlayerHelper.HealthToDescription(this);
+            if (nameLabel != null)
+                nameLabel.Text = this.Name + "(" + this.Id + ")" + "\r\n" + Constants.Chat.ME + Utils.PlayerUtils.PlayerHelper.HealthToDescription(this);
         }
 
         public override void OnExitVehicle(PlayerVehicleEventArgs e)
