@@ -20,7 +20,7 @@ namespace SemiRP.Models
         {
         }
 
-        public Item(int id, string name, int quantity, Container currentContainer, SpawnLocation spawnLocation, int modelId = -1, DynamicObject dynamicObject)
+        public Item(int id, string name, int quantity, Container currentContainer, SpawnLocation spawnLocation, int modelId = -1, DynamicObject dynamicObject = null)
         {
             this.Id = id;
             this.Name = name;
