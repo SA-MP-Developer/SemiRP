@@ -6,6 +6,7 @@ using Newtonsoft.Json.Bson;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
+using SampSharp.Streamer.World;
 using SemiRP.Models;
 
 namespace SemiRP
@@ -120,6 +121,11 @@ namespace SemiRP
             Console.WriteLine("Save timer");
 
             Console.WriteLine("[Timers] Done.");
+            Console.WriteLine("[Objects] Begining loading...");
+            InitializeObjectOnMap();
+            Console.WriteLine("[Objects] Done.");
+
+            Console.WriteLine("-------------Loading finish------------");
 
         }
 
@@ -142,6 +148,17 @@ namespace SemiRP
                 }
             }
             dbContext.SaveChanges();
+        }
+
+        private void InitializeObjectOnMap()
+        {
+
+            List<Item> itemsSpawning = new List<Item>();
+            itemsSpawning.AddRange(dbContext.Items.Where(x => x.SpawnLocation != null));
+            foreach(Item item in itemsSpawning)
+            {
+                item.DynamicObject = new DynamicObject(item.ModelId, item.SpawnLocation.Position, item.SpawnLocation.Rotation, item.SpawnLocation.VirtualWorld, item.SpawnLocation.Interior);
+            }
         }
 
         private void SaveTimer(Object sender, EventArgs e)
