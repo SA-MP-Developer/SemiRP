@@ -65,7 +65,11 @@ namespace SemiRP.Utils.ItemUtils
             {
                 throw new Exception("Le joueur a déjà un objet en main.");
             }
+            item.SpawnLocation = null;
+            item.DynamicObject = null;
             player.ActiveCharacter.ItemInHand = item;
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.SaveChanges();
         }
         public static void PutItemOnGround(Player player)
         {
@@ -81,6 +85,15 @@ namespace SemiRP.Utils.ItemUtils
             RemoveItemFromPlayerHand(player);
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             dbContext.SaveChanges();
+        }
+        public static void RemoveItemFromGround(Player player)
+        {
+            if (player.ActiveCharacter.ItemInHand != null)
+                throw new Exception("Vous avez déjà un objet en main.");
+            Item item = GetNearestItemOfCharacter(player.ActiveCharacter);
+            ItemIsCloseEnoughOfPlayer(player, item);
+            PutItemInPlayerHand(player, item);
+            
         }
 
     }
