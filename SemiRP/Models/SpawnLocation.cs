@@ -23,6 +23,14 @@ namespace SemiRP.Models
             Interior = interior;
             VirtualWorld = virtualworld;
         }
+        public SpawnLocation(Vector3 position, Vector3 rotation, int interior = 0, int virtualworld = 0)
+        {
+            Position = position;
+            Rotation = rotation;
+
+            Interior = interior;
+            VirtualWorld = virtualworld;
+        }
 
 
         [Key]

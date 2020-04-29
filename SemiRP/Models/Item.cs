@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SampSharp.Streamer.World;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -13,12 +14,13 @@ namespace SemiRP.Models
         private Container currentContainer;
         private SpawnLocation spawnLocation;
         private int modelId;
+        private DynamicObject dynamicObject;
 
         public Item()
         {
         }
 
-        public Item(int id, string name, int quantity, Container currentContainer, SpawnLocation spawnLocation, int modelId = -1)
+        public Item(int id, string name, int quantity, Container currentContainer, SpawnLocation spawnLocation, int modelId = -1, DynamicObject dynamicObject)
         {
             this.Id = id;
             this.Name = name;
@@ -26,6 +28,7 @@ namespace SemiRP.Models
             this.currentContainer = currentContainer;
             this.spawnLocation = spawnLocation;
             this.ModelId = modelId;
+            this.DynamicObject = dynamicObject;
         }
 
         [Key]
@@ -35,5 +38,6 @@ namespace SemiRP.Models
         public virtual Container CurrentContainer { get => currentContainer; set => currentContainer = value; }
         public virtual SpawnLocation SpawnLocation { get => spawnLocation; set => spawnLocation = value; }
         public int ModelId { get => modelId; set => modelId = value; }
+        public DynamicObject DynamicObject { get; set; }
     }
 }
