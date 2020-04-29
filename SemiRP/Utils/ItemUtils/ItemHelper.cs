@@ -7,6 +7,7 @@ using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils.PlayerUtils;
 using SampSharp.Streamer.World;
 using SampSharp.GameMode;
+using SampSharp.GameMode.Definitions;
 
 namespace SemiRP.Utils.ItemUtils
 {
@@ -68,6 +69,10 @@ namespace SemiRP.Utils.ItemUtils
             item.SpawnLocation = null;
             item.DynamicObject = null;
             player.ActiveCharacter.ItemInHand = item;
+            if (item is Gun)
+            {
+                player.GiveWeapon(((Gun)item).idWeapon, item.Quantity);
+            }
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             dbContext.SaveChanges();
         }
@@ -78,6 +83,11 @@ namespace SemiRP.Utils.ItemUtils
             if (player.ActiveCharacter.ItemInHand.ModelId == -1)
                 throw new Exception("Cet objet n'est pas posable.");
             Item item = player.ActiveCharacter.ItemInHand;
+            if(item is Gun)
+            {
+                player.SetArmedWeapon(((Gun)item).idWeapon);
+                item.Quantity = player.WeaponAmmo;
+            }
             Vector3 position = new Vector3(player.Position.X, player.Position.Y, player.Position.Z-0.9);
             Vector3 rotation = new Vector3(90, 0, 0);
             item.SpawnLocation = new SpawnLocation(position, rotation,player.Interior, player.VirtualWorld);
@@ -92,8 +102,13 @@ namespace SemiRP.Utils.ItemUtils
                 throw new Exception("Vous avez déjà un objet en main.");
             Item item = GetNearestItemOfCharacter(player.ActiveCharacter);
             ItemIsCloseEnoughOfPlayer(player, item);
+            item.SpawnLocation = null;
+            item.DynamicObject.Dispose();
+            item.DynamicObject = null;
             PutItemInPlayerHand(player, item);
-            
+            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            dbContext.SaveChanges();
+
         }
 
     }
