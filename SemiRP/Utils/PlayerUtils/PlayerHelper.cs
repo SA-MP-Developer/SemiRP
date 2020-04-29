@@ -41,10 +41,11 @@ namespace SemiRP.Utils.PlayerUtils
             {
                 return "* Très mal en point";
             }
-            else
+            else if (player.Health > 0.0f)
             {
                 return "* Proche de la mort";
             }
+            return "* En parfaite santé";
         }
     }
 }

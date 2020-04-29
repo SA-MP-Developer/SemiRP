@@ -231,8 +231,8 @@ namespace SemiRP
                 this.GiveWeapon(((Gun)this.ActiveCharacter.ItemInHand).idWeapon, this.ActiveCharacter.ItemInHand.Quantity);
             }
 
-            nameLabel = new DynamicTextLabel(this.Name + "(" + this.Id + ")" + "\r\n" + Constants.Chat.ME + Utils.PlayerUtils.PlayerHelper.HealthToDescription(this), Color.White,
-                            new Vector3(0, 0, 0.5), Constants.PLAYER_LABEL_DIST, attachedPlayer: this, testLOS: true);
+            nameLabel = new DynamicTextLabel(this.Name + " (( " + this.Id + " ))" + "\r\n" + Constants.Chat.ME + Utils.PlayerUtils.PlayerHelper.HealthToDescription(this), Color.White,
+                            new Vector3(0, 0, 0.4), Constants.PLAYER_LABEL_DIST, attachedPlayer: this, testLOS: true);
             nameLabel.Interior = this.Interior;
             nameLabel.World = this.VirtualWorld;
             nameLabel.HideForPlayer(this);
@@ -243,7 +243,7 @@ namespace SemiRP
             base.OnTakeDamage(e);
 
             if (nameLabel != null)
-                nameLabel.Text = this.Name + "(" + this.Id + ")" + "\r\n" + Constants.Chat.ME + Utils.PlayerUtils.PlayerHelper.HealthToDescription(this);
+                nameLabel.Text = this.Name + " (( " + this.Id + " ))" + "\r\n" + Constants.Chat.ME + Utils.PlayerUtils.PlayerHelper.HealthToDescription(this);
         }
 
         public override void OnExitVehicle(PlayerVehicleEventArgs e)
@@ -292,6 +292,10 @@ namespace SemiRP
         public override void OnDisconnected(DisconnectEventArgs e)
         {
             base.OnDisconnected(e);
+
+            nameLabel.Dispose();
+            nameLabel = null;
+
             try
             {
                 GunHelper.SaveGunInHand(this);
