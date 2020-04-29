@@ -2,6 +2,7 @@
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
+using SampSharp.GameMode.SAMP;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -180,7 +181,10 @@ namespace SemiRP.Dialog
 
             foreach (Field f in fields)
             {
-                dialog.AddItem(f.Title);
+                if (datas.ContainsKey(f.Dataname))
+                    dialog.AddItem(Color.Green + f.Title);
+                else
+                    dialog.AddItem(Color.Red + f.Title);
             }
 
             dialog.AddItem(ContinueButton);
