@@ -1,4 +1,6 @@
-﻿using SampSharp.GameMode.SAMP;
+﻿using SampSharp.GameMode;
+using SampSharp.GameMode.SAMP;
+using SampSharp.Streamer.World;
 using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils.ContainerUtils;
@@ -12,6 +14,7 @@ namespace SemiRP.Utils.ItemUtils
 {
     public class PhoneHelper
     {
+        private static DynamicTextLabel phoneLabel;
         public static Phone CreatePhone()
         {
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
@@ -95,7 +98,7 @@ namespace SemiRP.Utils.ItemUtils
         }
         public static void Call(Player sender, string number)
         {
-            Phone phoneReceiver = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(number);
+            Phone phoneReceiver = PhoneHelper.GetPhoneByNumber(number);
             if (phoneReceiver is null)
             {
                 throw new Exception("le numéro " + number + " n'est pas attribué.");
@@ -104,14 +107,10 @@ namespace SemiRP.Utils.ItemUtils
             {
                 throw new Exception("le numéro " + number + " est déjà en cours d'appel.");
             }
-            Character character = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneReceiver);
+            Character character = PhoneHelper.GetPhoneOwner(phoneReceiver);
             Player receiver = PlayerHelper.SearchCharacter(character);
             Phone phoneSender = ContainerHelper.CheckPlayerPhone(sender);
 
-            if (!receiver.IsConnected)
-            {
-                throw new Exception("Le joueur n'est pas connecté.");
-            }
             if(phoneReceiver == phoneSender)
             {
                 throw new Exception("Vous ne pouvez pas vous appeler vous même.");
@@ -124,7 +123,8 @@ namespace SemiRP.Utils.ItemUtils
             }
             else // If the phone is not in a player inventory
             {
-
+                Vector3 phoneLabelPosition = new Vector3(phoneSender.SpawnLocation.X, phoneSender.SpawnLocation.Y, phoneSender.SpawnLocation.Z+Constants.Item.PHONE_LABEL_DISTANCE_FROM_PHONE);
+                phoneLabel = new DynamicTextLabel("Le téléphone sonne !", Constants.Chat.ME, phoneLabelPosition,Constants.Item.PHONE_LABEL_DISTANCE);
             }
             phoneSender.IsRinging = true;
             phoneSender.PhoneNumberCaller = phoneReceiver.Number;
@@ -158,6 +158,8 @@ namespace SemiRP.Utils.ItemUtils
                         timer.Dispose();
                         nbr = 0;
                         Chat.CallChat(sender, "La personne n'a pas décroché.");
+                        phoneLabel.Dispose();
+                        phoneLabel = null;
                         phoneSender.IsRinging = false;
                         phoneSender.PhoneNumberCaller = null;
                         phoneReceiver.IsRinging = false;
