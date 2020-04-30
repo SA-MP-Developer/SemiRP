@@ -46,10 +46,15 @@ namespace SemiRP.Utils.ItemUtils
         {
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             Container container = dbContext.Containers.Select(x => x).Where(w => w == phone.CurrentContainer).FirstOrDefault();
+            
                 if(container != null)
                 {
                     Character character = dbContext.Characters.Select(x => x).Where(w => w.Inventory == container).FirstOrDefault();
                     return character;
+                }
+                if(container == null)
+                {
+                    return dbContext.Characters.Where(x => x.ItemInHand == phone).FirstOrDefault();
                 }
                 return null;
         }
