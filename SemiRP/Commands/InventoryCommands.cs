@@ -13,7 +13,7 @@ namespace SemiRP.Commands
     public class InventoryCommands
     {
 
-        [Command("ramasser")]
+        [Command("ramasser","prendre")]
         private static void PutItemInPlayerHand (Player player)
         {
             try
@@ -28,7 +28,7 @@ namespace SemiRP.Commands
             }
         }
 
-        [Command("poser")]
+        [Command("poser","mettre")]
         private static void PutItemOnGround(Player player)
         {
             try

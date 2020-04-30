@@ -106,10 +106,10 @@ namespace SemiRP.Utils.ItemUtils
         }
         public static void RemoveItemFromGround(Player player)
         {
-            if (player.ActiveCharacter.ItemInHand != null)
-                throw new Exception("Vous avez déjà un objet en main.");
             Item item = GetNearestItemOfCharacter(player.ActiveCharacter);
             ItemIsCloseEnoughOfPlayer(player, item);
+            if (player.ActiveCharacter.ItemInHand != null)
+                throw new Exception("Vous avez déjà un objet en main.");
             item.SpawnLocation = null;
             item.DynamicObject.Dispose();
             item.DynamicObject = null;
