@@ -23,6 +23,7 @@ namespace SemiRP.Models.ItemHeritage
             PhoneBook = new List<ContactPhone>();
             this.Name = "Téléphone (" + number + ")";
             this.Quantity = 1;
+            this.ModelId = 18872;
         }
 
 
