@@ -115,7 +115,7 @@ namespace SemiRP.Utils.ItemUtils
             
             if(receiver != null) // If a player has the phone
             {
-                Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler ! /t dec pour décrocher.");
+                Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler ("+phoneSender.Number+")! /t dec pour décrocher.");
             }
             else // If the phone is not in a player inventory
             {
@@ -127,7 +127,7 @@ namespace SemiRP.Utils.ItemUtils
             phoneReceiver.PhoneNumberCaller = phoneSender.Number;
             var timer = new Timer(5000, true);
             int nbr = 0;
-            timer.Tick += (sender, e) => {
+            timer.Tick += (senderPlayer, e) => {
                 if(phoneSender.IsCalling && phoneReceiver.IsCalling) // If the players are now in a call
                 {
                     timer.Dispose();
@@ -139,7 +139,7 @@ namespace SemiRP.Utils.ItemUtils
                     {
                         if (receiver != null) // If a player has the phone
                         {
-                            Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler ! /t dec pour décrocher.");
+                            Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler (" + phoneSender.Number + ") ! /t dec pour décrocher.");
                         }
                         else // If the phone is not in a player inventory
                         {
@@ -152,6 +152,7 @@ namespace SemiRP.Utils.ItemUtils
                     {
                         timer.Dispose();
                         nbr = 0;
+                        Chat.CallChat(sender, "La personne n'a pas décroché.");
                         phoneSender.IsRinging = false;
                         phoneSender.PhoneNumberCaller = null;
                         phoneReceiver.IsRinging = false;
