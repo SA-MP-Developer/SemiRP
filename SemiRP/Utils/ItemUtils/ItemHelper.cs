@@ -89,7 +89,15 @@ namespace SemiRP.Utils.ItemUtils
                 item.Quantity = player.WeaponAmmo;
             }
             Vector3 position = new Vector3(player.Position.X, player.Position.Y, player.Position.Z-0.9);
-            Vector3 rotation = new Vector3(90, 0, 0);
+            Vector3 rotation = new Vector3();
+            if(item is Gun)
+            {
+                rotation = new Vector3(90, 0, 0);
+            }
+            else
+            {
+                rotation = new Vector3(0, 0, 0);
+            }
             item.SpawnLocation = new SpawnLocation(position, rotation,player.Interior, player.VirtualWorld);
             item.DynamicObject = new DynamicObject(item.ModelId, item.SpawnLocation.Position, item.SpawnLocation.Rotation, item.SpawnLocation.VirtualWorld, item.SpawnLocation.Interior);
             RemoveItemFromPlayerHand(player);

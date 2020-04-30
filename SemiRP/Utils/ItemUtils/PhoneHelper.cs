@@ -99,7 +99,7 @@ namespace SemiRP.Utils.ItemUtils
         public static void Call(Player sender, string number)
         {
             Phone phoneReceiver = PhoneHelper.GetPhoneByNumber(number);
-            DynamicTextLabel dynamicTextLabelPhone = (DynamicTextLabel) new object();
+            Object dynamicTextLabelPhone = null;
             if (phoneReceiver is null)
             {
                 throw new Exception("le numéro " + number + " n'est pas attribué.");
@@ -124,8 +124,12 @@ namespace SemiRP.Utils.ItemUtils
             }
             else // If the phone is not in a player inventory
             {
-                Vector3 phoneLabelPosition = new Vector3(phoneReceiver.SpawnLocation.X, phoneReceiver.SpawnLocation.Y, phoneReceiver.SpawnLocation.Z+Constants.Item.PHONE_LABEL_DISTANCE_FROM_PHONE);
-                dynamicTextLabelPhone = Chat.CreateTme("Le téléphone sonne !", phoneLabelPosition, Constants.Item.PHONE_LABEL_DISTANCE);
+                if(phoneReceiver.CurrentContainer == null)
+                {
+                    Vector3 phoneLabelPosition = new Vector3(phoneReceiver.SpawnLocation.X, phoneReceiver.SpawnLocation.Y, phoneReceiver.SpawnLocation.Z + Constants.Item.PHONE_LABEL_DISTANCE_FROM_PHONE);
+                    dynamicTextLabelPhone = Chat.CreateTme("Le téléphone sonne !", phoneLabelPosition, Constants.Item.PHONE_LABEL_DISTANCE);
+                }
+                
             }
             phoneSender.IsRinging = true;
             phoneSender.PhoneNumberCaller = phoneReceiver.Number;
@@ -138,6 +142,19 @@ namespace SemiRP.Utils.ItemUtils
                 {
                     timer.Dispose();
                     nbr = 0;
+                    try
+                    {
+                        if (dynamicTextLabelPhone != null)
+                        {
+                            DynamicTextLabel textLabel = (DynamicTextLabel)dynamicTextLabelPhone;
+                            textLabel.Dispose();
+                            textLabel = null;
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+
+                    }
                 }
                 else
                 {
@@ -161,8 +178,12 @@ namespace SemiRP.Utils.ItemUtils
                         Chat.CallChat(sender, "La personne n'a pas décroché.");
                         try
                         {
-                            dynamicTextLabelPhone.Dispose();
-                            dynamicTextLabelPhone = null;
+                            if(dynamicTextLabelPhone != null)
+                            {
+                                DynamicTextLabel textLabel = (DynamicTextLabel)dynamicTextLabelPhone;
+                                textLabel.Dispose();
+                                textLabel = null;
+                            }
                         }
                         catch(Exception exception)
                         {
