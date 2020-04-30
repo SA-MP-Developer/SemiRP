@@ -55,7 +55,8 @@ namespace SemiRP
         }
         public static class Item
         {
-            public static float PROXIMITY_RADIUS = 1.0f;
+            public static float PROXIMITY_RADIUS = 3.0f;
+            public static float PHONE_LABEL_DISTANCE = 15f;
         }
     }
 }
