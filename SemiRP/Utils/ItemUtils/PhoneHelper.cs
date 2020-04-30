@@ -158,6 +158,23 @@ namespace SemiRP.Utils.ItemUtils
                 }
                 else
                 {
+                    if(phoneSender.IsRinging == false || phoneReceiver.IsRinging == false)
+                    {
+                        timer.Dispose();
+                        try
+                        {
+                            if (dynamicTextLabelPhone != null)
+                            {
+                                DynamicTextLabel textLabel = (DynamicTextLabel)dynamicTextLabelPhone;
+                                textLabel.Dispose();
+                                textLabel = null;
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+
+                        }
+                    }
                     if (nbr < 3)
                     {
                         if (receiver != null) // If a player has the phone
@@ -219,7 +236,7 @@ namespace SemiRP.Utils.ItemUtils
         }
         public static void HangUp(Player player)
         {
-            if (!GetDefaultPhone(player.ActiveCharacter).IsCalling)
+            if (!GetDefaultPhone(player.ActiveCharacter).IsCalling && !GetDefaultPhone(player.ActiveCharacter).IsRinging)
             {
                 throw new Exception("Vous n'êtes pas en appel.");
             }
@@ -228,12 +245,16 @@ namespace SemiRP.Utils.ItemUtils
             Character characterCaller = GetPhoneOwner(phoneCaller);
             Player playerCaller = PlayerHelper.SearchCharacter(characterCaller);
             Chat.CallChat(player, "Vous avez raccroché.");
-            Chat.CallChat(playerCaller, "La personne a raccroché.");
             phonePlayer.IsCalling = false;
-            phoneCaller.IsCalling = false;
+            phonePlayer.IsRinging = false;
             phonePlayer.PhoneNumberCaller = null;
+            phoneCaller.IsRinging = false;
+            phoneCaller.IsCalling = false;
             phoneCaller.PhoneNumberCaller = null;
-            
+            if (playerCaller != null)
+            {
+                Chat.CallChat(playerCaller, "La personne a raccroché.");
+            }
         }
         public static void DeletePhone(Phone phone)
         {
