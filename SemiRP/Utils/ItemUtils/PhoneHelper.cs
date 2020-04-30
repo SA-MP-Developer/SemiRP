@@ -14,7 +14,7 @@ namespace SemiRP.Utils.ItemUtils
 {
     public class PhoneHelper
     {
-        private static DynamicTextLabel phoneLabel;
+        
         public static Phone CreatePhone()
         {
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
@@ -99,6 +99,7 @@ namespace SemiRP.Utils.ItemUtils
         public static void Call(Player sender, string number)
         {
             Phone phoneReceiver = PhoneHelper.GetPhoneByNumber(number);
+            DynamicTextLabel dynamicTextLabelPhone = (DynamicTextLabel) new object();
             if (phoneReceiver is null)
             {
                 throw new Exception("le numéro " + number + " n'est pas attribué.");
@@ -123,8 +124,8 @@ namespace SemiRP.Utils.ItemUtils
             }
             else // If the phone is not in a player inventory
             {
-                Vector3 phoneLabelPosition = new Vector3(phoneSender.SpawnLocation.X, phoneSender.SpawnLocation.Y, phoneSender.SpawnLocation.Z+Constants.Item.PHONE_LABEL_DISTANCE_FROM_PHONE);
-                phoneLabel = new DynamicTextLabel("Le téléphone sonne !", Constants.Chat.ME, phoneLabelPosition,Constants.Item.PHONE_LABEL_DISTANCE);
+                Vector3 phoneLabelPosition = new Vector3(phoneReceiver.SpawnLocation.X, phoneReceiver.SpawnLocation.Y, phoneReceiver.SpawnLocation.Z+Constants.Item.PHONE_LABEL_DISTANCE_FROM_PHONE);
+                dynamicTextLabelPhone = Chat.CreateTme("Le téléphone sonne !", phoneLabelPosition, Constants.Item.PHONE_LABEL_DISTANCE);
             }
             phoneSender.IsRinging = true;
             phoneSender.PhoneNumberCaller = phoneReceiver.Number;
@@ -158,8 +159,15 @@ namespace SemiRP.Utils.ItemUtils
                         timer.Dispose();
                         nbr = 0;
                         Chat.CallChat(sender, "La personne n'a pas décroché.");
-                        phoneLabel.Dispose();
-                        phoneLabel = null;
+                        try
+                        {
+                            dynamicTextLabelPhone.Dispose();
+                            dynamicTextLabelPhone = null;
+                        }
+                        catch(Exception exception)
+                        {
+
+                        }
                         phoneSender.IsRinging = false;
                         phoneSender.PhoneNumberCaller = null;
                         phoneReceiver.IsRinging = false;
