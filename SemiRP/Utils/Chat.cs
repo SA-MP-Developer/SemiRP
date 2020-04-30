@@ -1,4 +1,6 @@
-﻿using SampSharp.GameMode.SAMP;
+﻿using SampSharp.GameMode;
+using SampSharp.GameMode.SAMP;
+using SampSharp.Streamer.World;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -89,6 +91,10 @@ namespace SemiRP.Utils
                     p.SendClientMessage(Color.White, "[" + Constants.Chat.INFO_TAG + "INFO" + Color.White + "] " + "[JOUEUR:"+player.ActiveCharacter.Name+"] "+message);
                 }
             }
+        }
+        public static DynamicTextLabel CreateTme(String message,Vector3 position, float drawdistance,Player attachedPlayer = null,Vehicle attachedVehicle = null,bool testLOS = false,int worldid =-1,int interiorid =-1, Player player = null, float streamdistance = 100, DynamicArea area = null, int priority = 0)
+        {
+             return new DynamicTextLabel(message, Constants.Chat.ME, position,drawdistance,attachedPlayer,attachedVehicle,testLOS,worldid,interiorid,player,streamdistance,area,priority);
         }
 
 

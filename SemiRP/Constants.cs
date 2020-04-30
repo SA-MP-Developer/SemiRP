@@ -57,6 +57,7 @@ namespace SemiRP
         {
             public static float PROXIMITY_RADIUS = 3.0f;
             public static float PHONE_LABEL_DISTANCE = 15f;
+            public static float PHONE_LABEL_DISTANCE_FROM_PHONE = 0.2f;
         }
     }
 }
