@@ -1,9 +1,6 @@
 ﻿using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.SAMP.Commands;
 using SemiRP.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SemiRP.Commands
 {
@@ -12,25 +9,25 @@ namespace SemiRP.Commands
         [Command("me")]
         private static void MeCommand(Player sender, string message)
         {
-            Utils.Chat.SendMeChat(sender, message);
+            Chat.SendMeChat(sender, message);
         }
 
         [Command("do")]
         private static void DoCommand(Player sender, string message)
         {
-            Utils.Chat.SendDoChat(sender, message);
+            Chat.SendDoChat(sender, message);
         }
 
         [Command("crier", "c", "shout", "s")]
         private static void ShoutCommand(Player sender, string message)
         {
-            Utils.Chat.SendGradientRangedChat(sender, SemiRP.Constants.PROXIMITY_RADIUS * SemiRP.Constants.PROXIMITY_SHOUT_FACTOR, Color.White, sender.Name + " crie : " + message);
+            Chat.SendGradientRangedChat(sender, SemiRP.Constants.PROXIMITY_RADIUS * SemiRP.Constants.PROXIMITY_SHOUT_FACTOR, Color.White, sender.Name + " crie : " + message + " !");
         }
 
         [Command("b", "(")]
         private static void OocCommand(Player sender, string message)
         {
-            Utils.Chat.SendGradientRangedChat(sender, SemiRP.Constants.PROXIMITY_RADIUS, Color.White, "(( " + sender.Name + "[" + sender.Id + "] : " + message + " ))");
+            Chat.SendGradientRangedChat(sender, SemiRP.Constants.PROXIMITY_RADIUS, Color.White, "(( " + sender.Name + "[" + sender.Id + "] : " + message + " ))");
         }
 
         [Command("chuchotter", "chu", "whisper", "wh", "w")]
@@ -38,12 +35,12 @@ namespace SemiRP.Commands
         {
             if (sender.Position.DistanceTo(receiver.Position) > SemiRP.Constants.PROXIMITY_WHISPER)
             {
-                sender.SendClientMessage(Color.White, "[" + Color.DarkRed + "ERREUR" + Color.White + "] Vous êtes trop loin du joueur ciblé.");
+                Chat.ErrorChat(sender, "Vous êtes trop loin du joueur ciblé.");
                 return;
             }
 
-            sender.SendClientMessage(Color.White, "Vous chuchottez à " + receiver.Name + " : " + message);
-            receiver.SendClientMessage(Color.White, sender.Name + " vous chuchotte : " + message);
+            sender.SendClientMessage(Color.YellowGreen, "Chuchottement à " + receiver.Name + " : " + Color.White + message);
+            receiver.SendClientMessage(Color.YellowGreen, sender.Name + " vous chuchotte : " + Color.White + message);
         }
 
         [Command("mp", "pm")]
@@ -51,18 +48,18 @@ namespace SemiRP.Commands
         {
             if (!receiver.IsConnected)
             {
-                Utils.Chat.ErrorChat(sender, "le joueur id " + receiver.Id + " n'est pas connecté.");
+                Chat.ErrorChat(sender, "Le joueur id " + receiver.Id + " n'est pas connecté.");
                 return;
             }
 
             if (!receiver.AcceptMP)
             {
-                Utils.Chat.ErrorChat(sender, receiver.Name + " n'accepte pas de MP.");
+                Chat.ErrorChat(sender, receiver.Name + " n'accepte pas de MP.");
                 return;
             }
 
-            sender.SendClientMessage(Constants.Chat.PM, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
-            receiver.SendClientMessage(Constants.Chat.PM, "[MP] " + sender.Name + " [" + sender.Id + "] : " + message);
+            sender.SendClientMessage(Color.Yellow, "[MP] Envoyé à " + sender.Name + "(" + sender.Id + ") : " + message);
+            receiver.SendClientMessage(Color.Yellow, "[MP] Reçu de " + sender.Name + "(" + sender.Id + ") : " + message);
         }
 
         [Command("activermp", "activerpm", "togglemp"," togglepm")]
@@ -71,12 +68,12 @@ namespace SemiRP.Commands
             if (sender.AcceptMP)
             {
                 sender.AcceptMP = false;
-                Utils.Chat.InfoChat(sender, "Vous avez " + Constants.Chat.HIGHLIGHT + "désactivé" + Color.White + " vos message privés (mp).");
+                Chat.ClientChat(sender, "Vous avez " + Constants.Chat.DISABLED + "désactivé" + Color.White + " vos message privés (mp).");
             }
             else
             {
                 sender.AcceptMP = true;
-                Utils.Chat.InfoChat(sender, "Vous avez " + Constants.Chat.HIGHLIGHT + "activé" + Color.White + " vos message privés (mp).");
+                Chat.ClientChat(sender, "Vous avez " + Constants.Chat.SUCCESS + "activé" + Color.White + " vos message privés (mp).");
             }
         }
     }

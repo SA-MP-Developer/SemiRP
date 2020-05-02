@@ -39,19 +39,23 @@ namespace SemiRP
 
             public static float CHAT_BUBBLE_TIME_FACTOR = 2.0f;
 
-            public static Color ADMIN_TAG = Color.Red;
-            public static Color INFO_TAG = Color.LemonChiffon;
+            public static Color ADMIN = Color.OrangeRed;
+            public static Color ADMIN_PM = Color.Red;
+
+            public static Color INFO = Color.CornflowerBlue;
             public static Color SMS_TAG = Color.YellowGreen;
             public static Color TEL_TAG = Color.DarkOrange;
-            public static Color ERROR_TAG = Color.DarkRed;
+            public static Color ERROR = Color.DarkGray;
             public static Color HELP_TAG = Color.LightSkyBlue;
 
             public static Color HIGHLIGHT = Color.LightSkyBlue;
 
-            public static Color ME = Color.DeepPink;
+            public static Color USERNAME = Color.LightSkyBlue;
 
-            public static Color PM = Color.Yellow;
-            public static Color ADMIN_PM = Color.Red;
+            public static Color ME = new Color(194, 162, 218);
+
+            public static Color SUCCESS = Color.ForestGreen;
+            public static Color DISABLED = Color.Red;
         }
         public static class Item
         {

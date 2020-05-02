@@ -1,13 +1,13 @@
-﻿using Castle.DynamicProxy.Contributors;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.GameMode.World;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
+using SemiRP.Utils;
+using SemiRP.Utils.Vehicles;
 
 namespace SemiRP.Commands
 {
@@ -17,61 +17,56 @@ namespace SemiRP.Commands
         [Command("lock", "verouiller")]
         private static void Lock(Player sender)
         {
-            var nearestVeh = Utils.Vehicles.Helper.GetNearestVehicle(sender, Constants.Vehicle.LOCK_RANGE);
+            var nearestVeh = Helper.GetNearestVehicle(sender, Constants.Vehicle.LOCK_RANGE);
 
-            if (nearestVeh != null && Utils.Vehicles.Helper.IsBorrowerOrOwner(sender, nearestVeh))
+            if (nearestVeh != null && Helper.IsBorrowerOrOwner(sender, nearestVeh))
             {
-                if (nearestVeh.Locked)
-                    Utils.Chat.SendMeChat(sender, "dévérouille son véhicule.");
-                else
-                    Utils.Chat.SendMeChat(sender, "vérouille son véhicule.");
-                    nearestVeh.Locked = !nearestVeh.Locked;
+                Chat.SendMeChat(sender, nearestVeh.Locked ? "déverouille son véhicule." : "vérouille son véhicule.");
+                nearestVeh.Locked = !nearestVeh.Locked;
                 return;
             }
 
-            if (!Utils.Vehicles.Helper.CommandCheckForVehicle(sender))
+            if (!Helper.CommandCheckForVehicle(sender))
                 return;
 
-            var vehicle = ((Vehicle)sender.Vehicle);
+            var vehicle = ((Vehicle) sender.Vehicle);
 
-            if (Utils.Vehicles.Helper.IsBorrowerOrOwner(sender, vehicle))
+            if (Helper.IsBorrowerOrOwner(sender, vehicle))
             {
-                if (vehicle.Locked)
-                    Utils.Chat.SendMeChat(sender, "dévérouille son véhicule.");
-                else
-                    Utils.Chat.SendMeChat(sender, "vérouille son véhicule.");
+                Chat.SendMeChat(sender, vehicle.Locked ? "dévérouille son véhicule." : "vérouille son véhicule.");
                 vehicle.Locked = !vehicle.Locked;
             }
             else
             {
-                Utils.Chat.ErrorChat(sender, "Vous n'êtes pas propriétaire de ce véhicule.");
+                Chat.ErrorChat(sender, "Vous n'êtes pas propriétaire de ce véhicule.");
             }
         }
 
         [Command("garer", "park")]
         private static void Park(Player sender)
         {
-            if (!Utils.Vehicles.Helper.CommandCheckForVehicle(sender))
+            if (!Helper.CommandCheckForVehicle(sender))
                 return;
 
-            var vehicle = ((Vehicle)sender.Vehicle);
+            var vehicle = ((Vehicle) sender.Vehicle);
 
-            if (Utils.Vehicles.Helper.IsOwner(sender, vehicle))
+            if (Helper.IsOwner(sender, vehicle))
             {
-                Utils.Chat.InfoChat(sender, "Vous avez garé votre véhicule, il réapparaitra désormais ici.");
-                vehicle.Data.SpawnLocation.Position = new SampSharp.GameMode.Vector3(vehicle.Position.X, vehicle.Position.Y, vehicle.Position.Z + 0.5f);
+                Chat.InfoChat(sender, "Vous avez garé votre véhicule, il réapparaitra désormais ici.");
+                vehicle.Data.SpawnLocation.Position =
+                    new Vector3(vehicle.Position.X, vehicle.Position.Y, vehicle.Position.Z + 0.5f);
                 vehicle.Data.SpawnLocation.RotZ = vehicle.Angle;
 
                 var vData = vehicle.Data;
 
-                ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+                ServerDbContext dbContext = ((GameMode) BaseMode.Instance).DbContext;
                 dbContext.Update(vehicle.Data);
                 dbContext.SaveChanges();
 
                 List<BasePlayer> passengers = vehicle.Passengers.ToList();
 
                 vehicle.Dispose();
-                vehicle = Utils.Vehicles.Helper.CreateFromData(vData);
+                vehicle = Helper.CreateFromData(vData);
 
                 sender.PutInVehicle(vehicle);
 
@@ -82,34 +77,32 @@ namespace SemiRP.Commands
             }
             else
             {
-                Utils.Chat.ErrorChat(sender, "Vous n'êtes pas propriétaire de ce véhicule.");
+                Chat.ErrorChat(sender, "Vous n'êtes pas propriétaire de ce véhicule.");
             }
         }
 
         [Command("phare", "lights")]
         private static void Lights(Player sender)
         {
-            if (!Utils.Vehicles.Helper.CommandCheckForVehicle(sender))
+            if (!Helper.CommandCheckForVehicle(sender))
                 return;
 
-            var vehicle = ((Vehicle)sender.Vehicle);
+            var vehicle = ((Vehicle) sender.Vehicle);
 
-            if (vehicle.ModelInfo.Category == SampSharp.GameMode.Definitions.VehicleCategory.Bike)
+            if (vehicle.ModelInfo.Category == VehicleCategory.Bike)
             {
-                Utils.Chat.ErrorChat(sender, "Ce véhicule n'a pas de phares.");
+                Chat.ErrorChat(sender, "Ce véhicule n'a pas de phares.");
             }
 
-            if (vehicle.Lights)
-                Utils.Chat.SendMeChat(sender, "éteint les phares de son véhicule.");
-            else
-                Utils.Chat.SendMeChat(sender, "allume les phares de son véhicule.");
+            Chat.SendMeChat(sender,
+                vehicle.Lights ? "éteint les phares de son véhicule." : "allume les phares de son véhicule.");
             vehicle.Lights = !vehicle.Lights;
         }
 
         [Command("capot", "hood")]
         private static void Hood(Player sender)
         {
-            var nearestVeh = Utils.Vehicles.Helper.GetNearestVehicle(sender, Constants.Vehicle.HOOD_RANGE);
+            var nearestVeh = Helper.GetNearestVehicle(sender, Constants.Vehicle.HOOD_RANGE);
 
             Vehicle vehicle = null;
 
@@ -117,10 +110,10 @@ namespace SemiRP.Commands
                 vehicle = nearestVeh;
             else
             {
-                if (!Utils.Vehicles.Helper.CommandCheckForVehicle(sender))
+                if (!Helper.CommandCheckForVehicle(sender))
                     return;
 
-                vehicle = ((Vehicle)sender.Vehicle);
+                vehicle = ((Vehicle) sender.Vehicle);
             }
 
             if (vehicle.ModelInfo.Category == VehicleCategory.Bike
@@ -129,60 +122,58 @@ namespace SemiRP.Commands
                 || vehicle.ModelInfo.Category == VehicleCategory.Bike
                 || vehicle.ModelInfo.Category == VehicleCategory.Helicopter)
             {
-                Utils.Chat.ErrorChat(sender, "Ce véhicule n'a pas de capot.");
+                Chat.ErrorChat(sender, "Ce véhicule n'a pas de capot.");
             }
 
-            if (vehicle.Bonnet)
-                Utils.Chat.SendMeChat(sender, "ferme le capot de son véhicule.");
-            else
-                Utils.Chat.SendMeChat(sender, "ouvre le capot de son véhicule.");
+            Chat.SendMeChat(sender,
+                vehicle.Bonnet ? "ferme le capot de son véhicule." : "ouvre le capot de son véhicule.");
             vehicle.Bonnet = !vehicle.Bonnet;
         }
 
         [Command("moteur", "engine")]
         private static void Engine(Player sender)
         {
-            if (!Utils.Vehicles.Helper.CommandCheckForVehicle(sender))
+            if (!Helper.CommandCheckForVehicle(sender))
                 return;
 
-            var vehicle = ((Vehicle)sender.Vehicle);
+            var vehicle = ((Vehicle) sender.Vehicle);
 
-            if (Utils.Vehicles.ModelHelper.IsBicycle(vehicle))
+            if (ModelHelper.IsBicycle(vehicle))
             {
-                Utils.Chat.ErrorChat(sender, "Ce véhicule n'a pas de moteur.");
+                Chat.ErrorChat(sender, "Ce véhicule n'a pas de moteur.");
             }
 
-            if (!Utils.Vehicles.Helper.IsBorrowerOrOwner(sender, vehicle))
+            if (!Helper.IsBorrowerOrOwner(sender, vehicle))
             {
-                Utils.Chat.ErrorChat(sender, "Vous n'avez pas les clefs de ce véhicule.");
+                Chat.ErrorChat(sender, "Vous n'avez pas les clefs de ce véhicule.");
                 return;
             }
 
             if (vehicle.Data.Fuel == 0)
             {
-                Utils.Chat.ErrorChat(sender, "Ce véhicule n'a plus d'essence.");
+                Chat.ErrorChat(sender, "Ce véhicule n'a plus d'essence.");
             }
 
             if (vehicle.Engine)
-                Utils.Chat.SendMeChat(sender, "éteint le moteur de son véhicule.");
+                Chat.SendMeChat(sender, "éteint le moteur de son véhicule.");
             else
-                Utils.Chat.SendMeChat(sender, "allume le moteur de son véhicule.");
+                Chat.SendMeChat(sender, "allume le moteur de son véhicule.");
             vehicle.Engine = !vehicle.Engine;
         }
 
         [Command("liste", "list")]
         private static void List(Player sender)
         {
-            if (!Vehicle.All.Any(v => ((Vehicle)v).Data.Owner == sender.ActiveCharacter))
+            if (Vehicle.All.All(v => ((Vehicle) v).Data.Owner != sender.ActiveCharacter))
             {
-                Utils.Chat.ErrorChat(sender, "Vous n'avez pas de véhicules.");
+                Chat.ErrorChat(sender, "Vous n'avez pas de véhicules.");
                 return;
             }
 
-            Utils.Chat.InfoChat(sender, "===== Vos véhicules =====");
-            foreach (string line in Utils.Vehicles.CmdHelper.ListPlayerVehicles(sender))
+            Chat.ClientChat(sender, "===== Vos véhicules =====");
+            foreach (string line in CmdHelper.ListPlayerVehicles(sender))
             {
-                Utils.Chat.InfoChat(sender, line);
+                Chat.ClientChat(sender, line);
             }
         }
 
@@ -191,31 +182,31 @@ namespace SemiRP.Commands
         {
             try
             {
-                Vehicle veh = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, vehicle);
+                Vehicle veh = CmdHelper.GetCurrentVehicleOrID(sender, vehicle);
 
-                if (!Utils.Vehicles.Helper.IsOwner(sender, veh))
+                if (!Helper.IsOwner(sender, veh))
                     throw new Exception("Vous n'êtes pas propriétaire de ce véhicule.");
 
                 if (veh.Data.Borrowers.Select(b => b.Borrower).Any(b => b == target.ActiveCharacter))
                     throw new Exception("Vous prêtez déjà votre véhicule à ce joueur.");
 
-                Utils.Vehicles.Helper.BorrowVehicle(veh, target);
-                Utils.Chat.InfoChat(sender, "Vous avez prêté votre véhicule " + Constants.Chat.HIGHLIGHT + VehicleModelInfo.ForVehicle(veh).Name + Color.White
-                                            + " à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + ".");
+                Helper.BorrowVehicle(veh, target);
+                Chat.InfoChat(sender, "Vous avez prêté votre véhicule " + Constants.Chat.HIGHLIGHT +
+                                      VehicleModelInfo.ForVehicle(veh).Name + Color.White
+                                      + " à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + ".");
 
-                ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+                ServerDbContext dbContext = ((GameMode) GameMode.Instance).DbContext;
                 dbContext.SaveChanges();
             }
             catch (Exception e)
             {
-                Utils.Chat.ErrorChat(sender, e.Message);
+                Chat.ErrorChat(sender, e.Message);
             }
         }
 
         [Command("coffre", "trunk")]
         private static void Trunk(Player sender)
         {
-
         }
     }
 }

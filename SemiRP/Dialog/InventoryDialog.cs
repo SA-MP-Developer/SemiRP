@@ -1,12 +1,12 @@
-﻿using SampSharp.GameMode.Display;
+﻿using System;
+using System.Collections.Generic;
+using SampSharp.GameMode.Definitions;
+using SampSharp.GameMode.Display;
 using SampSharp.GameMode.SAMP;
-using SemiRP.Data;
 using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
+using SemiRP.Utils;
 using SemiRP.Utils.ItemUtils;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SemiRP.Dialog
 {
@@ -22,29 +22,21 @@ namespace SemiRP.Dialog
             int i = 0;
             foreach (Item item in listItemsContainer)
             {
-                listInventory.Add(new[]
-                {
-                    item.Name,
-                    item.Quantity.ToString()
-                });
+                listInventory.Add(item.Name, item.Quantity.ToString());
                 i++;
             }
             if (i < maxSpaceContainer)
             {
                 for (int a = 0; a < (maxSpaceContainer - i); a++)
                 {
-                    listInventory.Add(new[]
-                    {
-                        Color.Green+"Vide"+Color.White,
-                        "0"
-                    });
+                    listInventory.Add(Color.DarkGray + " Vide" + Color.White, Color.DarkGray + "0");
                 }
             }
             listInventory.Show(player);
 
             listInventory.Response += (playerReponse, EventArgs) =>
             {
-                if(EventArgs.DialogButton == SampSharp.GameMode.Definitions.DialogButton.Right)
+                if(EventArgs.DialogButton == DialogButton.Right)
                 {
                     return;
                 }
@@ -66,7 +58,7 @@ namespace SemiRP.Dialog
                         }
                         catch(Exception e)
                         {
-                            Utils.Chat.ErrorChat(player, "Impossible de prendre l'objet.");
+                            Chat.ErrorChat(player, "Impossible de prendre l'objet.");
                         }
                     }
                 }
@@ -83,7 +75,7 @@ namespace SemiRP.Dialog
                         }
                         catch(Exception e)
                         {
-                            Utils.Chat.ErrorChat(player, "Impossible de prendre l'objet : "+e.Message);
+                            Chat.ErrorChat(player, "Impossible de prendre l'objet : "+e.Message);
                         }
                         
                     }
@@ -97,7 +89,7 @@ namespace SemiRP.Dialog
                         }
                         catch(Exception e)
                         {
-                            Utils.Chat.ErrorChat(player, "Impossible de prendre l'objet.");
+                            Chat.ErrorChat(player, "Impossible de prendre l'objet.");
                         }
                     }
                 }
