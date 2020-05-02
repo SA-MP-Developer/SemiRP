@@ -1,13 +1,8 @@
-﻿using SampSharp.GameMode.SAMP;
-using SampSharp.GameMode.SAMP.Commands;
-using SemiRP.Models;
+﻿using SampSharp.GameMode.SAMP.Commands;
 using SemiRP.Models.ItemHeritage;
-using SemiRP.Utils.ContainerUtils;
+using SemiRP.Utils;
 using SemiRP.Utils.ItemUtils;
-using SemiRP.Utils.PlayerUtils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SemiRP.Commands
 {
@@ -23,11 +18,11 @@ namespace SemiRP.Commands
             }
             catch (Exception e)
             {
-                Utils.Chat.ErrorChat(sender, "Le sms n'a pas pu être envoyé à cause d'une erreur : " + e.Message);
+                Chat.ErrorChat(sender, "Le sms n'a pas pu être envoyé : " + e.Message);
             }
         }
 
-        [Command("appel","appeler")]
+        [Command("appel", "appeler")]
         private static void Call(Player sender, string number)
         {
             try
@@ -36,7 +31,7 @@ namespace SemiRP.Commands
             }
             catch (Exception e)
             {
-                Utils.Chat.ErrorChat(sender, "L'appel n'a pas pu être démarré à cause d'une erreur : " + e.Message);
+                Chat.ErrorChat(sender, "L'appel a échoué : " + e.Message);
             }
         }
 
@@ -49,7 +44,7 @@ namespace SemiRP.Commands
             }
             catch (Exception e)
             {
-                Utils.Chat.ErrorChat(sender, "L'appel n'a pas pu être démarré à cause d'une erreur : " + e.Message);
+                Chat.ErrorChat(sender, "Le décrochage a échoué : " + e.Message);
             }
         }
 
@@ -62,9 +57,10 @@ namespace SemiRP.Commands
             }
             catch (Exception e)
             {
-                Utils.Chat.ErrorChat(sender, "L'appel n'a pas pu être fini à cause d'une erreur : " + e.Message);
+                Chat.ErrorChat(sender, "Le raccrochage a échoué : " + e.Message);
             }
         }
+
         [Command("numero", "num")]
         private static void Number(Player sender)
         {
@@ -72,11 +68,10 @@ namespace SemiRP.Commands
             {
                 PhoneHelper.DisplayPhoneNumber(sender);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Utils.Chat.ErrorChat(sender, "Le numéro n'a pas pu être affiché à cause d'une erreur : " + e.Message);
+                Chat.ErrorChat(sender, "Le numéro n'a pas pu être affiché : " + e.Message);
             }
-            
         }
 
         [Command("defaut", "default")]
@@ -88,15 +83,14 @@ namespace SemiRP.Commands
             }
             catch (Exception e)
             {
-                Utils.Chat.ErrorChat(sender, "Le téléphone par défaut n'a pas pu être choisi : " + e.Message);
+                Chat.ErrorChat(sender, "Le téléphone par défaut n'a pas pu être choisi : " + e.Message);
             }
-
         }
 
-        [CommandGroup("contact", "c", "contacts", "rep","repertoire")]
+        [CommandGroup("contact", "c", "contacts", "rep", "repertoire")]
         public class Contact
         {
-            [Command("ajouter", "aj")]
+            [Command("ajouter", "aj", "add")]
             private static void AddContact(Player sender, String name, String number)
             {
                 try
@@ -104,68 +98,74 @@ namespace SemiRP.Commands
                     Phone phone = PhoneHelper.GetDefaultPhone(sender.ActiveCharacter);
                     ContactPhone contactPhone = PhoneHelper.CreateContact(name, number);
                     PhoneHelper.AddContactToPhoneBook(contactPhone, phone);
-                    Utils.Chat.InfoChat(sender, "Le contact " + name + " (" + number + ") a bien été ajouté au répertoire du téléphone par défaut.");
-
+                    Chat.InfoChat(sender,
+                        "Le contact " + name + " (" + number +
+                        ") a bien été ajouté au répertoire du téléphone par défaut.");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être ajouté dans le répertoire à cause d'une erreur : "+e.Message);
+                    Chat.ErrorChat(sender, "Le contact n'a pas pu être ajouté dans le répertoire : " + e.Message);
                 }
             }
-            [Command("retirer", "re")]
+
+            [Command("retirer", "re", "rem")]
             private static void RemoveContact(Player sender, String name)
             {
                 try
                 {
                     PhoneHelper.RemoveContactFromPhoneBook(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter));
-                    Utils.Chat.InfoChat(sender, "Le contact " + name + " a bien été supprimé du répertoire du téléphone par défaut.");
+                    Chat.InfoChat(sender,
+                        "Le contact " + name + " a bien été supprimé du répertoire du téléphone par défaut.");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être supprimé du répertoire à cause d'une erreur : "+e.Message);
+                    Chat.ErrorChat(sender, "Le contact n'a pas pu être supprimé du répertoire : " + e.Message);
                 }
-                
             }
+
             [Command("appeler", "appel")]
             private static void CallContact(Player sender, String name)
             {
                 try
                 {
-                    PhoneHelper.Call(sender, PhoneHelper.GetContactByName(name,PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number);
+                    PhoneHelper.Call(sender,
+                        PhoneHelper.GetContactByName(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number);
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le contact n'a pas pu être appelé à cause d'une erreur : " + e.Message);
+                    Chat.ErrorChat(sender, "Le contact n'a pas pu être appelé : " + e.Message);
                 }
-
             }
+
             [Command("numero", "num")]
             private static void NumberContact(Player sender, String name)
             {
                 try
                 {
-                    Utils.Chat.InfoChat(sender,"Le numéro du contact est : "+PhoneHelper.GetContactByName(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number);
+                    Chat.InfoChat(sender,
+                        "Le numéro du contact est : " + PhoneHelper
+                            .GetContactByName(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number);
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le numéro du contact n'a pas pu être affiché à cause d'une erreur : " + e.Message);
+                    Chat.ErrorChat(sender, "Le numéro du contact n'a pas pu être affiché : " + e.Message);
                 }
-
             }
+
             [Command("sms")]
             private static void SMSContact(Player sender, String name, String message)
             {
                 try
                 {
-                    PhoneHelper.SendSMS(sender, PhoneHelper.GetContactByName(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number,message);
+                    PhoneHelper.SendSMS(sender,
+                        PhoneHelper.GetContactByName(name, PhoneHelper.GetDefaultPhone(sender.ActiveCharacter)).Number,
+                        message);
                 }
                 catch (Exception e)
                 {
-                    Utils.Chat.ErrorChat(sender, "Le SMS n'a pas pu être envoyé à cause d'une erreur : "+e.Message);
+                    Chat.ErrorChat(sender, "Le SMS n'a pas pu être envoyé : " + e.Message);
                 }
-
             }
         }
-        
     }
 }

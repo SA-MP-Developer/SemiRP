@@ -1,4 +1,6 @@
-﻿using SampSharp.GameMode;
+﻿using System;
+using System.Collections.Generic;
+using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
 using SemiRP.Data;
@@ -6,9 +8,7 @@ using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils.ContainerUtils;
 using SemiRP.Utils.ItemUtils;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SemiRP.Utils.Vehicles;
 
 namespace SemiRP.Utils
 {
@@ -39,13 +39,15 @@ namespace SemiRP.Utils
             else
                 target.Position = new Vector3(tppos.X, tppos.Y, tppos.Z + 1f);
         }
+
         public static void Slap(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.slap"))
                 throw new Exception();
 
-            target.Position = new Vector3(target.Position.X, target.Position.Y, target.Position.Z + 10f);
+            target.Position = new Vector3(target.Position.X, target.Position.Y, target.Position.Z + 5f);
         }
+
         public static void Freeze(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.freeze"))
@@ -53,6 +55,7 @@ namespace SemiRP.Utils
 
             target.ToggleControllable(false);
         }
+
         public static void UnFreeze(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.freeze"))
@@ -60,12 +63,13 @@ namespace SemiRP.Utils
 
             target.ToggleControllable(true);
         }
+
         public static void PrivateMessage(Player sender, Player target, string message)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.pm"))
                 throw new Exception();
-            Utils.Chat.AdminChat(sender, Constants.Chat.ADMIN_PM + "[PM] " + sender.AccountData.Nickname + " : " + message);
-            Utils.Chat.AdminChat(target, Constants.Chat.ADMIN_PM + "[PM] " + sender.AccountData.Nickname + " : " + message);
+            Chat.AdminChat(sender, Constants.Chat.ADMIN_PM + "[PM] " + sender.AccountData.Nickname + " : " + message);
+            Chat.ClientChat(target, Constants.Chat.ADMIN_PM + "[PM] " + sender.AccountData.Nickname + " : " + message);
         }
 
         public static void PermissionAdd(Player sender, Player target, string perm)
@@ -73,35 +77,48 @@ namespace SemiRP.Utils
             //if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
             //    throw new Exception();
 
-            var ret = Utils.Permissions.AddPerm(target.AccountData.PermsSet, perm);
+            var ret = Permissions.AddPerm(target.AccountData.PermsSet, perm);
             if (ret == 1)
             {
-                Utils.Chat.AdminChat(sender, "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" n'éxiste pas.");
+                Chat.AdminChat(sender,
+                    "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Constants.Chat.ERROR + "\" n'éxiste pas.");
                 throw new Exception();
             }
-            else if (ret == 2)
+
+            if (ret == 2)
             {
-                Utils.Chat.AdminChat(sender, "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" est déjà attribuée à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                Chat.AdminChat(sender,
+                    "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Constants.Chat.ERROR +
+                    "\" est déjà attribuée à " + Constants.Chat.HIGHLIGHT + target.Name + Constants.Chat.ERROR + " (" +
+                    target.Id + ").");
                 throw new Exception();
             }
         }
+
         public static void PermissionRemove(Player sender, Player target, string perm)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.perms.remove"))
                 throw new Exception();
 
-            var ret = Utils.Permissions.RemovePerm(target.AccountData.PermsSet, perm);
+            var ret = Permissions.RemovePerm(target.AccountData.PermsSet, perm);
+
             if (ret == 1)
             {
-                Utils.Chat.AdminChat(sender, "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" n'éxiste pas.");
+                Chat.ErrorChat(sender,
+                    "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Constants.Chat.ERROR + "\" n'éxiste pas.");
                 throw new Exception();
             }
-            else if (ret == 2)
+
+            if (ret == 2)
             {
-                Utils.Chat.AdminChat(sender, "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Color.White + "\" n'est pas attribuée à " + Constants.Chat.HIGHLIGHT + target.Name + Color.White + " (" + target.Id + ").");
+                Utils.Chat.AdminChat(sender,
+                    "La permission \"" + Constants.Chat.HIGHLIGHT + perm + Constants.Chat.ERROR +
+                    "\" n'est pas attribuée à " + Constants.Chat.HIGHLIGHT + target.Name + Constants.Chat.ERROR + " (" +
+                    target.Id + ").");
                 throw new Exception();
             }
         }
+
         public static void PermissionsShow(Player sender, Player target, string perm = "")
         {
             if (!sender.AccountData.HavePerm("admin.cmds.perms.list"))
@@ -111,13 +128,16 @@ namespace SemiRP.Utils
 
             if (perm == "")
             {
-                permsStrings = Utils.Permissions.ListAccountPerms(target.AccountData);
-                Utils.Chat.AdminChat(sender, "Permissions de " + Color.Red + target.Name + Color.White + " (" + target.Id + ") :");
+                permsStrings = Permissions.ListAccountPerms(target.AccountData);
+                Chat.AdminChat(sender,
+                    "Permissions de " + Constants.Chat.USERNAME + target.Name + Color.White + " (" + target.Id + ") :");
             }
             else
             {
-                permsStrings = Utils.Permissions.ListAccountPermChildren(target.AccountData, perm);
-                Utils.Chat.AdminChat(sender, "Permissions de " + Color.Red + target.Name + Color.White + " (" + target.Id + ") à partir de \"" + perm + "\" :");
+                permsStrings = Permissions.ListAccountPermChildren(target.AccountData, perm);
+                Chat.AdminChat(sender,
+                    "Permissions de " + Constants.Chat.USERNAME + target.Name + Color.White + " (" + target.Id +
+                    ") à partir de \"" + perm + "\" :");
             }
 
             foreach (string permname in permsStrings)
@@ -125,40 +145,56 @@ namespace SemiRP.Utils
                 sender.SendClientMessage(permname);
             }
         }
+
         public static int VehicleCreate(Player sender, Player target, VehicleModelType vehicle)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicule.create"))
                 throw new Exception();
 
-            var veh = Utils.Vehicles.Helper.CreateVehicle(target.ActiveCharacter, Utils.Vehicles.ModelHelper.ModelForModelType(vehicle), target.Position, target.Angle);
+            var veh = Helper.CreateVehicle(
+                target.ActiveCharacter, ModelHelper.ModelForModelType(vehicle),
+                target.Position, target.Angle
+            );
+
             return veh.Id;
         }
+
         public static void VehicleSpawnTmp(Player sender, VehicleModelType vehicle)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicule.spawntmp"))
                 throw new Exception();
 
-            var veh = Utils.Vehicles.Helper.CreateVehicle(sender.ActiveCharacter, Utils.Vehicles.ModelHelper.ModelForModelType(vehicle), sender.Position, sender.Angle, VehicleColor.BrighRed, VehicleColor.BrighRed, true);
+            var veh = Helper.CreateVehicle(
+                sender.ActiveCharacter,
+                ModelHelper.ModelForModelType(vehicle),
+                sender.Position,
+                sender.Angle,
+                VehicleColor.BrighRed,
+                VehicleColor.BrighRed,
+                true
+            );
             veh.Data.FuelConsumption = 0;
             sender.PutInVehicle(veh);
             veh.Engine = true;
         }
+
         public static void VehicleDestroy(Player sender, int id = -1)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicule.destroy"))
                 throw new Exception();
 
-            
-            Vehicle vehicle = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
 
-            Utils.Vehicles.Helper.DestroyVehicle(vehicle);
+            Vehicle vehicle = CmdHelper.GetCurrentVehicleOrID(sender, id);
+
+            Helper.DestroyVehicle(vehicle);
         }
+
         public static Vehicle VehicleTpTo(Player sender)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicule.tp"))
                 throw new Exception();
 
-            var nearestVeh = Utils.Vehicles.Helper.GetNearestVehicle(sender);
+            var nearestVeh = Helper.GetNearestVehicle(sender);
 
             if (nearestVeh == null)
                 throw new Exception();
@@ -170,41 +206,44 @@ namespace SemiRP.Utils
 
             return nearestVeh;
         }
+
         public static Vehicle VehicleHeal(Player sender, int id = -1)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicule.heal"))
                 throw new Exception();
 
-            
-            Vehicle vehicle = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
+
+            Vehicle vehicle = CmdHelper.GetCurrentVehicleOrID(sender, id);
             vehicle.Health = 1000;
             vehicle.Data.Dammages = 1000;
 
             return vehicle;
         }
+
         public static Vehicle VehicleFill(Player sender, int id = -1)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicule.fill"))
                 throw new Exception();
-            Vehicle vehicle = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
+            Vehicle vehicle = CmdHelper.GetCurrentVehicleOrID(sender, id);
             vehicle.Data.Fuel = vehicle.Data.MaxFuel;
             return vehicle;
         }
+
         public static void VehicleInfos(Player sender, int id = -1)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicule.infos"))
                 throw new Exception();
 
-            Vehicle veh = Utils.Vehicles.CmdHelper.GetCurrentVehicleOrID(sender, id);
-            var strings = Utils.Vehicles.CmdHelper.DisplayAdminInfos(veh);
+            Vehicle veh = CmdHelper.GetCurrentVehicleOrID(sender, id);
+            var strings = CmdHelper.DisplayAdminInfos(veh);
 
-            Utils.Chat.AdminChat(sender, "======= Infos du véhicule =======");
+            Chat.AdminChat(sender, "======= Infos du véhicule =======");
             foreach (string line in strings)
             {
-                Utils.Chat.AdminChat(sender, line);
+                Chat.AdminChat(sender, line);
             }
-            
         }
+
         public static void SetSkin(Player sender, Player target, int skinid)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.set.skin"))
@@ -212,37 +251,37 @@ namespace SemiRP.Utils
 
             if (skinid < 0 || 311 < skinid)
             {
-                throw new Exception("Le skin ID " + Constants.Chat.HIGHLIGHT + skinid + Color.White + " n'est pas valide, l'id d'un skin doit être entre 0 et 311.");
-
+                throw new Exception("Le skin ID " + Constants.Chat.HIGHLIGHT + skinid + Color.White +
+                                    " n'est pas valide, l'id d'un skin doit être entre 0 et 311.");
             }
 
-            target.ActiveCharacter.Skin = (uint)skinid;
+            target.ActiveCharacter.Skin = (uint) skinid;
             target.Skin = skinid;
-
-            
         }
+
         public static Phone GivePhone(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.give.phone"))
                 throw new Exception();
+
             Phone phone = PhoneHelper.CreatePhone();
-            if (Utils.ItemUtils.PhoneHelper.GetDefaultPhone(target.ActiveCharacter) == null)
+
+            if (PhoneHelper.GetDefaultPhone(target.ActiveCharacter) == null)
             {
                 phone.DefaultPhone = true;
             }
 
             if (InventoryHelper.AddItemToCharacter(target.ActiveCharacter, phone))
             {
-                ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+                ServerDbContext dbContext = ((GameMode) GameMode.Instance).DbContext;
                 dbContext.SaveChanges();
                 return phone;
             }
-            else
-            {
-                PhoneHelper.DeletePhone(phone);
-                throw new Exception("Le téléphone n'a pas pu être ajouté à l'utilisateur.");
-            }
+
+            PhoneHelper.DeletePhone(phone);
+            throw new Exception("Le téléphone n'a pas pu être ajouté à l'utilisateur.");
         }
+
         public static void GiveGun(Player sender, Player target, Weapon gun)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
@@ -256,12 +295,13 @@ namespace SemiRP.Utils
             weapon.CurrentContainer = null;
             weapon.SpawnLocation = null;
             weapon.Name = Weapons.WeaponsDictionnary.GetValueOrDefault((int) gun);
-            weapon.ModelId = WeaponsModelId.WeaponsModelIdDictionnary.GetValueOrDefault((int)gun);
+            weapon.ModelId = WeaponsModelId.WeaponsModelIdDictionnary.GetValueOrDefault((int) gun);
             target.ActiveCharacter.ItemInHand = weapon;
             target.GiveWeapon(gun, 500);
-            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            ServerDbContext dbContext = ((GameMode) GameMode.Instance).DbContext;
             dbContext.SaveChanges();
         }
+
         public static void GiveGun(Player sender, Player target, Weapon gun, int ammo)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
@@ -274,11 +314,11 @@ namespace SemiRP.Utils
             weapon.Quantity = ammo;
             weapon.CurrentContainer = null;
             weapon.SpawnLocation = null;
-            weapon.Name = Weapons.WeaponsDictionnary.GetValueOrDefault((int)gun);
-            weapon.ModelId = WeaponsModelId.WeaponsModelIdDictionnary.GetValueOrDefault((int)gun);
+            weapon.Name = Weapons.WeaponsDictionnary.GetValueOrDefault((int) gun);
+            weapon.ModelId = WeaponsModelId.WeaponsModelIdDictionnary.GetValueOrDefault((int) gun);
             target.ActiveCharacter.ItemInHand = weapon;
             target.GiveWeapon(gun, ammo);
-            ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
+            ServerDbContext dbContext = ((GameMode) GameMode.Instance).DbContext;
             dbContext.SaveChanges();
         }
     }
