@@ -21,19 +21,25 @@ namespace SemiRP.Commands
         [Command("crier", "c", "shout", "s")]
         private static void ShoutCommand(Player sender, string message)
         {
-            Chat.SendGradientRangedChat(sender, SemiRP.Constants.PROXIMITY_RADIUS * SemiRP.Constants.PROXIMITY_SHOUT_FACTOR, Color.White, sender.Name + " crie : " + message + " !");
+            Chat.SendGradientRangedChat(sender, Constants.PROXIMITY_RADIUS * Constants.PROXIMITY_SHOUT_FACTOR, Color.White, sender.Name + " crie : " + message + " !");
+        }
+        
+        [Command("vb", "vbasse")]
+        private static void LowVoiceCommand(Player sender, string message)
+        {
+            Chat.SendGradientRangedChat(sender, Constants.PROXIMITY_RADIUS * Constants.PROXIMITY_LOW_VOICE_FACTOR, Color.White, sender.Name + " [voix basse] : " + message);
         }
 
         [Command("b", "(")]
         private static void OocCommand(Player sender, string message)
         {
-            Chat.SendGradientRangedChat(sender, SemiRP.Constants.PROXIMITY_RADIUS, Color.White, "(( " + sender.Name + "[" + sender.Id + "] : " + message + " ))");
+            Chat.SendGradientRangedChat(sender, Constants.PROXIMITY_RADIUS, Color.White, "(( " + sender.Name + "[" + sender.Id + "] : " + message + " ))");
         }
 
         [Command("chuchotter", "chu", "whisper", "wh", "w")]
         private static void WhisperCommand(Player sender, Player receiver, string message)
         {
-            if (sender.Position.DistanceTo(receiver.Position) > SemiRP.Constants.PROXIMITY_WHISPER)
+            if (sender.Position.DistanceTo(receiver.Position) > Constants.PROXIMITY_WHISPER)
             {
                 Chat.ErrorChat(sender, "Vous êtes trop loin du joueur ciblé.");
                 return;

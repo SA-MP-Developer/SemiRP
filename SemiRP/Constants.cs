@@ -9,6 +9,7 @@ namespace SemiRP
     {
         public const float PROXIMITY_RADIUS = 15.0f;
         public const float PROXIMITY_SHOUT_FACTOR = 1.5f;
+        public const float PROXIMITY_LOW_VOICE_FACTOR = 0.15f;
         public const float PROXIMITY_WHISPER = 5.0f;
 
         public const int PASSWORD_MAX_ATTEMPTS = 3;
