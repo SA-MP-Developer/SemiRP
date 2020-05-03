@@ -1,15 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SampSharp.GameMode.Definitions;
+﻿using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
-using SampSharp.GameMode.World;
+using SampSharp.GameMode.SAMP;
 using SemiRP.Models;
 using SemiRP.Models.ContainerHeritage;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace SemiRP.PlayerSystems
 {
@@ -43,12 +39,12 @@ namespace SemiRP.PlayerSystems
 
                 foreach (Character chr in playerChars)
                 {
-                    charList.AddItem(chr.Name + " (" + Utils.SexUtils.SexToString(chr.Sex) + ", " + chr.Age + " ans)");
+                    charList.AddItem(chr.Name + " (Niveau " + chr.Level + " - " + Utils.SexUtils.SexToString(chr.Sex) + " de " + chr.Age + " ans)");
                 }
 
                 if (playerChars.Count < SemiRP.Constants.MAX_CHARACTERS)
                 {
-                    charList.AddItem("Créer un autre personnage...");
+                    charList.AddItem(Color.DarkGray + "Créer un autre personnage...");
                 }
             }
         }
