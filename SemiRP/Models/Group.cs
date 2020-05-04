@@ -7,11 +7,6 @@ namespace SemiRP.Models
 {
     public class Group
     {
-        private int id;
-        private Character owner;
-        private string name;
-        private DateTime dateCreation;
-        List<GroupRank> listRank;
 
         public Group()
         {
@@ -27,10 +22,10 @@ namespace SemiRP.Models
         }
 
         [Key]
-        public int Id { get => id; set => id = value; }
-        public virtual Character Owner { get => owner; set => owner = value; }
-        public string Name { get => name; set => name = value; }
-        public DateTime DateCreation { get => dateCreation; set => dateCreation = value; }
-        public virtual List<GroupRank> ListRank { get => listRank; set => listRank = value; }
+        public int Id { get; set ; }
+        public virtual Character Owner { get ; set ; }
+        public string Name { get ; set ; }
+        public DateTime DateCreation { get ; set ; }
+        public virtual List<GroupRank> ListRank { get ; set ; }
     }
 }

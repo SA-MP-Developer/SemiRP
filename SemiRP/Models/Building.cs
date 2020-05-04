@@ -7,13 +7,6 @@ namespace SemiRP.Models
 {
     public class Building
     {
-        private int id;
-        private Character owner;
-        private Group ownerGroup;
-        private Container container;
-        private String name;
-        private bool onSale;
-        private bool salable;
 
         public Building()
         {
@@ -21,10 +14,10 @@ namespace SemiRP.Models
 
         public Building(int id, Group ownerGroup, Container container, string name, bool onSale, bool salable)
         {
-            this.id = id;
+            this.Id = id;
             this.OwnerGroup = ownerGroup;
-            this.container = container;
-            this.name = name;
+            this.Container = container;
+            this.Name = name;
             this.OnSale = onSale;
             this.Salable = salable;
         }
@@ -40,12 +33,12 @@ namespace SemiRP.Models
         }
 
         [Key]
-        public int Id { get => id; set => id = value; }
-        public virtual Character Owner { get => owner; set => owner = value; }
-        public string Name { get => name; set => name = value; }
-        public virtual Container Container { get => container; set => container = value; }
-        public virtual Group OwnerGroup { get => ownerGroup; set => ownerGroup = value; }
-        public bool OnSale { get => onSale; set => onSale = value; }
-        public bool Salable { get => salable; set => salable = value; }
+        public int Id { get ; set ; }
+        public virtual Character Owner { get ; set ; }
+        public string Name { get ; set ; }
+        public virtual Container Container { get ; set ; }
+        public virtual Group OwnerGroup { get ; set ; }
+        public bool OnSale { get ; set ; }
+        public bool Salable { get ; set ; }
     }
 }

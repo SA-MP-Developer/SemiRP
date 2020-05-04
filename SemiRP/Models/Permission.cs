@@ -8,44 +8,39 @@ namespace SemiRP.Models
 {
     public class Permission
     {
-        private int id;
-        private String name;
-        private Permission parentPermission;
-        private List<Permission> childPermissions;
-
         public Permission() { }
 
         public Permission(string name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
         public Permission(int id, string name, List<Permission> childPermissions)
         {
-            this.id = id;
-            this.name = name;
-            this.childPermissions = childPermissions;
+            this.Id = id;
+            this.Name = name;
+            this.ChildPermissions = childPermissions;
         }
 
         public Permission(int id, string name, Permission parentPermission)
         {
-            this.id = id;
-            this.name = name;
-            this.parentPermission = parentPermission;
+            this.Id = id;
+            this.Name = name;
+            this.ParentPermission = parentPermission;
         }
 
         public Permission(int id, string name, Permission parentPermission, List<Permission> childPermissions)
         {
             this.Id = id;
-            this.name = name;
+            this.Name = name;
             this.ParentPermission = parentPermission;
             this.ChildPermissions = childPermissions;
         }
         [Key]
-        public int Id { get => id; set => id = value; }
-        public string Name { get => name; set => name = value; }
-        public virtual Permission ParentPermission { get => parentPermission; set => parentPermission = value; }
-        public virtual List<Permission> ChildPermissions { get => childPermissions; set => childPermissions = value; }
+        public int Id { get ; set ; }
+        public string Name { get; set; }
+        public virtual Permission ParentPermission { get ; set ; }
+        public virtual List<Permission> ChildPermissions { get ; set ; }
 
         public virtual IList<PermissionSetPermission> PermissionsSetPermission { get; set; }
     }

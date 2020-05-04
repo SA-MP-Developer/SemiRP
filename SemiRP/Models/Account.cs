@@ -10,15 +10,6 @@ namespace SemiRP.Models
 {
     public class Account
     {
-        private int id;
-        private string username;
-        private string password;
-        private string email;
-        private string nickname;
-        private string lastConnectionIP;
-        private DateTime lastConnectionTime;
-
-
         public Account()
         {
 
@@ -50,13 +41,13 @@ namespace SemiRP.Models
         }
 
         [Key]
-        public int Id { get => id; set => id = value; }
-        public string Username { get => username; set => username = value; }
-        public string Password { get => password; set => password = value; }
-        public string Email { get => email; set => email = value; }
-        public string Nickname { get => nickname; set => nickname = value; }
-        public string LastConnectionIP { get => lastConnectionIP; set => lastConnectionIP = value; }
-        public DateTime LastConnectionTime { get => lastConnectionTime; set => lastConnectionTime = value; }
+        public int Id { get; set; }
+        public string Username { get ; set ; }
+        public string Password { get ; set ; }
+        public string Email { get ; set ; }
+        public string Nickname { get ; set ; }
+        public string LastConnectionIP { get ; set ; }
+        public DateTime LastConnectionTime { get ; set ; }
         [ForeignKey("PermissionSet")]
         public virtual PermissionSet PermsSet { get; set; }
     }

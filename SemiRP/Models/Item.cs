@@ -9,14 +9,6 @@ namespace SemiRP.Models
 {
     public class Item
     {
-        private int id;
-        private String name;
-        private int quantity;
-        private Container currentContainer;
-        private SpawnLocation spawnLocation;
-        private int modelId;
-        private DynamicObject dynamicObject;
-
         public Item()
         {
         }
@@ -26,19 +18,19 @@ namespace SemiRP.Models
             this.Id = id;
             this.Name = name;
             this.Quantity = quantity;
-            this.currentContainer = currentContainer;
-            this.spawnLocation = spawnLocation;
+            this.CurrentContainer = currentContainer;
+            this.SpawnLocation = spawnLocation;
             this.ModelId = modelId;
             this.DynamicObject = dynamicObject;
         }
 
         [Key]
-        public int Id { get => id; set => id = value; }
-        public string Name { get => name; set => name = value; }
-        public int Quantity { get => quantity; set => quantity = value; }
-        public virtual Container CurrentContainer { get => currentContainer; set => currentContainer = value; }
-        public virtual SpawnLocation SpawnLocation { get => spawnLocation; set => spawnLocation = value; }
-        public int ModelId { get => modelId; set => modelId = value; }
+        public int Id { get ; set ; }
+        public string Name { get ; set ; }
+        public int Quantity { get ; set ; }
+        public virtual Container CurrentContainer { get ; set ; }
+        public virtual SpawnLocation SpawnLocation { get ; set ; }
+        public int ModelId { get ; set ; }
         [NotMapped]
         public DynamicObject DynamicObject { get; set; }
     }

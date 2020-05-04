@@ -7,10 +7,6 @@ namespace SemiRP.Models
 {
     public class GroupRank
     {
-        private int id;
-        private String name;
-        private Group parentGroup;
-
         public GroupRank()
         {
         }
@@ -22,8 +18,8 @@ namespace SemiRP.Models
             this.ParentGroup = parentGroup;
         }
         [Key]
-        public int Id { get => id; set => id = value; }
-        public string Name { get => name; set => name = value; }
-        public virtual Group ParentGroup { get => parentGroup; set => parentGroup = value; }
+        public int Id { get ; set ; }
+        public string Name { get ; set ; }
+        public virtual Group ParentGroup { get ; set ; }
     }
 }
