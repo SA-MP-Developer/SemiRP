@@ -16,8 +16,9 @@ namespace SemiRP.Dialog
         public static void ShowPlayerInventory(Player player)
         {
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
-            listInventory = new TablistDialog("Inventaire", new[] { "Nom", "Quantité" }, "Sélectionner", "Quitter");
             int maxSpaceContainer = player.ActiveCharacter.Inventory.MaxSpace;
+            listInventory = new TablistDialog("Inventaire ("+player.ActiveCharacter.Inventory.ListItems.Count+"/"+maxSpaceContainer+")", new[] { "Nom", "Quantité" }, "Sélectionner", "Quitter");
+            
             List<Item> listItemsContainer = player.ActiveCharacter.Inventory.ListItems;
             int i = 0;
             foreach (Item item in listItemsContainer)
