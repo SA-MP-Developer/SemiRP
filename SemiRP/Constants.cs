@@ -57,6 +57,8 @@ namespace SemiRP
 
             public static Color SUCCESS = Color.ForestGreen;
             public static Color DISABLED = Color.Red;
+
+            public static Color PM = Color.Yellow;
         }
         public static class Item
         {

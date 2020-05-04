@@ -22,7 +22,7 @@ namespace SemiRP.Utils.Vehicles
 
             if (id != -1)
             {
-                if (Vehicle.All.All(v => v.Id != id))
+                if (!Vehicle.All.Any(v => v.Id == id))
                 {
                     throw new Exception("Ce véhicule n'éxiste pas.");
                 }

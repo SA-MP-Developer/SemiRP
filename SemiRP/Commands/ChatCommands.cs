@@ -64,7 +64,7 @@ namespace SemiRP.Commands
                 return;
             }
 
-            sender.SendClientMessage(Color.Yellow, "[MP] Envoyé à " + sender.Name + "(" + sender.Id + ") : " + message);
+            sender.SendClientMessage(Constants.Chat.PM, "[MP] Envoyé à " + sender.Name + "(" + sender.Id + ") : " + message);
             receiver.SendClientMessage(Color.Yellow, "[MP] Reçu de " + sender.Name + "(" + sender.Id + ") : " + message);
         }
 

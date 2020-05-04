@@ -59,7 +59,7 @@ namespace SemiRP.Commands
 
                 var vData = vehicle.Data;
 
-                ServerDbContext dbContext = ((GameMode) BaseMode.Instance).DbContext;
+                ServerDbContext dbContext = ((GameMode) GameMode.Instance).DbContext;
                 dbContext.Update(vehicle.Data);
                 dbContext.SaveChanges();
 
@@ -164,7 +164,7 @@ namespace SemiRP.Commands
         [Command("liste", "list")]
         private static void List(Player sender)
         {
-            if (Vehicle.All.All(v => ((Vehicle) v).Data.Owner != sender.ActiveCharacter))
+            if (!Vehicle.All.Any(v => ((Vehicle) v).Data.Owner == sender.ActiveCharacter))
             {
                 Chat.ErrorChat(sender, "Vous n'avez pas de véhicules.");
                 return;
