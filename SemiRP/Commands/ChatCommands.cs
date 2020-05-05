@@ -52,12 +52,6 @@ namespace SemiRP.Commands
         [Command("mp", "pm")]
         private static void PrivateMessageCommand(Player sender, Player receiver, string message)
         {
-            if (!receiver.IsConnected)
-            {
-                Chat.ErrorChat(sender, "Le joueur id " + receiver.Id + " n'est pas connecté.");
-                return;
-            }
-
             if (!receiver.AcceptMP)
             {
                 Chat.ErrorChat(sender, receiver.Name + " n'accepte pas de MP.");
