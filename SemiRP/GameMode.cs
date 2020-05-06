@@ -116,7 +116,7 @@ namespace SemiRP
             vehicleTimer = new Timer(Constants.Vehicle.MS500_TIMER, true);
             vehicleTimer.Tick += Vehicle.GlobalTimer;
             Console.WriteLine("Vehicle timer");
-            saveTimer = new Timer(Constants.SAVE_TIMER, true);
+            saveTimer = new Timer(Constants.Timer.SAVE, true);
             saveTimer.Tick += this.SaveTimer;
             Console.WriteLine("Save timer");
 

@@ -72,6 +72,22 @@ namespace SemiRP.Utils
             Chat.ClientChat(target, Constants.Chat.ADMIN_PM + "[PM] " + sender.AccountData.Nickname + " : " + message);
         }
 
+        public static void Kick(Player sender, Player target, string reason)
+        {
+            if (!sender.AccountData.HavePerm("admin.cmds.kick"))
+                throw new Exception();
+
+            Chat.AdminChatToAll(target.Name + " a été kick du serveur par " + sender.AccountData.Nickname + " pour : " + reason);
+            Chat.AdminChat(target, "Vous avez été kick par " + Constants.Chat.USERNAME + sender.AccountData.Nickname + Color.White +" pour : " + reason);
+            KickPlayer(target);
+        }
+
+        public static void KickPlayer(Player target)
+        {
+            var timerKick = new Timer(Constants.Timer.KICK, false);
+            timerKick.Tick += (senderPlayer, e) => target.Kick();
+        }
+
         public static void PermissionAdd(Player sender, Player target, string perm)
         {
             //if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))

@@ -19,7 +19,7 @@ namespace SemiRP.Commands
             if (!sender.AccountData.HavePerm("admin.cmds.help"))
                 return;
 
-            Chat.AdminChat(sender, "help, goto, gethere, slap, freeze, unfreeze, pm, perm, give, set");
+            Chat.AdminChat(sender, "help, goto, gethere, slap, freeze, unfreeze, pm, kick, perm, v, set, give, delete");
         }
 
         [Command("dialog", "d")]
@@ -112,6 +112,18 @@ namespace SemiRP.Commands
             try
             {
                 AdminHelper.PrivateMessage(sender, target, message);
+            }
+            catch(Exception e){
+                Chat.ErrorChat(sender, e.Message);
+            }
+        }
+
+        [Command("kick", "k")]
+        private static void Kick(Player sender, Player target, string message)
+        {
+            try
+            {
+                AdminHelper.Kick(sender, target, message);
             }
             catch(Exception e){
                 Chat.ErrorChat(sender, e.Message);
