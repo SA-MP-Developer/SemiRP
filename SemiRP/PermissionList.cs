@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -32,6 +32,7 @@ namespace SemiRP
             "admin.cmds.vehicule.create",
             "admin.cmds.vehicule.destroy",
             "admin.cmds.vehicule.tp",
+            "admin.cmds.vehicule.tpn",
             "admin.cmds.vehicule.infos",
             "admin.cmds.vehicule.heal",
             "admin.cmds.vehicule.fill",

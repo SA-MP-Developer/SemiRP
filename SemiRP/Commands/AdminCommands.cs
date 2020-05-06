@@ -204,12 +204,26 @@ namespace SemiRP.Commands
             }
 
             [Command("tpnearest", "tpn")]
-            private static void TpTo(Player sender)
+            private static void TpNearest(Player sender)
             {
                 try
                 {
-                    Vehicle nearestVeh = AdminHelper.VehicleTpTo(sender);
-                    Chat.AdminChat(sender, "Vous vous êtes téléporté au véhicule id " + Constants.Chat.HIGHLIGHT + nearestVeh.Id + Color.White + " (bdd: " + Constants.Chat.HIGHLIGHT + nearestVeh.Data.Id + Color.White + ").");
+                    Vehicle vehicle = AdminHelper.VehicleTpNearest(sender);
+                    Chat.AdminChat(sender, "Vous vous êtes téléporté au véhicule id " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd: " + Constants.Chat.HIGHLIGHT + vehicle.Data.Id + Color.White + ").");
+                }
+                catch(Exception e)
+                {
+                    Chat.ErrorChat(sender, e.Message);
+                }
+            }
+            
+            [Command("tp", "goto")]
+            private static void TpId(Player sender, int id)
+            {
+                try
+                {
+                    Vehicle vehicle = AdminHelper.VehicleTpId(sender, id);
+                    Chat.AdminChat(sender, "Vous vous êtes téléporté au véhicule id " + Constants.Chat.HIGHLIGHT + vehicle.Id + Color.White + " (bdd: " + Constants.Chat.HIGHLIGHT + vehicle.Data.Id + Color.White + ").");
                 }
                 catch(Exception e)
                 {
