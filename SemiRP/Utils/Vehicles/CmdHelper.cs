@@ -90,12 +90,6 @@ namespace SemiRP.Utils.Vehicles
             veh.Engine = true;
         }
 
-        public static void CreateVehicleForPlayer(Player sender, VehicleModelType vehicle)
-        {
-            var veh = Helper.CreateVehicle(sender.ActiveCharacter,
-                ModelHelper.ModelForModelType(vehicle), sender.Position, sender.Angle);
-        }
-
         public static List<string> ListPlayerVehicles(Player player)
         {
             List<string> res = new List<string>();

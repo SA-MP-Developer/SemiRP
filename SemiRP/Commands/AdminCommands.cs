@@ -171,22 +171,30 @@ namespace SemiRP.Commands
             [Command("create", "c")]
             private static void Create(Player sender, Player target, VehicleModelType vehicle)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.create"))
-                    return;
-
-                CmdHelper.CreateVehicleForPlayer(target, vehicle);
-                Chat.AdminChat(sender, "Véhicule " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + " crée pour " + Constants.Chat.USERNAME + target.Name + Color.White + " (" + target.Id + ").");
-                Chat.ClientChat(target, Constants.Chat.USERNAME + sender.AccountData.Nickname + Color.White + " vous a créé le véhicule " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ".");
+                try
+                {
+                    AdminHelper.VehicleCreate(sender, target, vehicle);
+                    Chat.AdminChat(sender, "Véhicule " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + " crée pour " + Constants.Chat.USERNAME + target.Name + Color.White + " (" + target.Id + ").");
+                    Chat.ClientChat(target, Constants.Chat.USERNAME + sender.AccountData.Nickname + Color.White + " vous a créé le véhicule " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + ".");
+                }
+                catch (Exception e)
+                {
+                    Chat.ErrorChat(sender, e.Message);
+                }
             }
 
             [Command("spawntmp", "tmp")]
             private static void SpawnTmp(Player sender, VehicleModelType vehicle)
             {
-                if (!sender.AccountData.HavePerm("admin.cmds.vehicule.spawntmp"))
-                    return;
-
-                CmdHelper.CreateTmpVehicleForPlayer(sender, vehicle);
-                Chat.AdminChat(sender, "Véhicule temporaire " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + " crée.");
+                try
+                {
+                    AdminHelper.VehicleSpawnTmp(sender, vehicle);
+                    Chat.AdminChat(sender, "Véhicule temporaire " + Constants.Chat.HIGHLIGHT + vehicle + Color.White + " crée.");
+                }
+                catch (Exception e)
+                {
+                    Chat.ErrorChat(sender, e.Message);
+                }
             }
 
             [Command("destroy", "del", "rm", "d")]
