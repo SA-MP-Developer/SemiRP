@@ -16,6 +16,7 @@ namespace SemiRP
             "admin.cmds.slap",
             "admin.cmds.freeze",
             "admin.cmds.pm",
+            "admin.cmds.kick",
             "admin.cmds.perms",
             "admin.cmds.perms.add",
             "admin.cmds.perms.remove",
