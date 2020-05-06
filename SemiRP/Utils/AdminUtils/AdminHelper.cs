@@ -182,15 +182,14 @@ namespace SemiRP.Utils
             if (!sender.AccountData.HavePerm("admin.cmds.vehicule.destroy"))
                 throw new Exception();
 
-
             Vehicle vehicle = CmdHelper.GetCurrentVehicleOrID(sender, id);
 
             Helper.DestroyVehicle(vehicle);
         }
 
-        public static Vehicle VehicleTpTo(Player sender)
+        public static Vehicle VehicleTpNearest(Player sender)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.tp"))
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.tpn"))
                 throw new Exception();
 
             var nearestVeh = Helper.GetNearestVehicle(sender);
@@ -198,12 +197,30 @@ namespace SemiRP.Utils
             if (nearestVeh == null)
                 throw new Exception();
 
-            if (nearestVeh.Driver != null)
-                sender.Position = new Vector3(nearestVeh.Position.X, nearestVeh.Position.Y, nearestVeh.Position.Z + 1f);
-            else
-                sender.PutInVehicle(nearestVeh);
-
+            VehicleTp(sender, nearestVeh);
             return nearestVeh;
+        }
+
+        public static Vehicle VehicleTpId(Player sender, int id)
+        {
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.tp"))
+                throw new Exception();
+
+            var vehicle = (Vehicle)Vehicle.Find(id);
+            
+            if (vehicle == null)
+                throw new Exception("Véhicule (id samp " + id + ") introuvable !");
+
+            VehicleTp(sender, vehicle);
+            return vehicle;
+        }
+        
+        public static void VehicleTp(Player sender, Vehicle vehicle)
+        {
+            if (vehicle.Driver != null)
+                sender.Position = new Vector3(vehicle.Position.X, vehicle.Position.Y, vehicle.Position.Z + 1f);
+            else
+                sender.PutInVehicle(vehicle);
         }
 
         public static Vehicle VehicleHeal(Player sender, int id = -1)
