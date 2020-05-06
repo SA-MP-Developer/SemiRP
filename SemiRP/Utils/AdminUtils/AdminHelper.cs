@@ -4,7 +4,6 @@ using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
 using SemiRP.Data;
-using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils.ContainerUtils;
 using SemiRP.Utils.ItemUtils;
