@@ -24,6 +24,7 @@ namespace SemiRP.Models.ItemHeritage
             this.Name = "Téléphone (" + number + ")";
             this.Quantity = 1;
             this.ModelId = 18872;
+            this.Anonym = false;
         }
 
 
@@ -37,5 +38,6 @@ namespace SemiRP.Models.ItemHeritage
         public bool IsCalling { get; set; }
         public virtual List<ContactPhone> PhoneBook { get; set; }
         public int MaxContact { get; set; }
+        public bool Anonym { get; set; }
     }
 }
