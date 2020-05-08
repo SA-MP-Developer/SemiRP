@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json.Bson;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
+using SampSharp.GameMode.SAMP.Commands;
 using SampSharp.Streamer.World;
 using SemiRP.Models;
 
@@ -17,6 +19,8 @@ namespace SemiRP
 
         private ServerDbContext dbContext;
         public ServerDbContext DbContext { get { return dbContext; } }
+
+        public Dictionary<string, List<DefaultCommand>> GroupedCommands { get; private set; }
 
         private Timer saveTimer;
 
@@ -125,8 +129,17 @@ namespace SemiRP
             InitializeObjectOnMap();
             Console.WriteLine("[Objects] Done.");
 
-            Console.WriteLine("-------------Loading finish------------");
+            Console.WriteLine("[Commands] Grouping commands...");
+            PupulateGroupedCommands();
+            Console.WriteLine("Found " + GroupedCommands.Count() + " groups.");
+            Console.WriteLine("[Commands] Done.");
 
+            foreach (KeyValuePair<string, List<DefaultCommand>> cmdGroup in ((GameMode)GameMode.Instance).GroupedCommands.OrderBy(kv => kv.Key).ToList())
+            {
+                Console.WriteLine(cmdGroup.Key + " - " + cmdGroup.Value.Count);
+            }
+
+            Console.WriteLine("-------------Loading finish------------");
         }
 
         private void InitializeVehicleModel()
@@ -164,6 +177,31 @@ namespace SemiRP
         private void SaveTimer(Object sender, EventArgs e)
         {
             this.dbContext.SaveChanges();
+        }
+
+        private void PupulateGroupedCommands()
+        {
+            GroupedCommands = new Dictionary<string, List<DefaultCommand>>();
+
+            CommandsManager cmdManager = (CommandsManager)GameMode.Instance.Services.GetService<ICommandsManager>();
+
+            foreach (DefaultCommand cmd in cmdManager.Commands)
+            {
+                string group = cmd.Names[0].Group.Split()[0];
+
+                if (group.Length != 0)
+                {
+                    if (!GroupedCommands.ContainsKey(group))
+                        GroupedCommands.Add(group, new List<DefaultCommand>());
+                    GroupedCommands[group].Add(cmd);
+                }
+                else
+                {
+                    if (!GroupedCommands.ContainsKey("global"))
+                        GroupedCommands.Add("global", new List<DefaultCommand>());
+                    GroupedCommands["global"].Add(cmd);
+                }
+            }
         }
 
         #endregion
