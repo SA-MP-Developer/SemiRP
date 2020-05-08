@@ -101,7 +101,7 @@ namespace SemiRP.Utils.ItemUtils
             }
             if (phoneReceiver.Silent)
             {
-                throw new Exception("le téléphone du joueur est en silencieux, impossible de l'appeler.");
+                throw new Exception("le téléphone du joueur est en silencieux, impossible d'envoyer un message.");
             }
             if (phoneSender.Anonym)
             {
@@ -141,9 +141,13 @@ namespace SemiRP.Utils.ItemUtils
             }
             Chat.CallChat(sender, "Appel en cours...");
             
-            if(receiver != null) // If a player has the phone
+            if(receiver != null && !phoneSender.Anonym) // If a player has the phone
             {
-                Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler ("+phoneSender.Number+")! /t dec pour décrocher.");
+                Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler ("+phoneSender.Number+") ! /t dec pour décrocher.");
+            }
+            else if(receiver != null && !phoneSender.Anonym)
+            {
+                Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler (Anonyme)! /t dec pour décrocher.");
             }
             else // If the phone is not in a player inventory
             {
@@ -200,9 +204,13 @@ namespace SemiRP.Utils.ItemUtils
                     }
                     if (nbr < 3)
                     {
-                        if (receiver != null) // If a player has the phone
+                        if (receiver != null && !phoneSender.Anonym) // If a player has the phone
                         {
                             Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler (" + phoneSender.Number + ") ! /t dec pour décrocher.");
+                        }
+                        else if (receiver != null && !phoneSender.Anonym)
+                        {
+                            Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler (Anonyme)! /t dec pour décrocher.");
                         }
                         else // If the phone is not in a player inventory
                         {
