@@ -2,6 +2,7 @@
 using SampSharp.GameMode.SAMP;
 using SampSharp.Streamer.World;
 using System;
+using SampSharp.GameMode.World;
 
 namespace SemiRP.Utils
 {
@@ -62,6 +63,11 @@ namespace SemiRP.Utils
         public static void AdminChat(Player player, string message)
         {
             player.SendClientMessage(Constants.Chat.ADMIN, "[ADMIN] " + Color.White + message);
+        }
+
+        public static void AdminChatToAll(string message)
+        {
+            BasePlayer.SendClientMessageToAll(Constants.Chat.ADMIN, message);
         }
 
         public static void HelpChat(Player player, string message)

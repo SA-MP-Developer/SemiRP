@@ -17,9 +17,13 @@ namespace SemiRP
 
         public const int CHARACTER_INVENTORY_SIZE = 10;
 
-        public const int SAVE_TIMER = 2000;
-
         public const float PLAYER_LABEL_DIST = 12.5f;
+
+        public static class Timer
+        {
+            public const int SAVE = 2000;
+            public const int KICK = 500;
+        }
 
         public static class Vehicle
         {

@@ -71,6 +71,22 @@ namespace SemiRP.Utils
             Chat.ClientChat(target, Constants.Chat.ADMIN_PM + "[PM] " + sender.AccountData.Nickname + " : " + message);
         }
 
+        public static void Kick(Player sender, Player target, string reason)
+        {
+            if (!sender.AccountData.HavePerm("admin.cmds.kick"))
+                throw new Exception();
+
+            Chat.AdminChatToAll(target.Name + " a été kick du serveur par " + sender.AccountData.Nickname + " pour : " + reason);
+            Chat.AdminChat(target, "Vous avez été kick par " + Constants.Chat.USERNAME + sender.AccountData.Nickname + Color.White +" pour : " + reason);
+            KickPlayer(target);
+        }
+
+        public static void KickPlayer(Player target)
+        {
+            var timerKick = new Timer(Constants.Timer.KICK, false);
+            timerKick.Tick += (senderPlayer, e) => target.Kick();
+        }
+
         public static void PermissionAdd(Player sender, Player target, string perm)
         {
             //if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
@@ -147,7 +163,7 @@ namespace SemiRP.Utils
 
         public static int VehicleCreate(Player sender, Player target, VehicleModelType vehicle)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.create"))
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicle.create"))
                 throw new Exception();
 
             var veh = Helper.CreateVehicle(
@@ -160,7 +176,7 @@ namespace SemiRP.Utils
 
         public static void VehicleSpawnTmp(Player sender, VehicleModelType vehicle)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.spawntmp"))
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicle.spawntmp"))
                 throw new Exception();
 
             var veh = Helper.CreateVehicle(
@@ -179,7 +195,7 @@ namespace SemiRP.Utils
 
         public static void VehicleDestroy(Player sender, int id = -1)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.destroy"))
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicle.destroy"))
                 throw new Exception();
 
             Vehicle vehicle = CmdHelper.GetCurrentVehicleOrID(sender, id);
@@ -189,7 +205,7 @@ namespace SemiRP.Utils
 
         public static Vehicle VehicleTpNearest(Player sender)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.tpn"))
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicle.tpn"))
                 throw new Exception();
 
             var nearestVeh = Helper.GetNearestVehicle(sender);
@@ -203,7 +219,7 @@ namespace SemiRP.Utils
 
         public static Vehicle VehicleTpId(Player sender, int id)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.tp"))
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicle.tp"))
                 throw new Exception();
 
             var vehicle = (Vehicle)Vehicle.Find(id);
@@ -225,7 +241,7 @@ namespace SemiRP.Utils
 
         public static Vehicle VehicleHeal(Player sender, int id = -1)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.heal"))
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicle.heal"))
                 throw new Exception();
 
 
@@ -238,7 +254,7 @@ namespace SemiRP.Utils
 
         public static Vehicle VehicleFill(Player sender, int id = -1)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.fill"))
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicle.fill"))
                 throw new Exception();
             Vehicle vehicle = CmdHelper.GetCurrentVehicleOrID(sender, id);
             vehicle.Data.Fuel = vehicle.Data.MaxFuel;
@@ -247,7 +263,7 @@ namespace SemiRP.Utils
 
         public static void VehicleInfos(Player sender, int id = -1)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.vehicule.infos"))
+            if (!sender.AccountData.HavePerm("admin.cmds.vehicle.infos"))
                 throw new Exception();
 
             Vehicle veh = CmdHelper.GetCurrentVehicleOrID(sender, id);
