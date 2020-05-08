@@ -232,7 +232,7 @@ namespace SemiRP
             }
 
             nameLabel = new DynamicTextLabel(this.Name + " (( " + this.Id + " ))" + "\r\n" + Constants.Chat.ME + Utils.PlayerUtils.PlayerHelper.HealthToDescription(this), Color.White,
-                            new Vector3(0, 0, 0.4), Constants.PLAYER_LABEL_DIST, attachedPlayer: this, testLOS: true);
+                            new Vector3(0, 0, 0.3), Constants.PLAYER_LABEL_DIST, attachedPlayer: this, testLOS: true);
             nameLabel.Interior = this.Interior;
             nameLabel.World = this.VirtualWorld;
             nameLabel.HideForPlayer(this);
@@ -293,8 +293,11 @@ namespace SemiRP
         {
             base.OnDisconnected(e);
 
-            nameLabel.Dispose();
-            nameLabel = null;
+            if (nameLabel != null)
+            {
+                nameLabel.Dispose();
+                nameLabel = null;
+            }
 
             try
             {
