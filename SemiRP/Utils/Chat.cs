@@ -109,6 +109,16 @@ namespace SemiRP.Utils
         {
              return new DynamicTextLabel(message, Constants.Chat.ME, position,drawdistance,attachedPlayer,attachedVehicle,testLOS,worldid,interiorid,player,streamdistance,area,priority);
         }
+        public static DynamicTextLabel CreateTmeTimer(String message, Vector3 position, float drawdistance, int time, Player attachedPlayer = null, Vehicle attachedVehicle = null, bool testLOS = false, int worldid = -1, int interiorid = -1, Player player = null, float streamdistance = 100, DynamicArea area = null, int priority = 0)
+        {
+            DynamicTextLabel dynamicTextLabel = new DynamicTextLabel(message, Constants.Chat.ME, position, drawdistance, attachedPlayer, attachedVehicle, testLOS, worldid, interiorid, player, streamdistance, area, priority);
+            var timerKick = new Timer(time, false);
+            timerKick.Tick += (senderPlayer, e) =>
+            {
+                dynamicTextLabel.Dispose();
+            };
+            return dynamicTextLabel;
+        }
 
 
     }
