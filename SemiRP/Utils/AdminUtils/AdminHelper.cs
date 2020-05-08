@@ -16,7 +16,7 @@ namespace SemiRP.Utils
         public static void Goto(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.goto"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             var tppos = target.Position;
             if (sender.InAnyVehicle)
@@ -28,7 +28,7 @@ namespace SemiRP.Utils
         public static void Gethere(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.gethere"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             var tppos = sender.Position;
             if (target.InAnyVehicle)
@@ -42,7 +42,7 @@ namespace SemiRP.Utils
         public static void Slap(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.slap"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             target.Position = new Vector3(target.Position.X, target.Position.Y, target.Position.Z + 5f);
         }
@@ -50,7 +50,7 @@ namespace SemiRP.Utils
         public static void Freeze(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.freeze"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             target.ToggleControllable(false);
         }
@@ -58,7 +58,7 @@ namespace SemiRP.Utils
         public static void UnFreeze(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.freeze"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             target.ToggleControllable(true);
         }
@@ -66,7 +66,7 @@ namespace SemiRP.Utils
         public static void PrivateMessage(Player sender, Player target, string message)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.pm"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
             Chat.AdminChat(sender, Constants.Chat.ADMIN_PM + "[PM] " + sender.AccountData.Nickname + " : " + message);
             Chat.ClientChat(target, Constants.Chat.ADMIN_PM + "[PM] " + sender.AccountData.Nickname + " : " + message);
         }
@@ -74,7 +74,7 @@ namespace SemiRP.Utils
         public static void Kick(Player sender, Player target, string reason)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.kick"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             Chat.AdminChatToAll(target.Name + " a été kick du serveur par " + sender.AccountData.Nickname + " pour : " + reason);
             Chat.AdminChat(target, "Vous avez été kick par " + Constants.Chat.USERNAME + sender.AccountData.Nickname + Color.White +" pour : " + reason);
@@ -90,7 +90,7 @@ namespace SemiRP.Utils
         public static void PermissionAdd(Player sender, Player target, string perm)
         {
             //if (!sender.AccountData.HavePerm("admin.cmds.perms.add"))
-            //    throw new Exception();
+            //    throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             var ret = Permissions.AddPerm(target.AccountData.PermsSet, perm);
             if (ret == 1)
@@ -113,7 +113,7 @@ namespace SemiRP.Utils
         public static void PermissionRemove(Player sender, Player target, string perm)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.perms.remove"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             var ret = Permissions.RemovePerm(target.AccountData.PermsSet, perm);
 
@@ -137,7 +137,7 @@ namespace SemiRP.Utils
         public static void PermissionsShow(Player sender, Player target, string perm = "")
         {
             if (!sender.AccountData.HavePerm("admin.cmds.perms.list"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             List<string> permsStrings;
 
@@ -164,7 +164,7 @@ namespace SemiRP.Utils
         public static int VehicleCreate(Player sender, Player target, VehicleModelType vehicle)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicle.create"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             var veh = Helper.CreateVehicle(
                 target.ActiveCharacter, ModelHelper.ModelForModelType(vehicle),
@@ -177,7 +177,7 @@ namespace SemiRP.Utils
         public static void VehicleSpawnTmp(Player sender, VehicleModelType vehicle)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicle.spawntmp"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             var veh = Helper.CreateVehicle(
                 sender.ActiveCharacter,
@@ -196,7 +196,7 @@ namespace SemiRP.Utils
         public static void VehicleDestroy(Player sender, int id = -1)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicle.destroy"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             Vehicle vehicle = CmdHelper.GetCurrentVehicleOrID(sender, id);
 
@@ -206,12 +206,12 @@ namespace SemiRP.Utils
         public static Vehicle VehicleTpNearest(Player sender)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicle.tpn"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             var nearestVeh = Helper.GetNearestVehicle(sender);
 
             if (nearestVeh == null)
-                throw new Exception();
+                throw new Exception("Il n'y a pas de véhicule proche.");
 
             VehicleTp(sender, nearestVeh);
             return nearestVeh;
@@ -220,7 +220,7 @@ namespace SemiRP.Utils
         public static Vehicle VehicleTpId(Player sender, int id)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicle.tp"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             var vehicle = (Vehicle)Vehicle.Find(id);
             
@@ -242,7 +242,7 @@ namespace SemiRP.Utils
         public static Vehicle VehicleHeal(Player sender, int id = -1)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicle.heal"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
 
             Vehicle vehicle = CmdHelper.GetCurrentVehicleOrID(sender, id);
@@ -255,7 +255,7 @@ namespace SemiRP.Utils
         public static Vehicle VehicleFill(Player sender, int id = -1)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicle.fill"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
             Vehicle vehicle = CmdHelper.GetCurrentVehicleOrID(sender, id);
             vehicle.Data.Fuel = vehicle.Data.MaxFuel;
             return vehicle;
@@ -264,7 +264,7 @@ namespace SemiRP.Utils
         public static void VehicleInfos(Player sender, int id = -1)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.vehicle.infos"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             Vehicle veh = CmdHelper.GetCurrentVehicleOrID(sender, id);
             var strings = CmdHelper.DisplayAdminInfos(veh);
@@ -279,7 +279,7 @@ namespace SemiRP.Utils
         public static void SetSkin(Player sender, Player target, int skinid)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.set.skin"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             if (skinid < 0 || 311 < skinid)
             {
@@ -294,7 +294,7 @@ namespace SemiRP.Utils
         public static Phone GivePhone(Player sender, Player target)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.give.phone"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
 
             Phone phone = PhoneHelper.CreatePhone();
 
@@ -337,7 +337,7 @@ namespace SemiRP.Utils
         public static void GiveGun(Player sender, Player target, Weapon gun, int ammo)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
-                throw new Exception();
+                throw new Exception("Vous n'avez pas les permissions pour cela.");
             if (target.ActiveCharacter.ItemInHand != null)
                 throw new Exception("La main du joueur doit être vide.");
 
