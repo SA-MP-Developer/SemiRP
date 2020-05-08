@@ -10,7 +10,7 @@ using System;
 
 namespace SemiRP.Commands
 {
-    [CommandGroup("a", "admin")]
+    [CommandGroup("admin", "a")]
     class AdminCommands
     {
         [Command("help", "aide", "h", "a")]

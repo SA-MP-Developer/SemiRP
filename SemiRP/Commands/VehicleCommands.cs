@@ -11,7 +11,7 @@ using SemiRP.Utils.Vehicles;
 
 namespace SemiRP.Commands
 {
-    [CommandGroup("vehicle", "veh", "v")]
+    [CommandGroup("vehicule", "vehicle", "veh", "v")]
     public class VehicleCommands
     {
         [Command("lock", "verouiller")]
