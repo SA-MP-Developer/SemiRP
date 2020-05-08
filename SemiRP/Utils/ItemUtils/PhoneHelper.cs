@@ -99,6 +99,10 @@ namespace SemiRP.Utils.ItemUtils
             {
                 throw new Exception("le joueur n'est pas connecté.");
             }
+            if (phoneReceiver.Silent)
+            {
+                throw new Exception("le téléphone du joueur est en silencieux, impossible de l'appeler.");
+            }
             if (phoneSender.Anonym)
             {
                 Chat.SMSChat(sender, "Message envoyé à " + number + " : " + message);
@@ -130,6 +134,10 @@ namespace SemiRP.Utils.ItemUtils
             if(phoneReceiver == phoneSender)
             {
                 throw new Exception("Vous ne pouvez pas vous appeler vous même.");
+            }
+            if (phoneReceiver.Silent)
+            {
+                throw new Exception("le téléphone du joueur est en silencieux, impossible de l'appeler.");
             }
             Chat.CallChat(sender, "Appel en cours...");
             
@@ -340,6 +348,23 @@ namespace SemiRP.Utils.ItemUtils
             ToggleAnonym(phone);
             return phone;
         }
-        
+        public static void ToggleSilent(Phone phone)
+        {
+            if (phone.Silent)
+            {
+                phone.Silent = false;
+            }
+            else
+            {
+                phone.Silent = true;
+            }
+        }
+        public static Phone ToggleSilentPlayerPhone(Player player)
+        {
+            Phone phone = GetDefaultPhone(player.ActiveCharacter);
+            ToggleSilent(phone);
+            return phone;
+        }
+
     }
 }

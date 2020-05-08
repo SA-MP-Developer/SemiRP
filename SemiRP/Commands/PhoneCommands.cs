@@ -98,6 +98,18 @@ namespace SemiRP.Commands
                 Chat.ErrorChat(sender, "Le téléphone n'a pas pu être passé en mode anonyme : " + e.Message);
             }
         }
+        [Command("silencieux", "sil")]
+        private static void SilentMode(Player sender)
+        {
+            try
+            {
+                PhoneHelper.ToggleSilentPlayerPhone(sender);
+            }
+            catch (Exception e)
+            {
+                Chat.ErrorChat(sender, "Le téléphone n'a pas pu être passé en mode silencieux : " + e.Message);
+            }
+        }
 
         [CommandGroup("contact", "c", "contacts", "rep", "repertoire")]
         public class Contact

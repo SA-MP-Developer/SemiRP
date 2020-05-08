@@ -25,6 +25,7 @@ namespace SemiRP.Models.ItemHeritage
             this.Quantity = 1;
             this.ModelId = 18872;
             this.Anonym = false;
+            this.Silent = false;
         }
 
 
@@ -39,5 +40,6 @@ namespace SemiRP.Models.ItemHeritage
         public virtual List<ContactPhone> PhoneBook { get; set; }
         public int MaxContact { get; set; }
         public bool Anonym { get; set; }
+        public bool Silent { get; set; }
     }
 }
