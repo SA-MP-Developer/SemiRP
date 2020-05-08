@@ -86,6 +86,18 @@ namespace SemiRP.Commands
                 Chat.ErrorChat(sender, "Le téléphone par défaut n'a pas pu être choisi : " + e.Message);
             }
         }
+        [Command("inconnu", "inc")]
+        private static void Inconnu(Player sender)
+        {
+            try
+            {
+                PhoneHelper.ToggleAnonymPlayerPhone(sender);
+            }
+            catch (Exception e)
+            {
+                Chat.ErrorChat(sender, "Le téléphone n'a pas pu être passé en mode anonyme : " + e.Message);
+            }
+        }
 
         [CommandGroup("contact", "c", "contacts", "rep", "repertoire")]
         public class Contact

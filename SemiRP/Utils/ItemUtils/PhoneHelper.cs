@@ -99,8 +99,16 @@ namespace SemiRP.Utils.ItemUtils
             {
                 throw new Exception("le joueur n'est pas connecté.");
             }
-            Chat.SMSChat(sender, "Message envoyé à " + number + " : " + message);
-            Chat.SMSChat(receiver, "Message reçu de " + phoneSender.Number + " : " + message);
+            if (phoneSender.Anonym)
+            {
+                Chat.SMSChat(sender, "Message envoyé à " + number + " : " + message);
+                Chat.SMSChat(receiver, "Message reçu d'un numéro anonyme : " + message);
+            }
+            else
+            {
+                Chat.SMSChat(sender, "Message envoyé à " + number + " : " + message);
+                Chat.SMSChat(receiver, "Message reçu de " + phoneSender.Number + " : " + message);
+            }
         }
 
         public static void Call(Player sender, string number)
@@ -313,6 +321,24 @@ namespace SemiRP.Utils.ItemUtils
         {
             ContactPhone contact = phone.PhoneBook.Select(x => x).Where(x => x.Name == name).FirstOrDefault();
             return contact;
+        }
+
+        public static void ToggleAnonym(Phone phone)
+        {
+            if (phone.Anonym)
+            {
+                phone.Anonym = false;
+            }
+            else
+            {
+                phone.Anonym = true;
+            }                
+        }
+        public static Phone ToggleAnonymPlayerPhone(Player player)
+        {
+            Phone phone = GetDefaultPhone(player.ActiveCharacter);
+            ToggleAnonym(phone);
+            return phone;
         }
         
     }
