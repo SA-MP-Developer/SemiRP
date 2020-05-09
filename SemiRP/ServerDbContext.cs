@@ -28,7 +28,7 @@ namespace SemiRP
         public DbSet<PermissionSetPermission> PermissionSetPermissions { get; set; }
         public DbSet<VehicleModel> VehicleModels { get; set; }
         public DbSet<VehicleData> Vehicles { get; set; }
-        public DbSet<VehicleDataBorrower> VehicleDataBorrowers { get; set; }
+        public DbSet<Owner> Owners { get; set; }
         public DbSet<Phone> Phones { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<Gun> Gun { get; set; }
@@ -45,17 +45,6 @@ namespace SemiRP
                 .HasOne(bc => bc.PermissionSet)
                 .WithMany(c => c.PermissionsSetPermission)
                 .HasForeignKey(bc => bc.PermissionSetId);
-
-            modelBuilder.Entity<VehicleDataBorrower>()
-                .HasKey(bc => new { bc.BorrowerId, bc.VehicleId });
-            modelBuilder.Entity<VehicleDataBorrower>()
-                .HasOne(bc => bc.Borrower)
-                .WithMany(b => b.BorrowedVehicles)
-                .HasForeignKey(bc => bc.BorrowerId);
-            modelBuilder.Entity<VehicleDataBorrower>()
-                .HasOne(bc => bc.Vehicle)
-                .WithMany(c => c.Borrowers)
-                .HasForeignKey(bc => bc.VehicleId);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

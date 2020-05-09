@@ -21,11 +21,9 @@ namespace SemiRP.Models
         {
             this.GroupOwner = new List<Group>();
             this.GroupRanks = new List<GroupRank>();
-            this.BuildingOwner = new List<Building>();
-            this.BorrowedVehicles = new List<VehicleDataBorrower>();
         }
 
-        public Character(int id, Account account, string name, uint age, int level, List<GroupRank> groupRanks, List<Group> groupOwner, List<Building> buildingOwner, Inventory inventory, Item itemInHand)
+        public Character(int id, Account account, string name, uint age, int level, List<GroupRank> groupRanks, List<Group> groupOwner, Inventory inventory, Item itemInHand)
         {
             this.Id = id;
             this.Account = account;
@@ -33,15 +31,12 @@ namespace SemiRP.Models
             this.Age = age;
             this.GroupRanks = groupRanks;
             this.GroupOwner = groupOwner;
-            this.BuildingOwner = buildingOwner;
             this.Inventory = inventory;
             this.Level = level;
             this.ItemInHand = itemInHand;
 
             this.GroupOwner = new List<Group>();
             this.GroupRanks = new List<GroupRank>();
-            this.BuildingOwner = new List<Building>();
-            this.BorrowedVehicles = new List<VehicleDataBorrower>();
         }
         public IList<Permission> GetPerms()
         {
@@ -56,14 +51,12 @@ namespace SemiRP.Models
         public uint Skin { get; set; }
         public virtual List<GroupRank> GroupRanks { get; set; }
         public virtual List<Group> GroupOwner { get; set; }
-        public virtual List<Building> BuildingOwner { get; set; }
         public virtual Inventory Inventory { get; set; }
         public CharSex Sex { get; set; }
         public int Level { get; set; }
         public virtual SpawnLocation SpawnLocation { get; set; }
         [ForeignKey("PermissionSet")]
         public virtual PermissionSet PermsSet { get; set; }
-        public virtual List<VehicleDataBorrower> BorrowedVehicles {get;set;}
         public virtual Item ItemInHand { get; set; }
     }
 }

@@ -164,7 +164,7 @@ namespace SemiRP.Commands
         [Command("liste", "list")]
         private static void List(Player sender)
         {
-            if (!Vehicle.All.Any(v => ((Vehicle) v).Data.Owner == sender.ActiveCharacter))
+            if (!Vehicle.All.Any(v => ((Vehicle) v).Data.Owner.IsOwner(sender.ActiveCharacter)))
             {
                 Chat.ErrorChat(sender, "Vous n'avez pas de véhicules.");
                 return;
@@ -187,7 +187,7 @@ namespace SemiRP.Commands
                 if (!Helper.IsOwner(sender, veh))
                     throw new Exception("Vous n'êtes pas propriétaire de ce véhicule.");
 
-                if (veh.Data.Borrowers.Select(b => b.Borrower).Any(b => b == target.ActiveCharacter))
+                if (veh.Data.Borrowers.Any(b => b.IsOwner(target.ActiveCharacter)))
                     throw new Exception("Vous prêtez déjà votre véhicule à ce joueur.");
 
                 Helper.BorrowVehicle(veh, target);

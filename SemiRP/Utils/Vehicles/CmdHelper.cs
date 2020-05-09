@@ -49,15 +49,21 @@ namespace SemiRP.Utils.Vehicles
             ret.Add("Color 1 : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Color1 + Color.White + ", Color 2 : " +
                     Constants.Chat.HIGHLIGHT + vehicle.Data.Color2);
 
-            var ownerPlayer = PlayerHelper.SearchCharacter(vehicle.Data.Owner);
-            if (ownerPlayer == null)
-                ret.Add("Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Name + " (Compte : " +
-                        vehicle.Data.Owner.Account.Id + ")");
-            else
-                ret.Add("Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Name + " (Compte : " +
-                        vehicle.Data.Owner.Account.Id + ") (connecté, id : " + ownerPlayer.Id + ")");
+            bool isOwnedByChr = vehicle.Data.Owner.Character != null;
 
-            foreach (Character borrower in vehicle.Data.Borrowers.Select(b => b.Borrower).ToList())
+            if (isOwnedByChr)
+            {
+                var ownerPlayer = PlayerHelper.SearchCharacter(vehicle.Data.Owner.Character);
+                if (ownerPlayer == null)
+                    ret.Add("Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Character.Name + " (Compte : " +
+                            vehicle.Data.Owner.Character.Account.Id + ")");
+                else
+                    ret.Add("Owner : " + Constants.Chat.HIGHLIGHT + vehicle.Data.Owner.Character.Name + " (Compte : " +
+                            vehicle.Data.Owner.Character.Account.Id + ") (connecté, id : " + ownerPlayer.Id + ")");
+            }
+
+
+            foreach (Character borrower in vehicle.Data.Borrowers.Select(b => b.Character).OfType<Character>().ToList())
             {
                 var borrowerPlayer = PlayerHelper.SearchCharacter(borrower);
                 if (borrowerPlayer == null)
@@ -94,7 +100,7 @@ namespace SemiRP.Utils.Vehicles
         {
             List<string> res = new List<string>();
 
-            foreach (Vehicle v in Vehicle.All.Where(v => ((Vehicle) v).Data.Owner == player.ActiveCharacter))
+            foreach (Vehicle v in Vehicle.All.Where(v => ((Vehicle) v).Data.Owner.IsOwner(player.ActiveCharacter)))
             {
                 res.Add(
                     VehicleModelInfo.ForVehicle(v).Name + " (ID : " + Constants.Chat.HIGHLIGHT + v.Data.Id +

@@ -89,7 +89,6 @@ namespace SemiRP.PlayerSystems
                     chr.PermsSet = new PermissionSet();
                     chr.GroupOwner = new List<Group>();
                     chr.GroupRanks = new List<GroupRank>();
-                    chr.BuildingOwner = new List<Building>();
 
                     player.ActiveCharacter = chr;
 
