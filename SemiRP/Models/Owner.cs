@@ -23,6 +23,16 @@ namespace SemiRP.Models
             Group = grp;
         }
 
+        public bool IsOwner(Character chr)
+        {
+            return !(Character == null) || Character == chr;
+        }
+
+        public bool IsOwner(Group grp)
+        {
+            return !(Group == null) || Group == grp;
+        }
+
         [Key]
         public int Id { get; set; }
 
