@@ -283,7 +283,7 @@ namespace SemiRP.Utils
 
             if (skinid < 0 || 311 < skinid)
             {
-                throw new Exception("Le skin ID " + Constants.Chat.HIGHLIGHT + skinid + Color.White +
+                throw new Exception("Le skin ID " + Constants.Chat.HIGHLIGHT + skinid + Constants.Chat.ERROR +
                                     " n'est pas valide, l'id d'un skin doit être entre 0 et 311.");
             }
 
