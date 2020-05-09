@@ -303,15 +303,20 @@ namespace SemiRP.Utils
                 phone.DefaultPhone = true;
             }
 
-            if (InventoryHelper.AddItemToCharacter(target.ActiveCharacter, phone))
+            try
             {
-                ServerDbContext dbContext = ((GameMode) GameMode.Instance).DbContext;
+                InventoryHelper.AddItemToCharacter(target.ActiveCharacter, phone);
+
+                ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
                 dbContext.SaveChanges();
                 return phone;
             }
-
-            PhoneHelper.DeletePhone(phone);
-            throw new Exception("Le téléphone n'a pas pu être ajouté à l'utilisateur.");
+            catch
+            {
+                PhoneHelper.DeletePhone(phone);
+                throw new Exception("Le téléphone n'a pas pu être ajouté à l'utilisateur.");
+            }
+            
         }
 
         public static void GiveGun(Player sender, Player target, Weapon gun)

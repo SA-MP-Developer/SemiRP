@@ -8,6 +8,7 @@ using SemiRP.Utils.PlayerUtils;
 using SampSharp.Streamer.World;
 using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
+using SemiRP.Utils.ContainerUtils;
 
 namespace SemiRP.Utils.ItemUtils
 {
@@ -113,7 +114,7 @@ namespace SemiRP.Utils.ItemUtils
             item.SpawnLocation = null;
             item.DynamicObject.Dispose();
             item.DynamicObject = null;
-            PutItemInPlayerHand(player, item);
+            InventoryHelper.AddItemToCharacter(player.ActiveCharacter, item);
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             dbContext.SaveChanges();
 

@@ -19,22 +19,26 @@ namespace SemiRP.Utils.ContainerUtils
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             return dbContext.Characters.Select(x => x).Where(x => x == character).FirstOrDefault().Inventory.ListItems.Select(x=>x).Where(x=>x.Name == name).FirstOrDefault();
         }
-        public static bool AddItemToCharacter(Character character, Item item)
+        public static void AddItemToCharacter(Character character, Item item)
         {
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
-            Inventory inv = dbContext.Characters.Select(x => x).Where(x => x == character).FirstOrDefault().Inventory;
-            if (inv == null)
-                return false;
+            
+            if (character.Inventory == null)
+                throw new Exception("Le joueur n'a pas d'inventaire.");
 
-            if(inv.ListItems.Count() < inv.MaxSpace)
+            if(character.ItemInHand == null)
             {
-                inv.ListItems.Add(item);
+                character.ItemInHand = item;
                 dbContext.SaveChanges();
-                return true;
+            }
+            else if(character.Inventory.ListItems.Count() < character.Inventory.MaxSpace)
+            {
+                character.Inventory.ListItems.Add(item);
+                dbContext.SaveChanges();
             }
             else
             {
-                return false;
+                throw new Exception("L'inventaire est complet et la main n'est pas vide.");
             }
         }
     }
