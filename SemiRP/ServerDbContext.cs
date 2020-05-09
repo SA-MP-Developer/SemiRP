@@ -69,7 +69,13 @@ namespace SemiRP
                     .EnableDetailedErrors();
 
 #else
-                optionsBuilder.UseMySql(ConfigurationManager.ConnectionStrings["connectionStringRelease"].ConnectionString,
+                String sqlConString = $"Server={Environment.GetEnvironmentVariable("SEMIRP_MYSQL_HOST")}; " +
+                    $"Port={Environment.GetEnvironmentVariable("SEMIRP_MYSQL_PORT")}; " +
+                    $"Database={Environment.GetEnvironmentVariable("SEMIRP_MYSQL_DB")}; " +
+                    $"Uid={Environment.GetEnvironmentVariable("SEMIRP_MYSQL_USER")}; " +
+                    $"Pwd={Environment.GetEnvironmentVariable("SEMIRP_MYSQL_PASSWORD")};";
+                optionsBuilder.UseLazyLoadingProxies();
+                optionsBuilder.UseMySql(sqlConString,
                     mySqlOptions => mySqlOptions.ServerVersion(new Version(10, 4, 12), ServerType.MariaDb))
                     .EnableDetailedErrors();
 #endif
