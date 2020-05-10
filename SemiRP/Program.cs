@@ -21,7 +21,7 @@ namespace SemiRP
 #else
             new GameModeBuilder()
                 .Use<GameMode>()
-                .UseEncoding(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "..\\codepages\\cp1252.txt"))
+                .UseEncoding(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), $"..{Path.DirectorySeparatorChar}codepages{Path.DirectorySeparatorChar}cp1252.txt"))
                 .Run();
 #endif
         }
