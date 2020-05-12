@@ -17,7 +17,8 @@ namespace SemiRP.Commands
         {
             try
             {
-                ItemHelper.RemoveItemFromGround(player);
+                Item itemFromGround = ItemHelper.RemoveItemFromGround(player);
+                InventoryHelper.AddItemToCharacter(player.ActiveCharacter, itemFromGround);
                 Chat.InfoChat(player, "L'objet a été ramassé.");
             }
             catch (Exception e)
@@ -32,6 +33,7 @@ namespace SemiRP.Commands
             try
             {
                 ItemHelper.PutItemOnGround(player);
+                ItemHelper.RemoveItemFromPlayerHand(player);
                 Chat.InfoChat(player, "L'objet a été posé au sol.");
             }
             catch (Exception e)
@@ -46,7 +48,7 @@ namespace SemiRP.Commands
             try
             {
                 InventoryHelper.RemoveItemFromCharacter(player.ActiveCharacter, player.ActiveCharacter.ItemInHand);
-                InventoryHelper.AddItemToCharacter(receiver.ActiveCharacter, player.ActiveCharacter.ItemInHand);
+                InventoryHelper.AddItemToCharacter(receiver.ActiveCharacter, itemToGive);
                 
                 Chat.InfoChat(player, "L'objet à été donné à "+receiver.ActiveCharacter.Name+".");
             }

@@ -1,6 +1,8 @@
 ﻿using SemiRP.Exceptions;
 using SemiRP.Models;
 using SemiRP.Models.ContainerHeritage;
+using SemiRP.Models.ItemHeritage;
+using SemiRP.Utils.PlayerUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +33,11 @@ namespace SemiRP.Utils.ContainerUtils
             {
                 character.ItemInHand = item;
                 dbContext.SaveChanges();
+                if(item is Gun)
+                {
+                    Player player = PlayerHelper.SearchCharacter(character);
+                    player.GiveWeapon(((Gun)item).idWeapon, ((Gun)item).Quantity);
+                }
                 return item;
             }
             else if(character.Inventory.ListItems.Count() < character.Inventory.MaxSpace)
@@ -56,6 +63,11 @@ namespace SemiRP.Utils.ContainerUtils
             {
                 character.ItemInHand = null;
                 dbContext.SaveChanges();
+                if (item is Gun)
+                {
+                    Player player = PlayerHelper.SearchCharacter(character);
+                    player.ResetWeapons();
+                }
                 return item;
             }
             else if (character.Inventory.ListItems.Remove(item))

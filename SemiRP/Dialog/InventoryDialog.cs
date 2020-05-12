@@ -48,9 +48,9 @@ namespace SemiRP.Dialog
                     {
                         try
                         {
-                            player.SetAmmo(player.Weapon, 0); // Remove gun from player
                             if(player.ActiveCharacter.ItemInHand is Gun)
                             {
+                                player.SetArmedWeapon(((Gun)player.ActiveCharacter.ItemInHand).idWeapon);
                                 player.ActiveCharacter.ItemInHand.Quantity = player.WeaponAmmo;
                             }
                             player.ActiveCharacter.Inventory.ListItems.Add(player.ActiveCharacter.ItemInHand); // Add item to inventory

@@ -346,7 +346,7 @@ namespace SemiRP.Commands
             }
 
             [Command("gun", "weapon")]
-            private static void GiveGun(Player sender, Player target, Weapon gun, int ammo)
+            private static void GiveGun(Player sender, Player target, Weapon gun, int ammo = 50)
             {
                 try
                 {
@@ -372,6 +372,10 @@ namespace SemiRP.Commands
                     if(target.ActiveCharacter.ItemInHand == null)
                     {
                         throw new Exception("Le joueur n'a pas d'objet en main.");
+                    }
+                    if(target.ActiveCharacter.ItemInHand is Gun)
+                    {
+                        target.ResetWeapons();
                     }
                     ItemHelper.DeleteItem(target.ActiveCharacter.ItemInHand);
                     Chat.AdminChat(sender, "L'objet de la main du joueur " + Constants.Chat.USERNAME + target.ActiveCharacter.Name + Color.White + " a bien été supprimé");

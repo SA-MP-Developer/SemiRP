@@ -101,11 +101,10 @@ namespace SemiRP.Utils.ItemUtils
             }
             item.SpawnLocation = new SpawnLocation(position, rotation,player.Interior, player.VirtualWorld);
             item.DynamicObject = new DynamicObject(item.ModelId, item.SpawnLocation.Position, item.SpawnLocation.Rotation, item.SpawnLocation.VirtualWorld, item.SpawnLocation.Interior);
-            RemoveItemFromPlayerHand(player);
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             dbContext.SaveChanges();
         }
-        public static void RemoveItemFromGround(Player player)
+        public static Item RemoveItemFromGround(Player player)
         {
             Item item = GetNearestItemOfCharacter(player.ActiveCharacter);
             ItemIsCloseEnoughOfPlayer(player, item);
@@ -114,9 +113,9 @@ namespace SemiRP.Utils.ItemUtils
             item.SpawnLocation = null;
             item.DynamicObject.Dispose();
             item.DynamicObject = null;
-            InventoryHelper.AddItemToCharacter(player.ActiveCharacter, item);
             ServerDbContext dbContext = ((GameMode)GameMode.Instance).DbContext;
             dbContext.SaveChanges();
+            return item;
 
         }
 

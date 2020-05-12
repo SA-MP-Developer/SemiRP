@@ -319,27 +319,7 @@ namespace SemiRP.Utils
             
         }
 
-        public static void GiveGun(Player sender, Player target, Weapon gun)
-        {
-            if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
-                throw new Exception("Tu n'as pas la permission.");
-            if (target.ActiveCharacter.ItemInHand != null)
-                throw new Exception("La main du joueur doit être vide.");
-
-            Gun weapon = new Gun(); // Create Gun
-            weapon.idWeapon = gun;
-            weapon.Quantity = 500;
-            weapon.CurrentContainer = null;
-            weapon.SpawnLocation = null;
-            weapon.Name = Weapons.WeaponsDictionnary.GetValueOrDefault((int) gun);
-            weapon.ModelId = WeaponsModelId.WeaponsModelIdDictionnary.GetValueOrDefault((int) gun);
-            target.ActiveCharacter.ItemInHand = weapon;
-            target.GiveWeapon(gun, 500);
-            ServerDbContext dbContext = ((GameMode) GameMode.Instance).DbContext;
-            dbContext.SaveChanges();
-        }
-
-        public static void GiveGun(Player sender, Player target, Weapon gun, int ammo)
+        public static void GiveGun(Player sender, Player target, Weapon gun, int ammo = 50)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
                 throw new Exception("Vous n'avez pas les permissions pour cela.");

@@ -283,7 +283,19 @@ namespace SemiRP
                     this.Vehicle.Engine = false;
                 }
             }
-
+            if(this.ActiveCharacter != null)
+            {
+                if (this.ActiveCharacter.ItemInHand != null)
+                {
+                    if (this.ActiveCharacter.ItemInHand is Gun)
+                    {
+                        if (this.ActiveCharacter.ItemInHand.Quantity == 0)
+                        {
+                            ItemHelper.RemoveItemFromPlayerHand(this);
+                        }
+                    }
+                }
+            }
         }
 
         public override void OnWeaponShot(WeaponShotEventArgs e)
