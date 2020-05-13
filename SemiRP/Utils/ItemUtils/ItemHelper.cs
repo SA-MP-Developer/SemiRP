@@ -108,8 +108,6 @@ namespace SemiRP.Utils.ItemUtils
         {
             Item item = GetNearestItemOfCharacter(player.ActiveCharacter);
             ItemIsCloseEnoughOfPlayer(player, item);
-            if (player.ActiveCharacter.ItemInHand != null)
-                throw new Exception("Vous avez déjà un objet en main.");
             item.SpawnLocation = null;
             item.DynamicObject.Dispose();
             item.DynamicObject = null;
