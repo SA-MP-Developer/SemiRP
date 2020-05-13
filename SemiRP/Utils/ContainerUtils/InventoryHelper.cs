@@ -2,6 +2,7 @@
 using SemiRP.Models;
 using SemiRP.Models.ContainerHeritage;
 using SemiRP.Models.ItemHeritage;
+using SemiRP.Utils.ItemUtils;
 using SemiRP.Utils.PlayerUtils;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,17 @@ namespace SemiRP.Utils.ContainerUtils
             
             if (character.Inventory == null)
                 throw new InventoryAddingExceptions("Le joueur n'a pas d'inventaire.");
-
+            if(item is Phone)
+            {
+                if (((Phone)item).DefaultPhone)
+                {
+                    if (PhoneHelper.GetDefaultPhone(character) != null)
+                    {
+                        ((Phone)item).DefaultPhone = false;
+                    }
+                }
+                
+            }
             if(character.ItemInHand == null)
             {
                 character.ItemInHand = item;

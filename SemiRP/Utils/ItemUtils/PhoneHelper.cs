@@ -67,7 +67,27 @@ namespace SemiRP.Utils.ItemUtils
 
         public static Phone GetDefaultPhone(Character character)
         {
-            return GetAllPhone().Select(x => x).Where(x => x.CurrentContainer == character.Inventory).Where(x => x.DefaultPhone == true).FirstOrDefault();
+            Phone phone = null;
+            if(character.ItemInHand is Phone)
+            {
+                if (((Phone)character.ItemInHand).DefaultPhone)
+                {
+                    phone = (Phone)character.ItemInHand;
+                    return phone;
+                }
+            }
+            else
+            {
+                foreach(Phone ph in character.Inventory.ListItems.OfType<Phone>())
+                {
+                    if (ph.DefaultPhone)
+                    {
+                        return ph;
+                    }
+                }
+            }
+
+            return phone;
         }
 
         public static void SetInHandDefaultPhone(Character character)
@@ -94,7 +114,7 @@ namespace SemiRP.Utils.ItemUtils
             }
             Character character = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneReceiver);
             Player receiver = PlayerHelper.SearchCharacter(character);
-            Phone phoneSender = ContainerHelper.CheckPlayerPhone(sender);
+            Phone phoneSender = GetDefaultPhone(sender.ActiveCharacter);
             if (receiver == null || !receiver.IsConnected)
             {
                 throw new Exception("le joueur n'est pas connecté.");
@@ -129,8 +149,11 @@ namespace SemiRP.Utils.ItemUtils
             }
             Character character = PhoneHelper.GetPhoneOwner(phoneReceiver);
             Player receiver = PlayerHelper.SearchCharacter(character);
-            Phone phoneSender = ContainerHelper.CheckPlayerPhone(sender);
-
+            Phone phoneSender = GetDefaultPhone(sender.ActiveCharacter);
+            if(phoneSender == null)
+            {
+                throw new Exception("Vous n'avez pas de téléphone par défaut sur vous.");
+            }
             if(phoneReceiver == phoneSender)
             {
                 throw new Exception("Vous ne pouvez pas vous appeler vous même.");
