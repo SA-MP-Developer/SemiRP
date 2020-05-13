@@ -80,18 +80,20 @@ namespace SemiRP.Commands
             try
             {
                 PhoneHelper.SetInHandDefaultPhone(sender.ActiveCharacter);
+                Chat.InfoChat(sender, "Le téléphone qui est dans ta main a été choisi par défaut.");
             }
             catch (Exception e)
             {
                 Chat.ErrorChat(sender, "Le téléphone par défaut n'a pas pu être choisi : " + e.Message);
             }
         }
-        [Command("inconnu", "inc")]
+        [Command("anonyme", "ano", "inconnu", "inc")]
         private static void Inconnu(Player sender)
         {
             try
             {
                 PhoneHelper.ToggleAnonymPlayerPhone(sender);
+                Chat.InfoChat(sender, "Le téléphone par défaut est maintenant en mode anonyme.");
             }
             catch (Exception e)
             {
@@ -104,6 +106,7 @@ namespace SemiRP.Commands
             try
             {
                 PhoneHelper.ToggleSilentPlayerPhone(sender);
+                Chat.InfoChat(sender, "Le téléphone par défaut est maintenant en mode silencieux.");
             }
             catch (Exception e)
             {
