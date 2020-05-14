@@ -65,33 +65,16 @@ namespace SemiRP.Dialog
                 }
                 else // Take item from inventory
                 {
-                    if(player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem] is Gun)
+                    try
                     {
-                        try
-                        {
-                            ItemHelper.PutItemInPlayerHand(player, player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]);
-                            //player.GiveWeapon((SampSharp.GameMode.Definitions.Weapon)((Gun)player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]).idWeapon, ((Gun)player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]).Quantity); // Give player weapon
-                            player.ActiveCharacter.Inventory.ListItems.RemoveAt(EventArgs.ListItem); // Remove weapon from inventory
-                            dbContext.SaveChanges();
-                        }
-                        catch(Exception e)
-                        {
-                            Chat.ErrorChat(player, "Impossible de prendre l'objet : "+e.Message);
-                        }
-                        
+                        ItemHelper.PutItemInPlayerHand(player, player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]);
+                        //player.GiveWeapon((SampSharp.GameMode.Definitions.Weapon)((Gun)player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]).idWeapon, ((Gun)player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]).Quantity); // Give player weapon
+                        player.ActiveCharacter.Inventory.ListItems.RemoveAt(EventArgs.ListItem); // Remove weapon from inventory
+                        dbContext.SaveChanges();
                     }
-                    else
+                    catch(Exception e)
                     {
-                        try
-                        {
-                            player.ActiveCharacter.ItemInHand = player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]; // put in hand of player
-                            player.ActiveCharacter.Inventory.ListItems.RemoveAt(EventArgs.ListItem); // Remove item from inventory
-                            dbContext.SaveChanges();
-                        }
-                        catch(Exception e)
-                        {
-                            Chat.ErrorChat(player, "Impossible de prendre l'objet.");
-                        }
+                        Chat.ErrorChat(player, "Impossible de prendre l'objet : "+e.Message);
                     }
                 }
             };

@@ -51,6 +51,7 @@ namespace SemiRP.Commands
                 InventoryHelper.AddItemToCharacter(receiver.ActiveCharacter, itemToGive);
                 
                 Chat.InfoChat(player, "L'objet à été donné à "+receiver.ActiveCharacter.Name+".");
+                Chat.InfoChat(receiver, "Vous avez reçu " + itemToGive.Name + " de la part de " + player.ActiveCharacter.Name);
             }
             catch (InventoryAddingExceptions e)
             {

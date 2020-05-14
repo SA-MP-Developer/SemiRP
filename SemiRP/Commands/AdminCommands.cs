@@ -330,21 +330,7 @@ namespace SemiRP.Commands
                 }
                 
             }
-            [Command("gun", "weapon")]
-            private static void GiveGun(Player sender, Player target, Weapon gun)
-            {
-                try
-                {
-                    AdminHelper.GiveGun(sender, target, gun);
-                    Chat.AdminChat(sender, "L'arme " + Constants.Chat.HIGHLIGHT + gun + Color.White + " a bien été ajouté au joueur " + Constants.Chat.USERNAME + target.ActiveCharacter.Name + Color.White + " (" + target.Id + ").");
-                    Chat.ClientChat(target, Constants.Chat.USERNAME + sender.AccountData.Nickname + Color.White + " vous a donné une arme : " + Constants.Chat.HIGHLIGHT + gun + Color.White + ".");
-                }
-                catch (Exception e)
-                {
-                    Chat.ErrorChat(sender, e.Message);
-                }
-            }
-
+            
             [Command("gun", "weapon")]
             private static void GiveGun(Player sender, Player target, Weapon gun, int ammo = 50)
             {

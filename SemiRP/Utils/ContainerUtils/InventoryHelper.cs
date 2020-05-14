@@ -53,6 +53,7 @@ namespace SemiRP.Utils.ContainerUtils
             }
             else if(character.Inventory.ListItems.Count() < character.Inventory.MaxSpace)
             {
+                item.CurrentContainer = character.Inventory;
                 character.Inventory.ListItems.Add(item);
                 dbContext.SaveChanges();
                 return item;
@@ -83,6 +84,7 @@ namespace SemiRP.Utils.ContainerUtils
             }
             else if (character.Inventory.ListItems.Remove(item))
             {
+                item.CurrentContainer = null;
                 dbContext.SaveChanges();
                 return item;
             }

@@ -319,7 +319,7 @@ namespace SemiRP.Utils
             
         }
 
-        public static void GiveGun(Player sender, Player target, Weapon gun, int ammo = 50)
+        public static void GiveGun(Player sender, Player target, Weapon gun, int ammo)
         {
             if (!sender.AccountData.HavePerm("admin.cmds.give.gun"))
                 throw new Exception("Vous n'avez pas les permissions pour cela.");
@@ -333,10 +333,7 @@ namespace SemiRP.Utils
             weapon.SpawnLocation = null;
             weapon.Name = Weapons.WeaponsDictionnary.GetValueOrDefault((int) gun);
             weapon.ModelId = WeaponsModelId.WeaponsModelIdDictionnary.GetValueOrDefault((int) gun);
-            target.ActiveCharacter.ItemInHand = weapon;
-            target.GiveWeapon(gun, ammo);
-            ServerDbContext dbContext = ((GameMode) GameMode.Instance).DbContext;
-            dbContext.SaveChanges();
+            InventoryHelper.AddItemToCharacter(target.ActiveCharacter, weapon);
         }
     }
 }

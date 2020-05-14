@@ -69,6 +69,7 @@ namespace SemiRP.Utils.ItemUtils
             }
             item.SpawnLocation = null;
             item.DynamicObject = null;
+            item.CurrentContainer = null;
             player.ActiveCharacter.ItemInHand = item;
             if (item is Gun)
             {
