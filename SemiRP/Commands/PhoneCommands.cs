@@ -92,8 +92,16 @@ namespace SemiRP.Commands
         {
             try
             {
-                PhoneHelper.ToggleAnonymPlayerPhone(sender);
-                Chat.InfoChat(sender, "Le téléphone par défaut est maintenant en mode anonyme.");
+                Phone phone = PhoneHelper.ToggleAnonymPlayerPhone(sender);
+                if(phone.Anonym == true)
+                {
+                    Chat.InfoChat(sender, "Le mode anonyme est maintenant activé sur le téléphone par défaut.");
+                }
+                else
+                {
+                    Chat.InfoChat(sender, "Le mode anonyme est maintenant desactivé sur le téléphone par défaut.");
+                }
+                
             }
             catch (Exception e)
             {
@@ -105,8 +113,15 @@ namespace SemiRP.Commands
         {
             try
             {
-                PhoneHelper.ToggleSilentPlayerPhone(sender);
-                Chat.InfoChat(sender, "Le téléphone par défaut est maintenant en mode silencieux.");
+                Phone phone = PhoneHelper.ToggleSilentPlayerPhone(sender);
+                if(phone.Silent == true)
+                {
+                    Chat.InfoChat(sender, "Le mode silencieux est maintenant activé sur le téléphone par défaut.");
+                }
+                else
+                {
+                    Chat.InfoChat(sender, "Le mode silencieux est maintenant desactivé sur le téléphone par défaut.");
+                }
             }
             catch (Exception e)
             {

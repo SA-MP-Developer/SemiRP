@@ -174,7 +174,7 @@ namespace SemiRP.Utils.ItemUtils
             }
             else // If the phone is not in a player inventory
             {
-                if(phoneReceiver.CurrentContainer == null)
+                if(phoneReceiver.CurrentContainer == null && phoneReceiver.SpawnLocation != null)
                 {
                     Vector3 phoneLabelPosition = new Vector3(phoneReceiver.SpawnLocation.X, phoneReceiver.SpawnLocation.Y, phoneReceiver.SpawnLocation.Z + Constants.Item.PHONE_LABEL_DISTANCE_FROM_PHONE);
                     dynamicTextLabelPhone = Chat.CreateTme("Le téléphone sonne !", phoneLabelPosition, Constants.Item.PHONE_LABEL_DISTANCE);
