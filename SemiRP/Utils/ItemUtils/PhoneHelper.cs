@@ -68,26 +68,22 @@ namespace SemiRP.Utils.ItemUtils
         public static Phone GetDefaultPhone(Character character)
         {
             Phone phone = null;
+            
+            foreach(Phone ph in character.Inventory.ListItems.OfType<Phone>())
+            {
+                if (ph.DefaultPhone)
+                {
+                    return ph;
+                }
+            }
             if(character.ItemInHand is Phone)
             {
                 if (((Phone)character.ItemInHand).DefaultPhone)
                 {
-                    phone = (Phone)character.ItemInHand;
-                    return phone;
+                    return (Phone)character.ItemInHand;
                 }
             }
-            else
-            {
-                foreach(Phone ph in character.Inventory.ListItems.OfType<Phone>())
-                {
-                    if (ph.DefaultPhone)
-                    {
-                        return ph;
-                    }
-                }
-            }
-
-            return phone;
+            return (Phone)null;
         }
 
         public static void SetInHandDefaultPhone(Character character)
@@ -168,7 +164,7 @@ namespace SemiRP.Utils.ItemUtils
             {
                 Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler ("+phoneSender.Number+") ! /t dec pour décrocher.");
             }
-            else if(receiver != null && !phoneSender.Anonym)
+            else if(receiver != null && phoneSender.Anonym)
             {
                 Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler (Anonyme)! /t dec pour décrocher.");
             }
@@ -219,6 +215,7 @@ namespace SemiRP.Utils.ItemUtils
                                 textLabel.Dispose();
                                 textLabel = null;
                             }
+                            return;
                         }
                         catch (Exception exception)
                         {
@@ -231,7 +228,7 @@ namespace SemiRP.Utils.ItemUtils
                         {
                             Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler (" + phoneSender.Number + ") ! /t dec pour décrocher.");
                         }
-                        else if (receiver != null && !phoneSender.Anonym)
+                        else if (receiver != null && phoneSender.Anonym)
                         {
                             Chat.CallChat(receiver, "Quelqu'un essaie de vous appeler (Anonyme)! /t dec pour décrocher.");
                         }
