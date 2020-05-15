@@ -70,9 +70,9 @@ namespace SemiRP.Dialog
                     {
                         try
                         {
-                            ItemHelper.PutItemInPlayerHand(player, player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]);
-                            //player.GiveWeapon((SampSharp.GameMode.Definitions.Weapon)((Gun)player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]).idWeapon, ((Gun)player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]).Quantity); // Give player weapon
-                            player.ActiveCharacter.Inventory.ListItems.RemoveAt(EventArgs.ListItem); // Remove weapon from inventory
+                            //ItemHelper.PutItemInPlayerHand(player, player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]);
+                            Item item = InventoryHelper.RemoveItemFromCharacter(player.ActiveCharacter, player.ActiveCharacter.Inventory.ListItems[EventArgs.ListItem]);
+                            InventoryHelper.AddItemToCharacter(player.ActiveCharacter, item);
                             dbContext.SaveChanges();
                         }
                         catch (Exception e)

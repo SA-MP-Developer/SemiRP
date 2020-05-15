@@ -73,13 +73,15 @@ namespace SemiRP.Utils.ContainerUtils
 
             if(character.ItemInHand == item)
             {
-                character.ItemInHand = null;
-                dbContext.SaveChanges();
                 if (item is Gun)
                 {
                     Player player = PlayerHelper.SearchCharacter(character);
+                    player.SetArmedWeapon(((Gun)player.ActiveCharacter.ItemInHand).idWeapon);
+                    item.Quantity = player.WeaponAmmo;
                     player.ResetWeapons();
                 }
+                character.ItemInHand = null;
+                dbContext.SaveChanges();
                 return item;
             }
             else if (character.Inventory.ListItems.Remove(item))
