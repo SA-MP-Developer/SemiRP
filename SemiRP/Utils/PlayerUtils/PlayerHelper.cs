@@ -1,4 +1,5 @@
-﻿using SemiRP.Models;
+﻿using SampSharp.GameMode.Display;
+using SemiRP.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -46,6 +47,31 @@ namespace SemiRP.Utils.PlayerUtils
                 return "* Proche de la mort";
             }
             return "* En parfaite santé";
+        }
+
+        public static Player AskId(Player player)
+        {
+
+            int number = -1;
+            var idDialog = new InputDialog("Insérer l'ID", "Veullez insérer l'ID du joueur :", true, "Sélectionner", "Quitter");
+            idDialog.Show(player);
+            idDialog.Response += (sender, eventArgs) =>
+            {
+                do
+                {
+                    idDialog.Message = "Veullez insérer l'ID du joueur :\nVeuillez entrer un nombre.";
+                    idDialog.Show(player);
+                } while (!Int32.TryParse(eventArgs.InputText, out number));
+            };
+
+            if (number == -1)
+            {
+                throw new Exception("Aucun joueur avec cet ID.");
+            }
+            else
+            {
+                return (Player)Player.Find(number);
+            }
         }
     }
 }

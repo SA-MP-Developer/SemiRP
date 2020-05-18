@@ -1,5 +1,6 @@
 ﻿using SampSharp.GameMode.Display;
 using SemiRP.Utils;
+using SemiRP.Utils.PlayerUtils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,7 +17,7 @@ namespace SemiRP.Dialog
 
         private static InputDialog responseDialog;
 
-        public static void ShowAdminDialog(Player player)
+        public static void ShowAdminDialog(Player player, Player receiver = null)
         {
             listAdmin = new ListDialog("Administration", "Sélectionner", "Quitter");
             listAdmin.AddItem("Modération");
@@ -35,7 +36,7 @@ namespace SemiRP.Dialog
                 {
                     case 0:
                         {
-                            ShowModerationDialog(player);
+                            ShowModerationDialog(player, receiver);
                             break;
                         }
                     case 1:
@@ -57,7 +58,7 @@ namespace SemiRP.Dialog
                 }
             };
         }
-        private static void ShowModerationDialog(Player player)
+        private static void ShowModerationDialog(Player player, Player receiver)
         {
             listModeration = new ListDialog("Administration - Modération", "Sélectionner", "Quitter");
             listModeration.AddItem("Se téléporter à");
@@ -73,18 +74,37 @@ namespace SemiRP.Dialog
                 {
                     case 0:
                         {
-                            responseDialog = new InputDialog("Se téléporter à","Indiquez l'ID du joueur auquel se téléporter :",false, "Sélectionner", "Quitter");
-                            responseDialog.Response += (sender, EventArgs) =>
+                            if(receiver != null)
                             {
-                                try
+                                responseDialog = new InputDialog("Se téléporter à", "Indiquez l'ID du joueur auquel se téléporter :", false, "Sélectionner", "Quitter");
+                                responseDialog.Response += (sender, EventArgs) =>
                                 {
-                                    
-                                }
-                                catch(Exception e)
+                                    try
+                                    {
+                                        AdminHelper.Goto(player, receiver);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de se téléporter au joueur." + e.Message);
+                                    }
+                                };
+                            }
+                            else
+                            {
+                                responseDialog = new InputDialog("Se téléporter à", "Indiquez l'ID du joueur auquel se téléporter :", false, "Sélectionner", "Quitter");
+                                responseDialog.Response += (sender, EventArgs) =>
                                 {
-                                    Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de se téléporter au joueur." + e.Message);
-                                }
-                            };
+                                    try
+                                    {
+                                        receiver = PlayerHelper.AskId(player);
+                                        AdminHelper.Goto(player, receiver);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Utils.Chat.ErrorChat(player, "Une erreur est survenue, impossible de se téléporter au joueur." + e.Message);
+                                    }
+                                };
+                            }
                             break;
                         }
                     case 1:
@@ -178,5 +198,6 @@ namespace SemiRP.Dialog
         {
 
         }
+
     }
 }
