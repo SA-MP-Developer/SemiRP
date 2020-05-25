@@ -5,7 +5,6 @@ using SemiRP.Dialog;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils;
 using SemiRP.Utils.ItemUtils;
-using SemiRP.Utils.Vehicles;
 using System;
 
 namespace SemiRP.Commands
@@ -324,11 +323,10 @@ namespace SemiRP.Commands
                     Chat.AdminChat(sender, "Le téléphone \"" + phone.Number + "\" bien été ajouté à " + Constants.Chat.USERNAME + target.ActiveCharacter.Name + Color.White + " (" + target.Id + ").");
                     Chat.ClientChat(target, "L'administrateur " + Constants.Chat.USERNAME + sender.AccountData.Nickname + Color.White + " vous a ajouté un téléphone : " + phone.Number + ".");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Chat.AdminChat(sender, e.Message);
                 }
-                
             }
             
             [Command("gun", "weapon")]

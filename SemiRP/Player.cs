@@ -4,20 +4,14 @@ using SampSharp.GameMode.Events;
 using SampSharp.GameMode.Pools;
 using SampSharp.GameMode.World;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Internal;
 using SampSharp.GameMode.Display;
-using SemiRP.Utils;
 using SampSharp.GameMode.Definitions;
 using SemiRP.Models;
-using SampSharp.Core.Callbacks;
 using SemiRP.PlayerSystems;
-using Microsoft.EntityFrameworkCore;
 using SemiRP.Models.ItemHeritage;
 using System.Text.RegularExpressions;
 using SemiRP.Utils.ItemUtils;
-using SampSharp.Streamer;
 using SampSharp.Streamer.World;
-using System.Runtime.CompilerServices;
 using SampSharp.GameMode;
 
 namespace SemiRP
@@ -178,11 +172,11 @@ namespace SemiRP
                 Player playerCall = Utils.PlayerUtils.PlayerHelper.SearchCharacter(characterCall);
                 if (phone.Anonym)
                 {
-                    Utils.Chat.ChatInCall(playerCall, "La personne", "Anonyme", e.Text);
+                    Utils.Chat.ChatInCall(playerCall, "Correspondant", "Anonyme", e.Text);
                 }
                 else
                 {
-                    Utils.Chat.ChatInCall(playerCall, "La personne", phone.Number, e.Text);
+                    Utils.Chat.ChatInCall(playerCall, "Correspondant", phone.Number, e.Text);
                 }
                 Utils.Chat.ChatInCall(this,"Vous", e.Text);
                 foreach (Player p in Player.All)

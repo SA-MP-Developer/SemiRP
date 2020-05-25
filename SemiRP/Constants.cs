@@ -1,7 +1,4 @@
 ﻿using SampSharp.GameMode.SAMP;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SemiRP
 {
@@ -48,8 +45,8 @@ namespace SemiRP
             public static Color ADMIN_PM = Color.Red;
 
             public static Color INFO = Color.CornflowerBlue;
-            public static Color SMS_TAG = Color.YellowGreen;
-            public static Color TEL_TAG = Color.DarkOrange;
+            public static Color PHONE_SMS = Color.DarkOrange;
+            public static Color PHONE_CALL = Color.DarkOrange;
             public static Color ERROR = Color.DarkGray;
             public static Color HELP_TAG = Color.LightSkyBlue;
 
