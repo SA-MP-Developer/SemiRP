@@ -55,6 +55,11 @@ namespace SemiRP.Utils
             SendRangedChat(from, SemiRP.Constants.PROXIMITY_RADIUS, Constants.Chat.ME, message + " ((" + from.Name + "))");
         }
 
+        public static void InfoChat(Player player, string message)
+        {
+            player.SendClientMessage(Constants.Chat.INFO, "[INFO] " + Color.White + message);
+        }
+
         public static void ErrorChat(Player player, string message)
         {
             player.SendClientMessage(Constants.Chat.ERROR, message);
@@ -77,27 +82,22 @@ namespace SemiRP.Utils
 
         public static void CallChat(Player player, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Constants.Chat.TEL_TAG + "APPEL" + Color.White + "] " + message);
-        }
-
-        public static void SMSChat(Player player, string message)
-        {
-            player.SendClientMessage(Color.White, "[" + Constants.Chat.SMS_TAG + "SMS" + Color.White + "] " + message);
+            player.SendClientMessage(Constants.Chat.PHONE_CALL, message);
         }
 
         public static void ChatInCall(Player player, string denomination, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Constants.Chat.TEL_TAG + "APPEL" + Color.White + "] " + denomination + " : " + message);
+            player.SendClientMessage(Constants.Chat.PHONE_CALL, "[APPEL] " + denomination + " : " + message);
         }
 
         public static void ChatInCall(Player player, string denomination, string numero, string message)
         {
-            player.SendClientMessage(Color.White, "[" + Constants.Chat.TEL_TAG + "APPEL" + Color.White + "] "+denomination+" (" + numero + ") : " + message);
+            player.SendClientMessage(Constants.Chat.PHONE_CALL, "[APPEL] " + denomination + " (" + numero + ") : " + message);
         }
-
-        public static void InfoChat(Player player, string message)
+        
+        public static void SMSChat(Player player, string message)
         {
-            player.SendClientMessage(Constants.Chat.INFO, "[INFO] " + Color.White + message);
+            player.SendClientMessage(Constants.Chat.PHONE_SMS, message);
         }
 
         public static void SendToAllAdmin(Player player, string message)

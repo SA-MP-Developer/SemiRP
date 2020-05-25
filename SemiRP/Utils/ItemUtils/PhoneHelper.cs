@@ -1,13 +1,12 @@
-﻿using SampSharp.GameMode;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using SampSharp.GameMode;
 using SampSharp.GameMode.SAMP;
 using SampSharp.Streamer.World;
 using SemiRP.Models;
 using SemiRP.Models.ItemHeritage;
-using SemiRP.Utils.ContainerUtils;
 using SemiRP.Utils.PlayerUtils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SemiRP.Utils.ItemUtils
 {
@@ -31,9 +30,9 @@ namespace SemiRP.Utils.ItemUtils
         {
             Phone phone = GetDefaultPhone(player.ActiveCharacter);
             if (phone != null)
-                Utils.Chat.InfoChat(player, "Votre numéro est : "+GetDefaultPhone(player.ActiveCharacter).Number+".");
+                Chat.InfoChat(player, "Votre numéro est : " + GetDefaultPhone(player.ActiveCharacter).Number + ".");
             else
-                Utils.Chat.InfoChat(player, "Vous n'avez pas de téléphone.");
+                Chat.InfoChat(player, "Vous n'avez pas de téléphone.");
         }
 
         public static List<Phone> GetAllPhone()
@@ -102,13 +101,13 @@ namespace SemiRP.Utils.ItemUtils
 
         public static void SendSMS(Player sender, string number, string message)
         {
-            Phone phoneReceiver = Utils.ItemUtils.PhoneHelper.GetPhoneByNumber(number);
+            Phone phoneReceiver = GetPhoneByNumber(number);
 
             if (phoneReceiver is null)
             {
                 throw new Exception("le numéro " + number + " n'est pas attribué.");
             }
-            Character character = Utils.ItemUtils.PhoneHelper.GetPhoneOwner(phoneReceiver);
+            Character character = GetPhoneOwner(phoneReceiver);
             Player receiver = PlayerHelper.SearchCharacter(character);
             Phone phoneSender = GetDefaultPhone(sender.ActiveCharacter);
             if (receiver == null || !receiver.IsConnected)
@@ -121,19 +120,19 @@ namespace SemiRP.Utils.ItemUtils
             }
             if (phoneSender.Anonym)
             {
-                Chat.SMSChat(sender, "Message envoyé à " + number + " : " + message);
-                Chat.SMSChat(receiver, "Message reçu d'un numéro anonyme : " + message);
+                Chat.SMSChat(sender, "SMS envoyé au " + number + " : " + message);
+                Chat.SMSChat(receiver, "SMS reçu d'un numéro anonyme : " + message);
             }
             else
             {
-                Chat.SMSChat(sender, "Message envoyé à " + number + " : " + message);
-                Chat.SMSChat(receiver, "Message reçu de " + phoneSender.Number + " : " + message);
+                Chat.SMSChat(sender, "SMS envoyé au " + number + " : " + message);
+                Chat.SMSChat(receiver, "SMS reçu du " + phoneSender.Number + " : " + message);
             }
         }
 
         public static void Call(Player sender, string number)
         {
-            Phone phoneReceiver = PhoneHelper.GetPhoneByNumber(number);
+            Phone phoneReceiver = GetPhoneByNumber(number);
             Object dynamicTextLabelPhone = null;
             if (phoneReceiver is null)
             {
@@ -143,16 +142,16 @@ namespace SemiRP.Utils.ItemUtils
             {
                 throw new Exception("le numéro " + number + " est déjà en cours d'appel.");
             }
-            Character character = PhoneHelper.GetPhoneOwner(phoneReceiver);
+            Character character = GetPhoneOwner(phoneReceiver);
             Player receiver = PlayerHelper.SearchCharacter(character);
             Phone phoneSender = GetDefaultPhone(sender.ActiveCharacter);
             if(phoneSender == null)
             {
-                throw new Exception("Vous n'avez pas de téléphone par défaut sur vous.");
+                throw new Exception("vous n'avez pas de téléphone par défaut sur vous.");
             }
             if(phoneReceiver == phoneSender)
             {
-                throw new Exception("Vous ne pouvez pas vous appeler vous même.");
+                throw new Exception("vous ne pouvez pas vous appeler vous même.");
             }
             if (phoneReceiver.Silent)
             {

@@ -65,7 +65,7 @@ namespace SemiRP.Commands
             }
 
             sender.SendClientMessage(Constants.Chat.PM, "[MP] Envoyé à " + sender.Name + "(" + sender.Id + ") : " + message);
-            receiver.SendClientMessage(Color.Yellow, "[MP] Reçu de " + sender.Name + "(" + sender.Id + ") : " + message);
+            receiver.SendClientMessage(Constants.Chat.PM, "[MP] Reçu de " + sender.Name + "(" + sender.Id + ") : " + message);
         }
 
         [Command("activermp", "activerpm", "togglemp"," togglepm")]
