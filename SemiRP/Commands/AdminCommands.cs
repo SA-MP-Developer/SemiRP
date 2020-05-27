@@ -1,7 +1,6 @@
 ﻿using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
 using SampSharp.GameMode.SAMP.Commands;
-using SemiRP.Dialog;
 using SemiRP.Models.ItemHeritage;
 using SemiRP.Utils;
 using SemiRP.Utils.ItemUtils;
@@ -16,19 +15,27 @@ namespace SemiRP.Commands
         [Command("help", "aide", "h", "a")]
         private static void Help(Player sender)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.help"))
-                return;
-
-            Chat.AdminChat(sender, "help, goto, gethere, slap, freeze, unfreeze, pm, kick, perm, v, set, give, delete");
+            try
+            {
+                AdminHelper.Help(sender);
+            }
+            catch (Exception e)
+            {
+                Chat.ErrorChat(sender, e.Message);
+            }
         }
 
         [Command("dialog", "d")]
         private static void Dialog(Player sender)
         {
-            if (!sender.AccountData.HavePerm("admin.cmds.dialog"))
-                return;
-
-            AdminDialog.ShowAdminDialog(sender);
+            try
+            {
+                AdminHelper.Dialog(sender);
+            }
+            catch (Exception e)
+            {
+                Chat.ErrorChat(sender, e.Message);
+            }
         }
 
         [Command("goto", "gt")]
